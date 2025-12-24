@@ -77,29 +77,38 @@ export interface paths {
       query?: {
         /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
         allowWatchBookmarks?: boolean
-        /** @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
+        /**
+         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
          *
-         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications. */
+         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
+         */
         continue?: string
         /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
         fieldSelector?: string
         /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
         labelSelector?: string
-        /** @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
+        /**
+         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
          *
-         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned. */
+         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
+         */
         limit?: number
         /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
         pretty?: string
-        /** @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersion?: string
-        /** @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersionMatch?: string
-        /** @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
+        /**
+         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
          *
          *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
          *       is interpreted as "data at least as new as the provided `resourceVersion`"
@@ -111,7 +120,8 @@ export interface paths {
          *     - `resourceVersionMatch` set to any other value or unset
          *       Invalid error is returned.
          *
-         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise. */
+         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
+         */
         sendInitialEvents?: boolean
         /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
         timeoutSeconds?: number
@@ -137,29 +147,38 @@ export interface paths {
       query?: {
         /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
         allowWatchBookmarks?: boolean
-        /** @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
+        /**
+         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
          *
-         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications. */
+         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
+         */
         continue?: string
         /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
         fieldSelector?: string
         /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
         labelSelector?: string
-        /** @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
+        /**
+         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
          *
-         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned. */
+         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
+         */
         limit?: number
         /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
         pretty?: string
-        /** @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersion?: string
-        /** @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersionMatch?: string
-        /** @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
+        /**
+         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
          *
          *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
          *       is interpreted as "data at least as new as the provided `resourceVersion`"
@@ -171,7 +190,8 @@ export interface paths {
          *     - `resourceVersionMatch` set to any other value or unset
          *       Invalid error is returned.
          *
-         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise. */
+         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
+         */
         sendInitialEvents?: boolean
         /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
         timeoutSeconds?: number
@@ -410,29 +430,38 @@ export interface paths {
       query?: {
         /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
         allowWatchBookmarks?: boolean
-        /** @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
+        /**
+         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
          *
-         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications. */
+         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
+         */
         continue?: string
         /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
         fieldSelector?: string
         /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
         labelSelector?: string
-        /** @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
+        /**
+         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
          *
-         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned. */
+         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
+         */
         limit?: number
         /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
         pretty?: string
-        /** @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersion?: string
-        /** @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersionMatch?: string
-        /** @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
+        /**
+         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
          *
          *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
          *       is interpreted as "data at least as new as the provided `resourceVersion`"
@@ -444,7 +473,8 @@ export interface paths {
          *     - `resourceVersionMatch` set to any other value or unset
          *       Invalid error is returned.
          *
-         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise. */
+         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
+         */
         sendInitialEvents?: boolean
         /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
         timeoutSeconds?: number
@@ -491,11 +521,13 @@ export interface components {
       /** @description Whether and how garbage collection will be performed. Either this field or OrphanDependents may be set, but not both. The default policy is decided by the existing finalizer set in the metadata.finalizers and the resource-specific default policy. Acceptable values are: 'Orphan' - orphan the dependents; 'Background' - allow the garbage collector to delete the dependents in the background; 'Foreground' - a cascading policy that deletes all dependents in the foreground. */
       propagationPolicy?: string
     }
-    /** @description FieldsV1 stores a set of fields in a data structure like a Trie, in JSON format.
+    /**
+     * @description FieldsV1 stores a set of fields in a data structure like a Trie, in JSON format.
      *
      *     Each key is either a '.' representing the field itself, and will always map to an empty set, or a string representing a sub-field or item. The string will follow one of these four formats: 'f:<name>', where <name> is the name of a field in a struct, or key in a map 'v:<value>', where <value> is the exact json formatted value of a list item 'i:<index>', where <index> is position of a item in a list 'k:<keys>', where <keys> is a map of  a list item's key fields to their unique values If a key maps to an empty Fields value, the field that key represents is part of the set.
      *
-     *     The exact format is defined in sigs.k8s.io/structured-merge-diff */
+     *     The exact format is defined in sigs.k8s.io/structured-merge-diff
+     */
     "io.k8s.apimachinery.pkg.apis.meta.v1.FieldsV1": Record<string, never>
     /** @description ListMeta describes metadata that synthetic resources must have, including lists and various status objects. A resource may have only one of {ObjectMeta, ListMeta}. */
     "io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta": {
@@ -534,26 +566,32 @@ export interface components {
       annotations?: {
         [key: string]: string
       }
-      /** @description CreationTimestamp is a timestamp representing the server time when this object was created. It is not guaranteed to be set in happens-before order across separate operations. Clients may not set this value. It is represented in RFC3339 form and is in UTC.
+      /**
+       * @description CreationTimestamp is a timestamp representing the server time when this object was created. It is not guaranteed to be set in happens-before order across separate operations. Clients may not set this value. It is represented in RFC3339 form and is in UTC.
        *
-       *     Populated by the system. Read-only. Null for lists. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata */
+       *     Populated by the system. Read-only. Null for lists. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+       */
       creationTimestamp?: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Time"]
       /**
        * Format: int64
        * @description Number of seconds allowed for this object to gracefully terminate before it will be removed from the system. Only set when deletionTimestamp is also set. May only be shortened. Read-only.
        */
       deletionGracePeriodSeconds?: number
-      /** @description DeletionTimestamp is RFC 3339 date and time at which this resource will be deleted. This field is set by the server when a graceful deletion is requested by the user, and is not directly settable by a client. The resource is expected to be deleted (no longer visible from resource lists, and not reachable by name) after the time in this field, once the finalizers list is empty. As long as the finalizers list contains items, deletion is blocked. Once the deletionTimestamp is set, this value may not be unset or be set further into the future, although it may be shortened or the resource may be deleted prior to this time. For example, a user may request that a pod is deleted in 30 seconds. The Kubelet will react by sending a graceful termination signal to the containers in the pod. After that 30 seconds, the Kubelet will send a hard termination signal (SIGKILL) to the container and after cleanup, remove the pod from the API. In the presence of network partitions, this object may still exist after this timestamp, until an administrator or automated process can determine the resource is fully terminated. If not set, graceful deletion of the object has not been requested.
+      /**
+       * @description DeletionTimestamp is RFC 3339 date and time at which this resource will be deleted. This field is set by the server when a graceful deletion is requested by the user, and is not directly settable by a client. The resource is expected to be deleted (no longer visible from resource lists, and not reachable by name) after the time in this field, once the finalizers list is empty. As long as the finalizers list contains items, deletion is blocked. Once the deletionTimestamp is set, this value may not be unset or be set further into the future, although it may be shortened or the resource may be deleted prior to this time. For example, a user may request that a pod is deleted in 30 seconds. The Kubelet will react by sending a graceful termination signal to the containers in the pod. After that 30 seconds, the Kubelet will send a hard termination signal (SIGKILL) to the container and after cleanup, remove the pod from the API. In the presence of network partitions, this object may still exist after this timestamp, until an administrator or automated process can determine the resource is fully terminated. If not set, graceful deletion of the object has not been requested.
        *
-       *     Populated by the system when a graceful deletion is requested. Read-only. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata */
+       *     Populated by the system when a graceful deletion is requested. Read-only. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+       */
       deletionTimestamp?: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Time"]
       /** @description Must be empty before the object is deleted from the registry. Each entry is an identifier for the responsible component that will remove the entry from the list. If the deletionTimestamp of the object is non-nil, entries in this list can only be removed. Finalizers may be processed and removed in any order.  Order is NOT enforced because it introduces significant risk of stuck finalizers. finalizers is a shared field, any actor with permission can reorder it. If the finalizer list is processed in order, then this can lead to a situation in which the component responsible for the first finalizer in the list is waiting for a signal (field value, external system, or other) produced by a component responsible for a finalizer later in the list, resulting in a deadlock. Without enforced ordering finalizers are free to order amongst themselves and are not vulnerable to ordering changes in the list. */
       finalizers?: string[]
-      /** @description GenerateName is an optional prefix, used by the server, to generate a unique name ONLY IF the Name field has not been provided. If this field is used, the name returned to the client will be different than the name passed. This value will also be combined with a unique suffix. The provided value has the same validation rules as the Name field, and may be truncated by the length of the suffix required to make the value unique on the server.
+      /**
+       * @description GenerateName is an optional prefix, used by the server, to generate a unique name ONLY IF the Name field has not been provided. If this field is used, the name returned to the client will be different than the name passed. This value will also be combined with a unique suffix. The provided value has the same validation rules as the Name field, and may be truncated by the length of the suffix required to make the value unique on the server.
        *
        *     If this field is specified and the generated name exists, the server will return a 409.
        *
-       *     Applied only if Name is not specified. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#idempotency */
+       *     Applied only if Name is not specified. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#idempotency
+       */
       generateName?: string
       /**
        * Format: int64
@@ -568,21 +606,27 @@ export interface components {
       managedFields?: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.ManagedFieldsEntry"][]
       /** @description Name must be unique within a namespace. Is required when creating resources, although some resources may allow a client to request the generation of an appropriate name automatically. Name is primarily intended for creation idempotence and configuration definition. Cannot be updated. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names#names */
       name?: string
-      /** @description Namespace defines the space within which each name must be unique. An empty namespace is equivalent to the "default" namespace, but "default" is the canonical representation. Not all objects are required to be scoped to a namespace - the value of this field for those objects will be empty.
+      /**
+       * @description Namespace defines the space within which each name must be unique. An empty namespace is equivalent to the "default" namespace, but "default" is the canonical representation. Not all objects are required to be scoped to a namespace - the value of this field for those objects will be empty.
        *
-       *     Must be a DNS_LABEL. Cannot be updated. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces */
+       *     Must be a DNS_LABEL. Cannot be updated. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces
+       */
       namespace?: string
       /** @description List of objects depended by this object. If ALL objects in the list have been deleted, this object will be garbage collected. If this object is managed by a controller, then an entry in this list will point to this controller, with the controller field set to true. There cannot be more than one managing controller. */
       ownerReferences?: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.OwnerReference"][]
-      /** @description An opaque value that represents the internal version of this object that can be used by clients to determine when objects have changed. May be used for optimistic concurrency, change detection, and the watch operation on a resource or set of resources. Clients must treat these values as opaque and passed unmodified back to the server. They may only be valid for a particular resource or set of resources.
+      /**
+       * @description An opaque value that represents the internal version of this object that can be used by clients to determine when objects have changed. May be used for optimistic concurrency, change detection, and the watch operation on a resource or set of resources. Clients must treat these values as opaque and passed unmodified back to the server. They may only be valid for a particular resource or set of resources.
        *
-       *     Populated by the system. Read-only. Value must be treated as opaque by clients and . More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency */
+       *     Populated by the system. Read-only. Value must be treated as opaque by clients and . More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+       */
       resourceVersion?: string
       /** @description Deprecated: selfLink is a legacy read-only field that is no longer populated by the system. */
       selfLink?: string
-      /** @description UID is the unique in time and space value for this object. It is typically generated by the server on successful creation of a resource and is not allowed to change on PUT operations.
+      /**
+       * @description UID is the unique in time and space value for this object. It is typically generated by the server on successful creation of a resource and is not allowed to change on PUT operations.
        *
-       *     Populated by the system. Read-only. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names#uids */
+       *     Populated by the system. Read-only. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names#uids
+       */
       uid?: string
     }
     /** @description OwnerReference contains enough information to let you identify an owning object. An owning object must be in the same namespace as the dependent, or be cluster-scoped, so there is no namespace field. */
@@ -648,11 +692,13 @@ export interface components {
     }
     /** @description StatusCause provides more information about an api.Status failure, including cases when multiple errors are encountered. */
     "io.k8s.apimachinery.pkg.apis.meta.v1.StatusCause": {
-      /** @description The field of the resource that has caused this error, as named by its JSON serialization. May include dot and postfix notation for nested attributes. Arrays are zero-indexed.  Fields may appear more than once in an array of causes due to fields having multiple errors. Optional.
+      /**
+       * @description The field of the resource that has caused this error, as named by its JSON serialization. May include dot and postfix notation for nested attributes. Arrays are zero-indexed.  Fields may appear more than once in an array of causes due to fields having multiple errors. Optional.
        *
        *     Examples:
        *       "name" - the field "name" on the current resource
-       *       "items[0].name" - the field "name" on the first array entry in "items" */
+       *       "items[0].name" - the field "name" on the first array entry in "items"
+       */
       field?: string
       /** @description A human-readable description of the cause of the error.  This field may be presented as-is to a reader. */
       message?: string
@@ -682,8 +728,10 @@ export interface components {
      * @description Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.
      */
     "io.k8s.apimachinery.pkg.apis.meta.v1.Time": string
-    /** @description Gateway represents an instance of a service-traffic handling infrastructure
-     *     by binding Listeners to a set of IP addresses. */
+    /**
+     * @description Gateway represents an instance of a service-traffic handling infrastructure
+     *     by binding Listeners to a set of IP addresses.
+     */
     "io.k8s.networking.gateway.v1beta1.Gateway": {
       /** @description APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources */
       apiVersion?: string
@@ -693,7 +741,8 @@ export interface components {
       metadata?: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"]
       /** @description Spec defines the desired state of Gateway. */
       spec: {
-        /** @description Addresses requested for this Gateway. This is optional and behavior can
+        /**
+         * @description Addresses requested for this Gateway. This is optional and behavior can
          *     depend on the implementation. If a value is set in the spec and the
          *     requested address is invalid or unavailable, the implementation MUST
          *     indicate this in the associated entry in GatewayStatus.Addresses.
@@ -712,7 +761,8 @@ export interface components {
          *     it assigns to the Gateway and add a corresponding entry in
          *     GatewayStatus.Addresses.
          *
-         *     Support: Extended */
+         *     Support: Extended
+         */
         addresses?: (
           & {
             /**
@@ -720,13 +770,15 @@ export interface components {
              * @default IPAddress
              */
             type: string
-            /** @description When a value is unspecified, an implementation SHOULD automatically
+            /**
+             * @description When a value is unspecified, an implementation SHOULD automatically
              *     assign an address matching the requested type if possible.
              *
              *     If an implementation does not support an empty value, they MUST set the
              *     "Programmed" condition in status to False with a reason of "AddressNotAssigned".
              *
-             *     Examples: `1.2.3.4`, `128::1`, `my-ip-address`. */
+             *     Examples: `1.2.3.4`, `128::1`, `my-ip-address`.
+             */
             value?: string
           }
           & ({
@@ -737,25 +789,32 @@ export interface components {
             type?: unknown
           })
         )[]
-        /** @description GatewayClassName used for this Gateway. This is the name of a
-         *     GatewayClass resource. */
+        /**
+         * @description GatewayClassName used for this Gateway. This is the name of a
+         *     GatewayClass resource.
+         */
         gatewayClassName: string
-        /** @description Infrastructure defines infrastructure level attributes about this Gateway instance.
+        /**
+         * @description Infrastructure defines infrastructure level attributes about this Gateway instance.
          *
-         *     Support: Extended */
+         *     Support: Extended
+         */
         infrastructure?: {
-          /** @description Annotations that SHOULD be applied to any resources created in response to this Gateway.
+          /**
+           * @description Annotations that SHOULD be applied to any resources created in response to this Gateway.
            *
            *     For implementations creating other Kubernetes objects, this should be the `metadata.annotations` field on resources.
            *     For other implementations, this refers to any relevant (implementation specific) "annotations" concepts.
            *
            *     An implementation may chose to add additional implementation-specific annotations as they see fit.
            *
-           *     Support: Extended */
+           *     Support: Extended
+           */
           annotations?: {
             [key: string]: string
           }
-          /** @description Labels that SHOULD be applied to any resources created in response to this Gateway.
+          /**
+           * @description Labels that SHOULD be applied to any resources created in response to this Gateway.
            *
            *     For implementations creating other Kubernetes objects, this should be the `metadata.labels` field on resources.
            *     For other implementations, this refers to any relevant (implementation specific) "labels" concepts.
@@ -765,11 +824,13 @@ export interface components {
            *     If an implementation maps these labels to Pods, or any other resource that would need to be recreated when labels
            *     change, it SHOULD clearly warn about this behavior in documentation.
            *
-           *     Support: Extended */
+           *     Support: Extended
+           */
           labels?: {
             [key: string]: string
           }
-          /** @description ParametersRef is a reference to a resource that contains the configuration
+          /**
+           * @description ParametersRef is a reference to a resource that contains the configuration
            *     parameters corresponding to the Gateway. This is optional if the
            *     controller does not require any additional configuration.
            *
@@ -784,7 +845,8 @@ export interface components {
            *     rejected with the "Accepted" status condition set to "False" and an
            *     "InvalidParameters" reason.
            *
-           *     Support: Implementation-specific */
+           *     Support: Implementation-specific
+           */
           parametersRef?: {
             /** @description Group is the group of the referent. */
             group: string
@@ -794,7 +856,8 @@ export interface components {
             name: string
           }
         }
-        /** @description Listeners associated with this Gateway. Listeners define
+        /**
+         * @description Listeners associated with this Gateway. Listeners define
          *     logical endpoints that are bound on this Gateway's addresses.
          *     At least one Listener MUST be specified.
          *
@@ -954,7 +1017,8 @@ export interface components {
          *
          *     In a future release the MinItems=1 requirement MAY be dropped.
          *
-         *     Support: Core */
+         *     Support: Core
+         */
         listeners: {
           /**
            * @description AllowedRoutes defines the types of routes that MAY be attached to a
@@ -988,7 +1052,8 @@ export interface components {
            *     }
            */
           allowedRoutes: {
-            /** @description Kinds specifies the groups and kinds of Routes that are allowed to bind
+            /**
+             * @description Kinds specifies the groups and kinds of Routes that are allowed to bind
              *     to this Gateway Listener. When unspecified or empty, the kinds of Routes
              *     selected are determined using the Listener protocol.
              *
@@ -998,7 +1063,8 @@ export interface components {
              *     MUST set the "ResolvedRefs" condition to False for this Listener with the
              *     "InvalidRouteKinds" reason.
              *
-             *     Support: Core */
+             *     Support: Core
+             */
             kinds?: {
               /**
                * @description Group is the group of the Route.
@@ -1032,35 +1098,44 @@ export interface components {
                * @enum {string}
                */
               from: "All" | "Selector" | "Same"
-              /** @description Selector must be specified when From is set to "Selector". In that case,
+              /**
+               * @description Selector must be specified when From is set to "Selector". In that case,
                *     only Routes in Namespaces matching this Selector will be selected by this
                *     Gateway. This field is ignored for other values of "From".
                *
-               *     Support: Core */
+               *     Support: Core
+               */
               selector?: {
                 /** @description matchExpressions is a list of label selector requirements. The requirements are ANDed. */
                 matchExpressions?: {
                   /** @description key is the label key that the selector applies to. */
                   key: string
-                  /** @description operator represents a key's relationship to a set of values.
-                   *     Valid operators are In, NotIn, Exists and DoesNotExist. */
+                  /**
+                   * @description operator represents a key's relationship to a set of values.
+                   *     Valid operators are In, NotIn, Exists and DoesNotExist.
+                   */
                   operator: string
-                  /** @description values is an array of string values. If the operator is In or NotIn,
+                  /**
+                   * @description values is an array of string values. If the operator is In or NotIn,
                    *     the values array must be non-empty. If the operator is Exists or DoesNotExist,
                    *     the values array must be empty. This array is replaced during a strategic
-                   *     merge patch. */
+                   *     merge patch.
+                   */
                   values?: string[]
                 }[]
-                /** @description matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
+                /**
+                 * @description matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
                  *     map is equivalent to an element of matchExpressions, whose key field is "key", the
-                 *     operator is "In", and the values array contains only "value". The requirements are ANDed. */
+                 *     operator is "In", and the values array contains only "value". The requirements are ANDed.
+                 */
                 matchLabels?: {
                   [key: string]: string
                 }
               }
             }
           }
-          /** @description Hostname specifies the virtual hostname to match for protocol types that
+          /**
+           * @description Hostname specifies the virtual hostname to match for protocol types that
            *     define this concept. When unspecified, all hostnames are matched. This
            *     field is ignored for protocols that don't require hostname based
            *     matching.
@@ -1106,12 +1181,15 @@ export interface components {
            *     as a suffix match. That means that a match for `*.example.com` would match
            *     both `test.example.com`, and `foo.test.example.com`, but not `example.com`.
            *
-           *     Support: Core */
+           *     Support: Core
+           */
           hostname?: string
-          /** @description Name is the name of the Listener. This name MUST be unique within a
+          /**
+           * @description Name is the name of the Listener. This name MUST be unique within a
            *     Gateway.
            *
-           *     Support: Core */
+           *     Support: Core
+           */
           name: string
           /**
            * Format: int32
@@ -1121,11 +1199,14 @@ export interface components {
            *     Support: Core
            */
           port: number
-          /** @description Protocol specifies the network protocol this listener expects to receive.
+          /**
+           * @description Protocol specifies the network protocol this listener expects to receive.
            *
-           *     Support: Core */
+           *     Support: Core
+           */
           protocol: string
-          /** @description TLS is the TLS configuration for the Listener. This field is required if
+          /**
+           * @description TLS is the TLS configuration for the Listener. This field is required if
            *     the Protocol field is "HTTPS" or "TLS". It is invalid to set this field
            *     if the Protocol field is "HTTP", "TCP", or "UDP".
            *
@@ -1135,9 +1216,11 @@ export interface components {
            *     The GatewayClass MUST use the longest matching SNI out of all
            *     available certificates for any TLS handshake.
            *
-           *     Support: Core */
+           *     Support: Core
+           */
           tls?: {
-            /** @description CertificateRefs contains a series of references to Kubernetes objects that
+            /**
+             * @description CertificateRefs contains a series of references to Kubernetes objects that
              *     contains TLS certificates and private keys. These certificates are used to
              *     establish a TLS handshake for requests that match the hostname of the
              *     associated listener.
@@ -1160,7 +1243,8 @@ export interface components {
              *
              *     Support: Core - A single reference to a Kubernetes Secret of type kubernetes.io/tls
              *
-             *     Support: Implementation-specific (More than one reference or other resource types) */
+             *     Support: Implementation-specific (More than one reference or other resource types)
+             */
             certificateRefs?: {
               /**
                * @description Group is the group of the referent. For example, "gateway.networking.k8s.io".
@@ -1175,7 +1259,8 @@ export interface components {
               kind: string
               /** @description Name is the name of the referent. */
               name: string
-              /** @description Namespace is the namespace of the referenced object. When unspecified, the local
+              /**
+               * @description Namespace is the namespace of the referenced object. When unspecified, the local
                *     namespace is inferred.
                *
                *     Note that when a namespace different than the local namespace is specified,
@@ -1183,7 +1268,8 @@ export interface components {
                *     namespace's owner to accept the reference. See the ReferenceGrant
                *     documentation for details.
                *
-               *     Support: Core */
+               *     Support: Core
+               */
               namespace?: string
             }[]
             /**
@@ -1204,7 +1290,8 @@ export interface components {
              * @enum {string}
              */
             mode: "Terminate" | "Passthrough"
-            /** @description Options are a list of key/value pairs to enable extended TLS
+            /**
+             * @description Options are a list of key/value pairs to enable extended TLS
              *     configuration for each implementation. For example, configuring the
              *     minimum TLS version or supported cipher suites.
              *
@@ -1213,7 +1300,8 @@ export interface components {
              *     domain-prefixed names, such as `example.com/my-custom-option`.
              *     Un-prefixed names are reserved for key names defined by Gateway API.
              *
-             *     Support: Implementation-specific */
+             *     Support: Implementation-specific
+             */
             options?: {
               [key: string]: string
             }
@@ -1242,7 +1330,8 @@ export interface components {
        *     }
        */
       status: {
-        /** @description Addresses lists the network addresses that have been bound to the
+        /**
+         * @description Addresses lists the network addresses that have been bound to the
          *     Gateway.
          *
          *     This list may differ from the addresses provided in the spec under some
@@ -1250,7 +1339,8 @@ export interface components {
          *
          *       * no addresses are specified, all addresses are dynamically assigned
          *       * a combination of specified and dynamic addresses are assigned
-         *       * a specified address was unusable (e.g. already in use) */
+         *       * a specified address was unusable (e.g. already in use)
+         */
         addresses?: (
           & {
             /**
@@ -1258,10 +1348,12 @@ export interface components {
              * @default IPAddress
              */
             type: string
-            /** @description Value of the address. The validity of the values will depend
+            /**
+             * @description Value of the address. The validity of the values will depend
              *     on the type and support by the controller.
              *
-             *     Examples: `1.2.3.4`, `128::1`, `my-ip-address`. */
+             *     Examples: `1.2.3.4`, `128::1`, `my-ip-address`.
+             */
             value: string
           }
           & ({
@@ -1309,8 +1401,10 @@ export interface components {
            *     This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
            */
           lastTransitionTime: string
-          /** @description message is a human readable message indicating details about the transition.
-           *     This may be an empty string. */
+          /**
+           * @description message is a human readable message indicating details about the transition.
+           *     This may be an empty string.
+           */
           message: string
           /**
            * Format: int64
@@ -1319,11 +1413,13 @@ export interface components {
            *     with respect to the current state of the instance.
            */
           observedGeneration?: number
-          /** @description reason contains a programmatic identifier indicating the reason for the condition's last transition.
+          /**
+           * @description reason contains a programmatic identifier indicating the reason for the condition's last transition.
            *     Producers of specific condition types may define expected values and meanings for this field,
            *     and whether the values are considered a guaranteed API.
            *     The value should be a CamelCase string.
-           *     This field may not be empty. */
+           *     This field may not be empty.
+           */
           reason: string
           /**
            * @description status of the condition, one of True, False, Unknown.
@@ -1364,8 +1460,10 @@ export interface components {
              *     This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
              */
             lastTransitionTime: string
-            /** @description message is a human readable message indicating details about the transition.
-             *     This may be an empty string. */
+            /**
+             * @description message is a human readable message indicating details about the transition.
+             *     This may be an empty string.
+             */
             message: string
             /**
              * Format: int64
@@ -1374,11 +1472,13 @@ export interface components {
              *     with respect to the current state of the instance.
              */
             observedGeneration?: number
-            /** @description reason contains a programmatic identifier indicating the reason for the condition's last transition.
+            /**
+             * @description reason contains a programmatic identifier indicating the reason for the condition's last transition.
              *     Producers of specific condition types may define expected values and meanings for this field,
              *     and whether the values are considered a guaranteed API.
              *     The value should be a CamelCase string.
-             *     This field may not be empty. */
+             *     This field may not be empty.
+             */
             reason: string
             /**
              * @description status of the condition, one of True, False, Unknown.
@@ -1390,7 +1490,8 @@ export interface components {
           }[]
           /** @description Name is the name of the Listener that this status corresponds to. */
           name: string
-          /** @description SupportedKinds is the list indicating the Kinds supported by this
+          /**
+           * @description SupportedKinds is the list indicating the Kinds supported by this
            *     listener. This MUST represent the kinds an implementation supports for
            *     that Listener configuration.
            *
@@ -1398,7 +1499,8 @@ export interface components {
            *     appear in this list and an implementation MUST set the "ResolvedRefs"
            *     condition to "False" with the "InvalidRouteKinds" reason. If both valid
            *     and invalid Route kinds are specified, the implementation MUST
-           *     reference the valid Route kinds that have been specified. */
+           *     reference the valid Route kinds that have been specified.
+           */
           supportedKinds: {
             /**
              * @description Group is the group of the Route.
@@ -1411,7 +1513,8 @@ export interface components {
         }[]
       }
     }
-    /** @description GatewayClass describes a class of Gateways available to the user for creating
+    /**
+     * @description GatewayClass describes a class of Gateways available to the user for creating
      *     Gateway resources.
      *
      *     It is recommended that this resource be used as a template for Gateways. This
@@ -1427,7 +1530,8 @@ export interface components {
      *     associated GatewayClass. This ensures that a GatewayClass associated with a
      *     Gateway is not deleted while in use.
      *
-     *     GatewayClass is a Cluster level resource. */
+     *     GatewayClass is a Cluster level resource.
+     */
     "io.k8s.networking.gateway.v1beta1.GatewayClass": {
       /** @description APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources */
       apiVersion?: string
@@ -1437,18 +1541,21 @@ export interface components {
       metadata?: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"]
       /** @description Spec defines the desired state of GatewayClass. */
       spec: {
-        /** @description ControllerName is the name of the controller that is managing Gateways of
+        /**
+         * @description ControllerName is the name of the controller that is managing Gateways of
          *     this class. The value of this field MUST be a domain prefixed path.
          *
          *     Example: "example.net/gateway-controller".
          *
          *     This field is not mutable and cannot be empty.
          *
-         *     Support: Core */
+         *     Support: Core
+         */
         controllerName: string
         /** @description Description helps describe a GatewayClass with more details. */
         description?: string
-        /** @description ParametersRef is a reference to a resource that contains the configuration
+        /**
+         * @description ParametersRef is a reference to a resource that contains the configuration
          *     parameters corresponding to the GatewayClass. This is optional if the
          *     controller does not require any additional configuration.
          *
@@ -1465,7 +1572,8 @@ export interface components {
          *     the merging behavior is implementation specific.
          *     It is generally recommended that GatewayClass provides defaults that can be overridden by a Gateway.
          *
-         *     Support: Implementation-specific */
+         *     Support: Implementation-specific
+         */
         parametersRef?: {
           /** @description Group is the group of the referent. */
           group: string
@@ -1473,9 +1581,11 @@ export interface components {
           kind: string
           /** @description Name is the name of the referent. */
           name: string
-          /** @description Namespace is the namespace of the referent.
+          /**
+           * @description Namespace is the namespace of the referent.
            *     This field is required when referring to a Namespace-scoped resource and
-           *     MUST be unset when referring to a Cluster-scoped resource. */
+           *     MUST be unset when referring to a Cluster-scoped resource.
+           */
           namespace?: string
         }
       }
@@ -1520,8 +1630,10 @@ export interface components {
            *     This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
            */
           lastTransitionTime: string
-          /** @description message is a human readable message indicating details about the transition.
-           *     This may be an empty string. */
+          /**
+           * @description message is a human readable message indicating details about the transition.
+           *     This may be an empty string.
+           */
           message: string
           /**
            * Format: int64
@@ -1530,11 +1642,13 @@ export interface components {
            *     with respect to the current state of the instance.
            */
           observedGeneration?: number
-          /** @description reason contains a programmatic identifier indicating the reason for the condition's last transition.
+          /**
+           * @description reason contains a programmatic identifier indicating the reason for the condition's last transition.
            *     Producers of specific condition types may define expected values and meanings for this field,
            *     and whether the values are considered a guaranteed API.
            *     The value should be a CamelCase string.
-           *     This field may not be empty. */
+           *     This field may not be empty.
+           */
           reason: string
           /**
            * @description status of the condition, one of True, False, Unknown.
@@ -1568,10 +1682,12 @@ export interface components {
       /** @description Standard list metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds */
       metadata?: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"]
     }
-    /** @description HTTPRoute provides a way to route HTTP requests. This includes the capability
+    /**
+     * @description HTTPRoute provides a way to route HTTP requests. This includes the capability
      *     to match requests by hostname, path, header, or query param. Filters can be
      *     used to specify additional processing steps. Backends specify where matching
-     *     requests should be routed. */
+     *     requests should be routed.
+     */
     "io.k8s.networking.gateway.v1beta1.HTTPRoute": {
       /** @description APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources */
       apiVersion?: string
@@ -1581,7 +1697,8 @@ export interface components {
       metadata?: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"]
       /** @description Spec defines the desired state of HTTPRoute. */
       spec: {
-        /** @description Hostnames defines a set of hostnames that should match against the HTTP Host
+        /**
+         * @description Hostnames defines a set of hostnames that should match against the HTTP Host
          *     header to select a HTTPRoute used to process the request. Implementations
          *     MUST ignore any port value specified in the HTTP Host header while
          *     performing a match and (absent of any applicable header modification
@@ -1633,9 +1750,11 @@ export interface components {
          *     If ties exist across multiple Routes, the matching precedence rules for
          *     HTTPRouteMatches takes over.
          *
-         *     Support: Core */
+         *     Support: Core
+         */
         hostnames?: string[]
-        /** @description ParentRefs references the resources (usually Gateways) that a Route wants
+        /**
+         * @description ParentRefs references the resources (usually Gateways) that a Route wants
          *     to be attached to. Note that the referenced parent resource needs to
          *     allow this for the attachment to be complete. For Gateways, that means
          *     the Gateway needs to allow attachment from Routes of this kind and
@@ -1684,7 +1803,8 @@ export interface components {
          *     rules. Cross-namespace references are only valid if they are explicitly
          *     allowed by something in the namespace they are referring to. For example,
          *     Gateway has the AllowedRoutes field, and ReferenceGrant provides a
-         *     generic way to enable other kinds of cross-namespace reference. */
+         *     generic way to enable other kinds of cross-namespace reference.
+         */
         parentRefs?: {
           /**
            * @description Group is the group of the referent.
@@ -1708,11 +1828,14 @@ export interface components {
            * @default Gateway
            */
           kind: string
-          /** @description Name is the name of the referent.
+          /**
+           * @description Name is the name of the referent.
            *
-           *     Support: Core */
+           *     Support: Core
+           */
           name: string
-          /** @description Namespace is the namespace of the referent. When unspecified, this refers
+          /**
+           * @description Namespace is the namespace of the referent. When unspecified, this refers
            *     to the local namespace of the Route.
            *
            *     Note that there are specific rules for ParentRefs which cross namespace
@@ -1721,7 +1844,8 @@ export interface components {
            *     Gateway has the AllowedRoutes field, and ReferenceGrant provides a
            *     generic way to enable any other kind of cross-namespace reference.
            *
-           *     Support: Core */
+           *     Support: Core
+           */
           namespace?: string
           /**
            * Format: int32
@@ -1751,7 +1875,8 @@ export interface components {
            *     Support: Extended
            */
           port?: number
-          /** @description SectionName is the name of a section within the target resource. In the
+          /**
+           * @description SectionName is the name of a section within the target resource. In the
            *     following resources, SectionName is interpreted as the following:
            *
            *     * Gateway: Listener name. When both Port (experimental) and SectionName
@@ -1774,7 +1899,8 @@ export interface components {
            *     attached. If no Gateway listeners accept attachment from this Route, the
            *     Route MUST be considered detached from the Gateway.
            *
-           *     Support: Core */
+           *     Support: Core
+           */
           sectionName?: string
         }[]
         /**
@@ -1793,7 +1919,8 @@ export interface components {
          *     ]
          */
         rules: {
-          /** @description BackendRefs defines the backend(s) where matching requests should be
+          /**
+           * @description BackendRefs defines the backend(s) where matching requests should be
            *     sent.
            *
            *     Failure behavior here depends on how many BackendRefs are specified and
@@ -1827,37 +1954,47 @@ export interface components {
            *
            *     Support: Implementation-specific for any other resource
            *
-           *     Support for weight: Core */
+           *     Support for weight: Core
+           */
           backendRefs?: {
-            /** @description Filters defined at this level should be executed if and only if the
+            /**
+             * @description Filters defined at this level should be executed if and only if the
              *     request is being forwarded to the backend defined here.
              *
              *     Support: Implementation-specific (For broader support of filters, use the
-             *     Filters field in HTTPRouteRule.) */
+             *     Filters field in HTTPRouteRule.)
+             */
             filters?: {
-              /** @description ExtensionRef is an optional, implementation-specific extension to the
+              /**
+               * @description ExtensionRef is an optional, implementation-specific extension to the
                *     "filter" behavior.  For example, resource "myroutefilter" in group
                *     "networking.example.net"). ExtensionRef MUST NOT be used for core and
                *     extended filters.
                *
                *     This filter can be used multiple times within the same rule.
                *
-               *     Support: Implementation-specific */
+               *     Support: Implementation-specific
+               */
               extensionRef?: {
-                /** @description Group is the group of the referent. For example, "gateway.networking.k8s.io".
-                 *     When unspecified or empty string, core API group is inferred. */
+                /**
+                 * @description Group is the group of the referent. For example, "gateway.networking.k8s.io".
+                 *     When unspecified or empty string, core API group is inferred.
+                 */
                 group: string
                 /** @description Kind is kind of the referent. For example "HTTPRoute" or "Service". */
                 kind: string
                 /** @description Name is the name of the referent. */
                 name: string
               }
-              /** @description RequestHeaderModifier defines a schema for a filter that modifies request
+              /**
+               * @description RequestHeaderModifier defines a schema for a filter that modifies request
                *     headers.
                *
-               *     Support: Core */
+               *     Support: Core
+               */
               requestHeaderModifier?: {
-                /** @description Add adds the given header(s) (name, value) to the request
+                /**
+                 * @description Add adds the given header(s) (name, value) to the request
                  *     before the action. It appends to any existing values associated
                  *     with the header name.
                  *
@@ -1872,21 +2009,25 @@ export interface components {
                  *
                  *     Output:
                  *       GET /foo HTTP/1.1
-                 *       my-header: foo,bar,baz */
+                 *       my-header: foo,bar,baz
+                 */
                 add?: {
-                  /** @description Name is the name of the HTTP Header to be matched. Name matching MUST be
+                  /**
+                   * @description Name is the name of the HTTP Header to be matched. Name matching MUST be
                    *     case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
                    *
                    *     If multiple entries specify equivalent header names, the first entry with
                    *     an equivalent name MUST be considered for a match. Subsequent entries
                    *     with an equivalent header name MUST be ignored. Due to the
                    *     case-insensitivity of header names, "foo" and "Foo" are considered
-                   *     equivalent. */
+                   *     equivalent.
+                   */
                   name: string
                   /** @description Value is the value of HTTP Header to be matched. */
                   value: string
                 }[]
-                /** @description Remove the given header(s) from the HTTP request before the action. The
+                /**
+                 * @description Remove the given header(s) from the HTTP request before the action. The
                  *     value of Remove is a list of HTTP header names. Note that the header
                  *     names are case-insensitive (see
                  *     https://datatracker.ietf.org/doc/html/rfc2616#section-4.2).
@@ -1902,9 +2043,11 @@ export interface components {
                  *
                  *     Output:
                  *       GET /foo HTTP/1.1
-                 *       my-header2: bar */
+                 *       my-header2: bar
+                 */
                 remove?: string[]
-                /** @description Set overwrites the request with the given header (name, value)
+                /**
+                 * @description Set overwrites the request with the given header (name, value)
                  *     before the action.
                  *
                  *     Input:
@@ -1918,22 +2061,26 @@ export interface components {
                  *
                  *     Output:
                  *       GET /foo HTTP/1.1
-                 *       my-header: bar */
+                 *       my-header: bar
+                 */
                 set?: {
-                  /** @description Name is the name of the HTTP Header to be matched. Name matching MUST be
+                  /**
+                   * @description Name is the name of the HTTP Header to be matched. Name matching MUST be
                    *     case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
                    *
                    *     If multiple entries specify equivalent header names, the first entry with
                    *     an equivalent name MUST be considered for a match. Subsequent entries
                    *     with an equivalent header name MUST be ignored. Due to the
                    *     case-insensitivity of header names, "foo" and "Foo" are considered
-                   *     equivalent. */
+                   *     equivalent.
+                   */
                   name: string
                   /** @description Value is the value of HTTP Header to be matched. */
                   value: string
                 }[]
               }
-              /** @description RequestMirror defines a schema for a filter that mirrors requests.
+              /**
+               * @description RequestMirror defines a schema for a filter that mirrors requests.
                *     Requests are sent to the specified destination, but responses from
                *     that destination are ignored.
                *
@@ -1941,9 +2088,11 @@ export interface components {
                *     not all implementations will be able to support mirroring to multiple
                *     backends.
                *
-               *     Support: Extended */
+               *     Support: Extended
+               */
               requestMirror?: {
-                /** @description BackendRef references a resource where mirrored requests are sent.
+                /**
+                 * @description BackendRef references a resource where mirrored requests are sent.
                  *
                  *     Mirrored requests must be sent only to a single destination endpoint
                  *     within this BackendRef, irrespective of how many endpoints are present
@@ -1965,7 +2114,8 @@ export interface components {
                  *
                  *     Support: Extended for Kubernetes Service
                  *
-                 *     Support: Implementation-specific for any other resource */
+                 *     Support: Implementation-specific for any other resource
+                 */
                 backendRef: {
                   /**
                    * @description Group is the group of the referent. For example, "gateway.networking.k8s.io".
@@ -1993,7 +2143,8 @@ export interface components {
                   kind: string
                   /** @description Name is the name of the referent. */
                   name: string
-                  /** @description Namespace is the namespace of the backend. When unspecified, the local
+                  /**
+                   * @description Namespace is the namespace of the backend. When unspecified, the local
                    *     namespace is inferred.
                    *
                    *     Note that when a namespace different than the local namespace is specified,
@@ -2001,7 +2152,8 @@ export interface components {
                    *     namespace's owner to accept the reference. See the ReferenceGrant
                    *     documentation for details.
                    *
-                   *     Support: Core */
+                   *     Support: Core
+                   */
                   namespace?: string
                   /**
                    * Format: int32
@@ -2013,11 +2165,13 @@ export interface components {
                    */
                   port?: number
                 }
-                /** @description Fraction represents the fraction of requests that should be
+                /**
+                 * @description Fraction represents the fraction of requests that should be
                  *     mirrored to BackendRef.
                  *
                  *     Only one of Fraction or Percent may be specified. If neither field
-                 *     is specified, 100% of requests will be mirrored. */
+                 *     is specified, 100% of requests will be mirrored.
+                 */
                 fraction?: {
                   /**
                    * Format: int32
@@ -2038,27 +2192,36 @@ export interface components {
                  */
                 percent?: number
               }
-              /** @description RequestRedirect defines a schema for a filter that responds to the
+              /**
+               * @description RequestRedirect defines a schema for a filter that responds to the
                *     request with an HTTP redirection.
                *
-               *     Support: Core */
+               *     Support: Core
+               */
               requestRedirect?: {
-                /** @description Hostname is the hostname to be used in the value of the `Location`
+                /**
+                 * @description Hostname is the hostname to be used in the value of the `Location`
                  *     header in the response.
                  *     When empty, the hostname in the `Host` header of the request is used.
                  *
-                 *     Support: Core */
+                 *     Support: Core
+                 */
                 hostname?: string
-                /** @description Path defines parameters used to modify the path of the incoming request.
+                /**
+                 * @description Path defines parameters used to modify the path of the incoming request.
                  *     The modified path is then used to construct the `Location` header. When
                  *     empty, the request path is used as-is.
                  *
-                 *     Support: Extended */
+                 *     Support: Extended
+                 */
                 path?: {
-                  /** @description ReplaceFullPath specifies the value with which to replace the full path
-                   *     of a request during a rewrite or redirect. */
+                  /**
+                   * @description ReplaceFullPath specifies the value with which to replace the full path
+                   *     of a request during a rewrite or redirect.
+                   */
                   replaceFullPath?: string
-                  /** @description ReplacePrefixMatch specifies the value with which to replace the prefix
+                  /**
+                   * @description ReplacePrefixMatch specifies the value with which to replace the prefix
                    *     match of a request during a rewrite or redirect. For example, a request
                    *     to "/foo/bar" with a prefix match of "/foo" and a ReplacePrefixMatch
                    *     of "/xyz" would be modified to "/xyz/bar".
@@ -2073,7 +2236,8 @@ export interface components {
                    *     Using any other HTTPRouteMatch type on the same HTTPRouteRule will result in
                    *     the implementation setting the Accepted Condition for the Route to `status: False`.
                    *
-                   *     Request Path | Prefix Match | Replace Prefix | Modified Path */
+                   *     Request Path | Prefix Match | Replace Prefix | Modified Path
+                   */
                   replacePrefixMatch?: string
                   /**
                    * @description Type defines the type of path modifier. Additional types may be
@@ -2149,12 +2313,15 @@ export interface components {
                  */
                 statusCode: 301 | 302
               }
-              /** @description ResponseHeaderModifier defines a schema for a filter that modifies response
+              /**
+               * @description ResponseHeaderModifier defines a schema for a filter that modifies response
                *     headers.
                *
-               *     Support: Extended */
+               *     Support: Extended
+               */
               responseHeaderModifier?: {
-                /** @description Add adds the given header(s) (name, value) to the request
+                /**
+                 * @description Add adds the given header(s) (name, value) to the request
                  *     before the action. It appends to any existing values associated
                  *     with the header name.
                  *
@@ -2169,21 +2336,25 @@ export interface components {
                  *
                  *     Output:
                  *       GET /foo HTTP/1.1
-                 *       my-header: foo,bar,baz */
+                 *       my-header: foo,bar,baz
+                 */
                 add?: {
-                  /** @description Name is the name of the HTTP Header to be matched. Name matching MUST be
+                  /**
+                   * @description Name is the name of the HTTP Header to be matched. Name matching MUST be
                    *     case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
                    *
                    *     If multiple entries specify equivalent header names, the first entry with
                    *     an equivalent name MUST be considered for a match. Subsequent entries
                    *     with an equivalent header name MUST be ignored. Due to the
                    *     case-insensitivity of header names, "foo" and "Foo" are considered
-                   *     equivalent. */
+                   *     equivalent.
+                   */
                   name: string
                   /** @description Value is the value of HTTP Header to be matched. */
                   value: string
                 }[]
-                /** @description Remove the given header(s) from the HTTP request before the action. The
+                /**
+                 * @description Remove the given header(s) from the HTTP request before the action. The
                  *     value of Remove is a list of HTTP header names. Note that the header
                  *     names are case-insensitive (see
                  *     https://datatracker.ietf.org/doc/html/rfc2616#section-4.2).
@@ -2199,9 +2370,11 @@ export interface components {
                  *
                  *     Output:
                  *       GET /foo HTTP/1.1
-                 *       my-header2: bar */
+                 *       my-header2: bar
+                 */
                 remove?: string[]
-                /** @description Set overwrites the request with the given header (name, value)
+                /**
+                 * @description Set overwrites the request with the given header (name, value)
                  *     before the action.
                  *
                  *     Input:
@@ -2215,16 +2388,19 @@ export interface components {
                  *
                  *     Output:
                  *       GET /foo HTTP/1.1
-                 *       my-header: bar */
+                 *       my-header: bar
+                 */
                 set?: {
-                  /** @description Name is the name of the HTTP Header to be matched. Name matching MUST be
+                  /**
+                   * @description Name is the name of the HTTP Header to be matched. Name matching MUST be
                    *     case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
                    *
                    *     If multiple entries specify equivalent header names, the first entry with
                    *     an equivalent name MUST be considered for a match. Subsequent entries
                    *     with an equivalent header name MUST be ignored. Due to the
                    *     case-insensitivity of header names, "foo" and "Foo" are considered
-                   *     equivalent. */
+                   *     equivalent.
+                   */
                   name: string
                   /** @description Value is the value of HTTP Header to be matched. */
                   value: string
@@ -2272,23 +2448,32 @@ export interface components {
                 | "RequestRedirect"
                 | "URLRewrite"
                 | "ExtensionRef"
-              /** @description URLRewrite defines a schema for a filter that modifies a request during forwarding.
+              /**
+               * @description URLRewrite defines a schema for a filter that modifies a request during forwarding.
                *
-               *     Support: Extended */
+               *     Support: Extended
+               */
               urlRewrite?: {
-                /** @description Hostname is the value to be used to replace the Host header value during
+                /**
+                 * @description Hostname is the value to be used to replace the Host header value during
                  *     forwarding.
                  *
-                 *     Support: Extended */
+                 *     Support: Extended
+                 */
                 hostname?: string
-                /** @description Path defines a path rewrite.
+                /**
+                 * @description Path defines a path rewrite.
                  *
-                 *     Support: Extended */
+                 *     Support: Extended
+                 */
                 path?: {
-                  /** @description ReplaceFullPath specifies the value with which to replace the full path
-                   *     of a request during a rewrite or redirect. */
+                  /**
+                   * @description ReplaceFullPath specifies the value with which to replace the full path
+                   *     of a request during a rewrite or redirect.
+                   */
                   replaceFullPath?: string
-                  /** @description ReplacePrefixMatch specifies the value with which to replace the prefix
+                  /**
+                   * @description ReplacePrefixMatch specifies the value with which to replace the prefix
                    *     match of a request during a rewrite or redirect. For example, a request
                    *     to "/foo/bar" with a prefix match of "/foo" and a ReplacePrefixMatch
                    *     of "/xyz" would be modified to "/xyz/bar".
@@ -2303,7 +2488,8 @@ export interface components {
                    *     Using any other HTTPRouteMatch type on the same HTTPRouteRule will result in
                    *     the implementation setting the Accepted Condition for the Route to `status: False`.
                    *
-                   *     Request Path | Prefix Match | Replace Prefix | Modified Path */
+                   *     Request Path | Prefix Match | Replace Prefix | Modified Path
+                   */
                   replacePrefixMatch?: string
                   /**
                    * @description Type defines the type of path modifier. Additional types may be
@@ -2347,7 +2533,8 @@ export interface components {
             kind: string
             /** @description Name is the name of the referent. */
             name: string
-            /** @description Namespace is the namespace of the backend. When unspecified, the local
+            /**
+             * @description Namespace is the namespace of the backend. When unspecified, the local
              *     namespace is inferred.
              *
              *     Note that when a namespace different than the local namespace is specified,
@@ -2355,7 +2542,8 @@ export interface components {
              *     namespace's owner to accept the reference. See the ReferenceGrant
              *     documentation for details.
              *
-             *     Support: Core */
+             *     Support: Core
+             */
             namespace?: string
             /**
              * Format: int32
@@ -2385,7 +2573,8 @@ export interface components {
              */
             weight: number
           }[]
-          /** @description Filters define the filters that are applied to requests that match
+          /**
+           * @description Filters define the filters that are applied to requests that match
            *     this rule.
            *
            *     Wherever possible, implementations SHOULD implement filters in the order
@@ -2420,31 +2609,39 @@ export interface components {
            *     `False`, implementations may use the `IncompatibleFilters` reason to specify
            *     this configuration error.
            *
-           *     Support: Core */
+           *     Support: Core
+           */
           filters?: {
-            /** @description ExtensionRef is an optional, implementation-specific extension to the
+            /**
+             * @description ExtensionRef is an optional, implementation-specific extension to the
              *     "filter" behavior.  For example, resource "myroutefilter" in group
              *     "networking.example.net"). ExtensionRef MUST NOT be used for core and
              *     extended filters.
              *
              *     This filter can be used multiple times within the same rule.
              *
-             *     Support: Implementation-specific */
+             *     Support: Implementation-specific
+             */
             extensionRef?: {
-              /** @description Group is the group of the referent. For example, "gateway.networking.k8s.io".
-               *     When unspecified or empty string, core API group is inferred. */
+              /**
+               * @description Group is the group of the referent. For example, "gateway.networking.k8s.io".
+               *     When unspecified or empty string, core API group is inferred.
+               */
               group: string
               /** @description Kind is kind of the referent. For example "HTTPRoute" or "Service". */
               kind: string
               /** @description Name is the name of the referent. */
               name: string
             }
-            /** @description RequestHeaderModifier defines a schema for a filter that modifies request
+            /**
+             * @description RequestHeaderModifier defines a schema for a filter that modifies request
              *     headers.
              *
-             *     Support: Core */
+             *     Support: Core
+             */
             requestHeaderModifier?: {
-              /** @description Add adds the given header(s) (name, value) to the request
+              /**
+               * @description Add adds the given header(s) (name, value) to the request
                *     before the action. It appends to any existing values associated
                *     with the header name.
                *
@@ -2459,21 +2656,25 @@ export interface components {
                *
                *     Output:
                *       GET /foo HTTP/1.1
-               *       my-header: foo,bar,baz */
+               *       my-header: foo,bar,baz
+               */
               add?: {
-                /** @description Name is the name of the HTTP Header to be matched. Name matching MUST be
+                /**
+                 * @description Name is the name of the HTTP Header to be matched. Name matching MUST be
                  *     case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
                  *
                  *     If multiple entries specify equivalent header names, the first entry with
                  *     an equivalent name MUST be considered for a match. Subsequent entries
                  *     with an equivalent header name MUST be ignored. Due to the
                  *     case-insensitivity of header names, "foo" and "Foo" are considered
-                 *     equivalent. */
+                 *     equivalent.
+                 */
                 name: string
                 /** @description Value is the value of HTTP Header to be matched. */
                 value: string
               }[]
-              /** @description Remove the given header(s) from the HTTP request before the action. The
+              /**
+               * @description Remove the given header(s) from the HTTP request before the action. The
                *     value of Remove is a list of HTTP header names. Note that the header
                *     names are case-insensitive (see
                *     https://datatracker.ietf.org/doc/html/rfc2616#section-4.2).
@@ -2489,9 +2690,11 @@ export interface components {
                *
                *     Output:
                *       GET /foo HTTP/1.1
-               *       my-header2: bar */
+               *       my-header2: bar
+               */
               remove?: string[]
-              /** @description Set overwrites the request with the given header (name, value)
+              /**
+               * @description Set overwrites the request with the given header (name, value)
                *     before the action.
                *
                *     Input:
@@ -2505,22 +2708,26 @@ export interface components {
                *
                *     Output:
                *       GET /foo HTTP/1.1
-               *       my-header: bar */
+               *       my-header: bar
+               */
               set?: {
-                /** @description Name is the name of the HTTP Header to be matched. Name matching MUST be
+                /**
+                 * @description Name is the name of the HTTP Header to be matched. Name matching MUST be
                  *     case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
                  *
                  *     If multiple entries specify equivalent header names, the first entry with
                  *     an equivalent name MUST be considered for a match. Subsequent entries
                  *     with an equivalent header name MUST be ignored. Due to the
                  *     case-insensitivity of header names, "foo" and "Foo" are considered
-                 *     equivalent. */
+                 *     equivalent.
+                 */
                 name: string
                 /** @description Value is the value of HTTP Header to be matched. */
                 value: string
               }[]
             }
-            /** @description RequestMirror defines a schema for a filter that mirrors requests.
+            /**
+             * @description RequestMirror defines a schema for a filter that mirrors requests.
              *     Requests are sent to the specified destination, but responses from
              *     that destination are ignored.
              *
@@ -2528,9 +2735,11 @@ export interface components {
              *     not all implementations will be able to support mirroring to multiple
              *     backends.
              *
-             *     Support: Extended */
+             *     Support: Extended
+             */
             requestMirror?: {
-              /** @description BackendRef references a resource where mirrored requests are sent.
+              /**
+               * @description BackendRef references a resource where mirrored requests are sent.
                *
                *     Mirrored requests must be sent only to a single destination endpoint
                *     within this BackendRef, irrespective of how many endpoints are present
@@ -2552,7 +2761,8 @@ export interface components {
                *
                *     Support: Extended for Kubernetes Service
                *
-               *     Support: Implementation-specific for any other resource */
+               *     Support: Implementation-specific for any other resource
+               */
               backendRef: {
                 /**
                  * @description Group is the group of the referent. For example, "gateway.networking.k8s.io".
@@ -2580,7 +2790,8 @@ export interface components {
                 kind: string
                 /** @description Name is the name of the referent. */
                 name: string
-                /** @description Namespace is the namespace of the backend. When unspecified, the local
+                /**
+                 * @description Namespace is the namespace of the backend. When unspecified, the local
                  *     namespace is inferred.
                  *
                  *     Note that when a namespace different than the local namespace is specified,
@@ -2588,7 +2799,8 @@ export interface components {
                  *     namespace's owner to accept the reference. See the ReferenceGrant
                  *     documentation for details.
                  *
-                 *     Support: Core */
+                 *     Support: Core
+                 */
                 namespace?: string
                 /**
                  * Format: int32
@@ -2600,11 +2812,13 @@ export interface components {
                  */
                 port?: number
               }
-              /** @description Fraction represents the fraction of requests that should be
+              /**
+               * @description Fraction represents the fraction of requests that should be
                *     mirrored to BackendRef.
                *
                *     Only one of Fraction or Percent may be specified. If neither field
-               *     is specified, 100% of requests will be mirrored. */
+               *     is specified, 100% of requests will be mirrored.
+               */
               fraction?: {
                 /**
                  * Format: int32
@@ -2625,27 +2839,36 @@ export interface components {
                */
               percent?: number
             }
-            /** @description RequestRedirect defines a schema for a filter that responds to the
+            /**
+             * @description RequestRedirect defines a schema for a filter that responds to the
              *     request with an HTTP redirection.
              *
-             *     Support: Core */
+             *     Support: Core
+             */
             requestRedirect?: {
-              /** @description Hostname is the hostname to be used in the value of the `Location`
+              /**
+               * @description Hostname is the hostname to be used in the value of the `Location`
                *     header in the response.
                *     When empty, the hostname in the `Host` header of the request is used.
                *
-               *     Support: Core */
+               *     Support: Core
+               */
               hostname?: string
-              /** @description Path defines parameters used to modify the path of the incoming request.
+              /**
+               * @description Path defines parameters used to modify the path of the incoming request.
                *     The modified path is then used to construct the `Location` header. When
                *     empty, the request path is used as-is.
                *
-               *     Support: Extended */
+               *     Support: Extended
+               */
               path?: {
-                /** @description ReplaceFullPath specifies the value with which to replace the full path
-                 *     of a request during a rewrite or redirect. */
+                /**
+                 * @description ReplaceFullPath specifies the value with which to replace the full path
+                 *     of a request during a rewrite or redirect.
+                 */
                 replaceFullPath?: string
-                /** @description ReplacePrefixMatch specifies the value with which to replace the prefix
+                /**
+                 * @description ReplacePrefixMatch specifies the value with which to replace the prefix
                  *     match of a request during a rewrite or redirect. For example, a request
                  *     to "/foo/bar" with a prefix match of "/foo" and a ReplacePrefixMatch
                  *     of "/xyz" would be modified to "/xyz/bar".
@@ -2660,7 +2883,8 @@ export interface components {
                  *     Using any other HTTPRouteMatch type on the same HTTPRouteRule will result in
                  *     the implementation setting the Accepted Condition for the Route to `status: False`.
                  *
-                 *     Request Path | Prefix Match | Replace Prefix | Modified Path */
+                 *     Request Path | Prefix Match | Replace Prefix | Modified Path
+                 */
                 replacePrefixMatch?: string
                 /**
                  * @description Type defines the type of path modifier. Additional types may be
@@ -2736,12 +2960,15 @@ export interface components {
                */
               statusCode: 301 | 302
             }
-            /** @description ResponseHeaderModifier defines a schema for a filter that modifies response
+            /**
+             * @description ResponseHeaderModifier defines a schema for a filter that modifies response
              *     headers.
              *
-             *     Support: Extended */
+             *     Support: Extended
+             */
             responseHeaderModifier?: {
-              /** @description Add adds the given header(s) (name, value) to the request
+              /**
+               * @description Add adds the given header(s) (name, value) to the request
                *     before the action. It appends to any existing values associated
                *     with the header name.
                *
@@ -2756,21 +2983,25 @@ export interface components {
                *
                *     Output:
                *       GET /foo HTTP/1.1
-               *       my-header: foo,bar,baz */
+               *       my-header: foo,bar,baz
+               */
               add?: {
-                /** @description Name is the name of the HTTP Header to be matched. Name matching MUST be
+                /**
+                 * @description Name is the name of the HTTP Header to be matched. Name matching MUST be
                  *     case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
                  *
                  *     If multiple entries specify equivalent header names, the first entry with
                  *     an equivalent name MUST be considered for a match. Subsequent entries
                  *     with an equivalent header name MUST be ignored. Due to the
                  *     case-insensitivity of header names, "foo" and "Foo" are considered
-                 *     equivalent. */
+                 *     equivalent.
+                 */
                 name: string
                 /** @description Value is the value of HTTP Header to be matched. */
                 value: string
               }[]
-              /** @description Remove the given header(s) from the HTTP request before the action. The
+              /**
+               * @description Remove the given header(s) from the HTTP request before the action. The
                *     value of Remove is a list of HTTP header names. Note that the header
                *     names are case-insensitive (see
                *     https://datatracker.ietf.org/doc/html/rfc2616#section-4.2).
@@ -2786,9 +3017,11 @@ export interface components {
                *
                *     Output:
                *       GET /foo HTTP/1.1
-               *       my-header2: bar */
+               *       my-header2: bar
+               */
               remove?: string[]
-              /** @description Set overwrites the request with the given header (name, value)
+              /**
+               * @description Set overwrites the request with the given header (name, value)
                *     before the action.
                *
                *     Input:
@@ -2802,16 +3035,19 @@ export interface components {
                *
                *     Output:
                *       GET /foo HTTP/1.1
-               *       my-header: bar */
+               *       my-header: bar
+               */
               set?: {
-                /** @description Name is the name of the HTTP Header to be matched. Name matching MUST be
+                /**
+                 * @description Name is the name of the HTTP Header to be matched. Name matching MUST be
                  *     case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
                  *
                  *     If multiple entries specify equivalent header names, the first entry with
                  *     an equivalent name MUST be considered for a match. Subsequent entries
                  *     with an equivalent header name MUST be ignored. Due to the
                  *     case-insensitivity of header names, "foo" and "Foo" are considered
-                 *     equivalent. */
+                 *     equivalent.
+                 */
                 name: string
                 /** @description Value is the value of HTTP Header to be matched. */
                 value: string
@@ -2859,23 +3095,32 @@ export interface components {
               | "RequestRedirect"
               | "URLRewrite"
               | "ExtensionRef"
-            /** @description URLRewrite defines a schema for a filter that modifies a request during forwarding.
+            /**
+             * @description URLRewrite defines a schema for a filter that modifies a request during forwarding.
              *
-             *     Support: Extended */
+             *     Support: Extended
+             */
             urlRewrite?: {
-              /** @description Hostname is the value to be used to replace the Host header value during
+              /**
+               * @description Hostname is the value to be used to replace the Host header value during
                *     forwarding.
                *
-               *     Support: Extended */
+               *     Support: Extended
+               */
               hostname?: string
-              /** @description Path defines a path rewrite.
+              /**
+               * @description Path defines a path rewrite.
                *
-               *     Support: Extended */
+               *     Support: Extended
+               */
               path?: {
-                /** @description ReplaceFullPath specifies the value with which to replace the full path
-                 *     of a request during a rewrite or redirect. */
+                /**
+                 * @description ReplaceFullPath specifies the value with which to replace the full path
+                 *     of a request during a rewrite or redirect.
+                 */
                 replaceFullPath?: string
-                /** @description ReplacePrefixMatch specifies the value with which to replace the prefix
+                /**
+                 * @description ReplacePrefixMatch specifies the value with which to replace the prefix
                  *     match of a request during a rewrite or redirect. For example, a request
                  *     to "/foo/bar" with a prefix match of "/foo" and a ReplacePrefixMatch
                  *     of "/xyz" would be modified to "/xyz/bar".
@@ -2890,7 +3135,8 @@ export interface components {
                  *     Using any other HTTPRouteMatch type on the same HTTPRouteRule will result in
                  *     the implementation setting the Accepted Condition for the Route to `status: False`.
                  *
-                 *     Request Path | Prefix Match | Replace Prefix | Modified Path */
+                 *     Request Path | Prefix Match | Replace Prefix | Modified Path
+                 */
                 replacePrefixMatch?: string
                 /**
                  * @description Type defines the type of path modifier. Additional types may be
@@ -2975,11 +3221,14 @@ export interface components {
            *     ]
            */
           matches: {
-            /** @description Headers specifies HTTP request header matchers. Multiple match values are
+            /**
+             * @description Headers specifies HTTP request header matchers. Multiple match values are
              *     ANDed together, meaning, a request must match all the specified headers
-             *     to select the route. */
+             *     to select the route.
+             */
             headers?: {
-              /** @description Name is the name of the HTTP Header to be matched. Name matching MUST be
+              /**
+               * @description Name is the name of the HTTP Header to be matched. Name matching MUST be
                *     case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
                *
                *     If multiple entries specify equivalent header names, only the first
@@ -2992,7 +3241,8 @@ export interface components {
                *     implementation-specific behavior as to how this is represented.
                *     Generally, proxies should follow the guidance from the RFC:
                *     https://www.rfc-editor.org/rfc/rfc7230.html#section-3.2.2 regarding
-               *     processing a repeated header, with special handling for "Set-Cookie". */
+               *     processing a repeated header, with special handling for "Set-Cookie".
+               */
               name: string
               /**
                * @description Type specifies how to match against the value of the header.
@@ -3046,13 +3296,16 @@ export interface components {
                */
               value: string
             }
-            /** @description QueryParams specifies HTTP query parameter matchers. Multiple match
+            /**
+             * @description QueryParams specifies HTTP query parameter matchers. Multiple match
              *     values are ANDed together, meaning, a request must match all the
              *     specified query parameters to select the route.
              *
-             *     Support: Extended */
+             *     Support: Extended
+             */
             queryParams?: {
-              /** @description Name is the name of the HTTP query param to be matched. This must be an
+              /**
+               * @description Name is the name of the HTTP query param to be matched. This must be an
                *     exact string match. (See
                *     https://tools.ietf.org/html/rfc7230#section-2.7.3).
                *
@@ -3068,7 +3321,8 @@ export interface components {
                *     the Gateway API.
                *
                *     Users SHOULD NOT route traffic based on repeated query params to guard
-               *     themselves against potential differences in the implementations. */
+               *     themselves against potential differences in the implementations.
+               */
               name: string
               /**
                * @description Type specifies how to match against the value of the query parameter.
@@ -3089,11 +3343,14 @@ export interface components {
               value: string
             }[]
           }[]
-          /** @description Timeouts defines the timeouts that can be configured for an HTTP request.
+          /**
+           * @description Timeouts defines the timeouts that can be configured for an HTTP request.
            *
-           *     Support: Extended */
+           *     Support: Extended
+           */
           timeouts?: {
-            /** @description BackendRequest specifies a timeout for an individual request from the gateway
+            /**
+             * @description BackendRequest specifies a timeout for an individual request from the gateway
              *     to a backend. This covers the time from when the request first starts being
              *     sent from the gateway to when the full response has been received from the backend.
              *
@@ -3111,9 +3368,11 @@ export interface components {
              *     when specified, the value of BackendRequest must be no more than the value of the
              *     Request timeout (since the Request timeout encompasses the BackendRequest timeout).
              *
-             *     Support: Extended */
+             *     Support: Extended
+             */
             backendRequest?: string
-            /** @description Request specifies the maximum duration for a gateway to respond to an HTTP request.
+            /**
+             * @description Request specifies the maximum duration for a gateway to respond to an HTTP request.
              *     If the gateway has not been able to respond before this deadline is met, the gateway
              *     MUST return a timeout error.
              *
@@ -3134,14 +3393,16 @@ export interface components {
              *     The value of Request is a Gateway API Duration string as defined by GEP-2257. When this
              *     field is unspecified, request timeout behavior is implementation-specific.
              *
-             *     Support: Extended */
+             *     Support: Extended
+             */
             request?: string
           }
         }[]
       }
       /** @description Status defines the current state of HTTPRoute. */
       status?: {
-        /** @description Parents is a list of parent resources (usually Gateways) that are
+        /**
+         * @description Parents is a list of parent resources (usually Gateways) that are
          *     associated with the route, and the status of the route with respect to
          *     each parent. When this route attaches to a parent, the controller that
          *     manages the parent must add an entry to this list when the controller
@@ -3154,9 +3415,11 @@ export interface components {
          *     responsible for.
          *
          *     A maximum of 32 Gateways will be represented in this list. An empty list
-         *     means the route has not been attached to any Gateway. */
+         *     means the route has not been attached to any Gateway.
+         */
         parents: {
-          /** @description Conditions describes the status of the route with respect to the Gateway.
+          /**
+           * @description Conditions describes the status of the route with respect to the Gateway.
            *     Note that the route's availability is also subject to the Gateway's own
            *     status conditions and listener status.
            *
@@ -3174,7 +3437,8 @@ export interface components {
            *
            *     * The Route refers to a nonexistent parent.
            *     * The Route is of a type that the controller does not support.
-           *     * The Route is in a namespace the controller does not have access to. */
+           *     * The Route is in a namespace the controller does not have access to.
+           */
           conditions?: {
             /**
              * Format: date-time
@@ -3182,8 +3446,10 @@ export interface components {
              *     This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
              */
             lastTransitionTime: string
-            /** @description message is a human readable message indicating details about the transition.
-             *     This may be an empty string. */
+            /**
+             * @description message is a human readable message indicating details about the transition.
+             *     This may be an empty string.
+             */
             message: string
             /**
              * Format: int64
@@ -3192,11 +3458,13 @@ export interface components {
              *     with respect to the current state of the instance.
              */
             observedGeneration?: number
-            /** @description reason contains a programmatic identifier indicating the reason for the condition's last transition.
+            /**
+             * @description reason contains a programmatic identifier indicating the reason for the condition's last transition.
              *     Producers of specific condition types may define expected values and meanings for this field,
              *     and whether the values are considered a guaranteed API.
              *     The value should be a CamelCase string.
-             *     This field may not be empty. */
+             *     This field may not be empty.
+             */
             reason: string
             /**
              * @description status of the condition, one of True, False, Unknown.
@@ -3206,7 +3474,8 @@ export interface components {
             /** @description type of condition in CamelCase or in foo.example.com/CamelCase. */
             type: string
           }[]
-          /** @description ControllerName is a domain/path string that indicates the name of the
+          /**
+           * @description ControllerName is a domain/path string that indicates the name of the
            *     controller that wrote this status. This corresponds with the
            *     controllerName field on GatewayClass.
            *
@@ -3218,10 +3487,13 @@ export interface components {
            *
            *     Controllers MUST populate this field when writing status. Controllers should ensure that
            *     entries to status populated with their ControllerName are cleaned up when they are no
-           *     longer necessary. */
+           *     longer necessary.
+           */
           controllerName: string
-          /** @description ParentRef corresponds with a ParentRef in the spec that this
-           *     RouteParentStatus struct describes the status of. */
+          /**
+           * @description ParentRef corresponds with a ParentRef in the spec that this
+           *     RouteParentStatus struct describes the status of.
+           */
           parentRef: {
             /**
              * @description Group is the group of the referent.
@@ -3245,11 +3517,14 @@ export interface components {
              * @default Gateway
              */
             kind: string
-            /** @description Name is the name of the referent.
+            /**
+             * @description Name is the name of the referent.
              *
-             *     Support: Core */
+             *     Support: Core
+             */
             name: string
-            /** @description Namespace is the namespace of the referent. When unspecified, this refers
+            /**
+             * @description Namespace is the namespace of the referent. When unspecified, this refers
              *     to the local namespace of the Route.
              *
              *     Note that there are specific rules for ParentRefs which cross namespace
@@ -3258,7 +3533,8 @@ export interface components {
              *     Gateway has the AllowedRoutes field, and ReferenceGrant provides a
              *     generic way to enable any other kind of cross-namespace reference.
              *
-             *     Support: Core */
+             *     Support: Core
+             */
             namespace?: string
             /**
              * Format: int32
@@ -3288,7 +3564,8 @@ export interface components {
              *     Support: Extended
              */
             port?: number
-            /** @description SectionName is the name of a section within the target resource. In the
+            /**
+             * @description SectionName is the name of a section within the target resource. In the
              *     following resources, SectionName is interpreted as the following:
              *
              *     * Gateway: Listener name. When both Port (experimental) and SectionName
@@ -3311,7 +3588,8 @@ export interface components {
              *     attached. If no Gateway listeners accept attachment from this Route, the
              *     Route MUST be considered detached from the Gateway.
              *
-             *     Support: Core */
+             *     Support: Core
+             */
             sectionName?: string
           }
         }[]
@@ -3328,7 +3606,8 @@ export interface components {
       /** @description Standard list metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds */
       metadata?: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"]
     }
-    /** @description ReferenceGrant identifies kinds of resources in other namespaces that are
+    /**
+     * @description ReferenceGrant identifies kinds of resources in other namespaces that are
      *     trusted to reference the specified kinds of resources in the same namespace
      *     as the policy.
      *
@@ -3343,7 +3622,8 @@ export interface components {
      *     which cross-namespace object references are permitted. Implementations that
      *     support ReferenceGrant MUST NOT permit cross-namespace references which have
      *     no grant, and MUST respond to the removal of a grant by revoking the access
-     *     that the grant allowed. */
+     *     that the grant allowed.
+     */
     "io.k8s.networking.gateway.v1beta1.ReferenceGrant": {
       /** @description APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources */
       apiVersion?: string
@@ -3353,19 +3633,24 @@ export interface components {
       metadata?: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"]
       /** @description Spec defines the desired state of ReferenceGrant. */
       spec?: {
-        /** @description From describes the trusted namespaces and kinds that can reference the
+        /**
+         * @description From describes the trusted namespaces and kinds that can reference the
          *     resources described in "To". Each entry in this list MUST be considered
          *     to be an additional place that references can be valid from, or to put
          *     this another way, entries MUST be combined using OR.
          *
-         *     Support: Core */
+         *     Support: Core
+         */
         from: {
-          /** @description Group is the group of the referent.
+          /**
+           * @description Group is the group of the referent.
            *     When empty, the Kubernetes core API group is inferred.
            *
-           *     Support: Core */
+           *     Support: Core
+           */
           group: string
-          /** @description Kind is the kind of the referent. Although implementations may support
+          /**
+           * @description Kind is the kind of the referent. Although implementations may support
            *     additional resources, the following types are part of the "Core"
            *     support level for this field.
            *
@@ -3379,35 +3664,46 @@ export interface components {
            *     * HTTPRoute
            *     * TCPRoute
            *     * TLSRoute
-           *     * UDPRoute */
+           *     * UDPRoute
+           */
           kind: string
-          /** @description Namespace is the namespace of the referent.
+          /**
+           * @description Namespace is the namespace of the referent.
            *
-           *     Support: Core */
+           *     Support: Core
+           */
           namespace: string
         }[]
-        /** @description To describes the resources that may be referenced by the resources
+        /**
+         * @description To describes the resources that may be referenced by the resources
          *     described in "From". Each entry in this list MUST be considered to be an
          *     additional place that references can be valid to, or to put this another
          *     way, entries MUST be combined using OR.
          *
-         *     Support: Core */
+         *     Support: Core
+         */
         to: {
-          /** @description Group is the group of the referent.
+          /**
+           * @description Group is the group of the referent.
            *     When empty, the Kubernetes core API group is inferred.
            *
-           *     Support: Core */
+           *     Support: Core
+           */
           group: string
-          /** @description Kind is the kind of the referent. Although implementations may support
+          /**
+           * @description Kind is the kind of the referent. Although implementations may support
            *     additional resources, the following types are part of the "Core"
            *     support level for this field:
            *
            *     * Secret when used to permit a SecretObjectReference
-           *     * Service when used to permit a BackendObjectReference */
+           *     * Service when used to permit a BackendObjectReference
+           */
           kind: string
-          /** @description Name is the name of the referent. When unspecified, this policy
+          /**
+           * @description Name is the name of the referent. When unspecified, this policy
            *     refers to all resources of the specified Group and Kind in the local
-           *     namespace. */
+           *     namespace.
+           */
           name?: string
         }[]
       }
@@ -3439,27 +3735,36 @@ export interface operations {
         pretty?: string
         /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
         allowWatchBookmarks?: boolean
-        /** @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
+        /**
+         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
          *
-         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications. */
+         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
+         */
         continue?: string
         /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
         fieldSelector?: string
         /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
         labelSelector?: string
-        /** @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
+        /**
+         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
          *
-         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned. */
+         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
+         */
         limit?: number
-        /** @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersion?: string
-        /** @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersionMatch?: string
-        /** @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
+        /**
+         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
          *
          *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
          *       is interpreted as "data at least as new as the provided `resourceVersion`"
@@ -3471,7 +3776,8 @@ export interface operations {
          *     - `resourceVersionMatch` set to any other value or unset
          *       Invalid error is returned.
          *
-         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise. */
+         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
+         */
         sendInitialEvents?: boolean
         /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
         timeoutSeconds?: number
@@ -3572,27 +3878,36 @@ export interface operations {
         pretty?: string
         /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
         allowWatchBookmarks?: boolean
-        /** @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
+        /**
+         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
          *
-         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications. */
+         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
+         */
         continue?: string
         /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
         fieldSelector?: string
         /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
         labelSelector?: string
-        /** @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
+        /**
+         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
          *
-         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned. */
+         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
+         */
         limit?: number
-        /** @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersion?: string
-        /** @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersionMatch?: string
-        /** @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
+        /**
+         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
          *
          *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
          *       is interpreted as "data at least as new as the provided `resourceVersion`"
@@ -3604,7 +3919,8 @@ export interface operations {
          *     - `resourceVersionMatch` set to any other value or unset
          *       Invalid error is returned.
          *
-         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise. */
+         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
+         */
         sendInitialEvents?: boolean
         /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
         timeoutSeconds?: number
@@ -3641,9 +3957,11 @@ export interface operations {
       query?: {
         /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
         pretty?: string
-        /** @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersion?: string
       }
       header?: never
@@ -3841,9 +4159,11 @@ export interface operations {
       query?: {
         /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
         pretty?: string
-        /** @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersion?: string
       }
       header?: never
@@ -3982,29 +4302,38 @@ export interface operations {
       query?: {
         /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
         allowWatchBookmarks?: boolean
-        /** @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
+        /**
+         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
          *
-         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications. */
+         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
+         */
         continue?: string
         /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
         fieldSelector?: string
         /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
         labelSelector?: string
-        /** @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
+        /**
+         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
          *
-         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned. */
+         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
+         */
         limit?: number
         /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
         pretty?: string
-        /** @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersion?: string
-        /** @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersionMatch?: string
-        /** @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
+        /**
+         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
          *
          *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
          *       is interpreted as "data at least as new as the provided `resourceVersion`"
@@ -4016,7 +4345,8 @@ export interface operations {
          *     - `resourceVersionMatch` set to any other value or unset
          *       Invalid error is returned.
          *
-         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise. */
+         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
+         */
         sendInitialEvents?: boolean
         /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
         timeoutSeconds?: number
@@ -4053,29 +4383,38 @@ export interface operations {
       query?: {
         /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
         allowWatchBookmarks?: boolean
-        /** @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
+        /**
+         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
          *
-         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications. */
+         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
+         */
         continue?: string
         /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
         fieldSelector?: string
         /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
         labelSelector?: string
-        /** @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
+        /**
+         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
          *
-         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned. */
+         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
+         */
         limit?: number
         /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
         pretty?: string
-        /** @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersion?: string
-        /** @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersionMatch?: string
-        /** @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
+        /**
+         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
          *
          *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
          *       is interpreted as "data at least as new as the provided `resourceVersion`"
@@ -4087,7 +4426,8 @@ export interface operations {
          *     - `resourceVersionMatch` set to any other value or unset
          *       Invalid error is returned.
          *
-         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise. */
+         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
+         */
         sendInitialEvents?: boolean
         /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
         timeoutSeconds?: number
@@ -4126,27 +4466,36 @@ export interface operations {
         pretty?: string
         /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
         allowWatchBookmarks?: boolean
-        /** @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
+        /**
+         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
          *
-         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications. */
+         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
+         */
         continue?: string
         /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
         fieldSelector?: string
         /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
         labelSelector?: string
-        /** @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
+        /**
+         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
          *
-         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned. */
+         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
+         */
         limit?: number
-        /** @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersion?: string
-        /** @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersionMatch?: string
-        /** @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
+        /**
+         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
          *
          *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
          *       is interpreted as "data at least as new as the provided `resourceVersion`"
@@ -4158,7 +4507,8 @@ export interface operations {
          *     - `resourceVersionMatch` set to any other value or unset
          *       Invalid error is returned.
          *
-         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise. */
+         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
+         */
         sendInitialEvents?: boolean
         /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
         timeoutSeconds?: number
@@ -4265,27 +4615,36 @@ export interface operations {
         pretty?: string
         /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
         allowWatchBookmarks?: boolean
-        /** @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
+        /**
+         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
          *
-         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications. */
+         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
+         */
         continue?: string
         /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
         fieldSelector?: string
         /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
         labelSelector?: string
-        /** @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
+        /**
+         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
          *
-         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned. */
+         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
+         */
         limit?: number
-        /** @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersion?: string
-        /** @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersionMatch?: string
-        /** @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
+        /**
+         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
          *
          *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
          *       is interpreted as "data at least as new as the provided `resourceVersion`"
@@ -4297,7 +4656,8 @@ export interface operations {
          *     - `resourceVersionMatch` set to any other value or unset
          *       Invalid error is returned.
          *
-         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise. */
+         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
+         */
         sendInitialEvents?: boolean
         /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
         timeoutSeconds?: number
@@ -4337,9 +4697,11 @@ export interface operations {
       query?: {
         /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
         pretty?: string
-        /** @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersion?: string
       }
       header?: never
@@ -4545,9 +4907,11 @@ export interface operations {
       query?: {
         /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
         pretty?: string
-        /** @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersion?: string
       }
       header?: never
@@ -4694,27 +5058,36 @@ export interface operations {
         pretty?: string
         /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
         allowWatchBookmarks?: boolean
-        /** @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
+        /**
+         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
          *
-         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications. */
+         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
+         */
         continue?: string
         /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
         fieldSelector?: string
         /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
         labelSelector?: string
-        /** @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
+        /**
+         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
          *
-         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned. */
+         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
+         */
         limit?: number
-        /** @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersion?: string
-        /** @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersionMatch?: string
-        /** @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
+        /**
+         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
          *
          *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
          *       is interpreted as "data at least as new as the provided `resourceVersion`"
@@ -4726,7 +5099,8 @@ export interface operations {
          *     - `resourceVersionMatch` set to any other value or unset
          *       Invalid error is returned.
          *
-         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise. */
+         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
+         */
         sendInitialEvents?: boolean
         /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
         timeoutSeconds?: number
@@ -4833,27 +5207,36 @@ export interface operations {
         pretty?: string
         /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
         allowWatchBookmarks?: boolean
-        /** @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
+        /**
+         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
          *
-         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications. */
+         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
+         */
         continue?: string
         /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
         fieldSelector?: string
         /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
         labelSelector?: string
-        /** @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
+        /**
+         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
          *
-         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned. */
+         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
+         */
         limit?: number
-        /** @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersion?: string
-        /** @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersionMatch?: string
-        /** @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
+        /**
+         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
          *
          *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
          *       is interpreted as "data at least as new as the provided `resourceVersion`"
@@ -4865,7 +5248,8 @@ export interface operations {
          *     - `resourceVersionMatch` set to any other value or unset
          *       Invalid error is returned.
          *
-         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise. */
+         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
+         */
         sendInitialEvents?: boolean
         /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
         timeoutSeconds?: number
@@ -4905,9 +5289,11 @@ export interface operations {
       query?: {
         /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
         pretty?: string
-        /** @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersion?: string
       }
       header?: never
@@ -5113,9 +5499,11 @@ export interface operations {
       query?: {
         /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
         pretty?: string
-        /** @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersion?: string
       }
       header?: never
@@ -5262,27 +5650,36 @@ export interface operations {
         pretty?: string
         /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
         allowWatchBookmarks?: boolean
-        /** @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
+        /**
+         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
          *
-         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications. */
+         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
+         */
         continue?: string
         /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
         fieldSelector?: string
         /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
         labelSelector?: string
-        /** @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
+        /**
+         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
          *
-         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned. */
+         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
+         */
         limit?: number
-        /** @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersion?: string
-        /** @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersionMatch?: string
-        /** @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
+        /**
+         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
          *
          *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
          *       is interpreted as "data at least as new as the provided `resourceVersion`"
@@ -5294,7 +5691,8 @@ export interface operations {
          *     - `resourceVersionMatch` set to any other value or unset
          *       Invalid error is returned.
          *
-         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise. */
+         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
+         */
         sendInitialEvents?: boolean
         /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
         timeoutSeconds?: number
@@ -5401,27 +5799,36 @@ export interface operations {
         pretty?: string
         /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
         allowWatchBookmarks?: boolean
-        /** @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
+        /**
+         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
          *
-         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications. */
+         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
+         */
         continue?: string
         /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
         fieldSelector?: string
         /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
         labelSelector?: string
-        /** @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
+        /**
+         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
          *
-         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned. */
+         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
+         */
         limit?: number
-        /** @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersion?: string
-        /** @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersionMatch?: string
-        /** @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
+        /**
+         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
          *
          *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
          *       is interpreted as "data at least as new as the provided `resourceVersion`"
@@ -5433,7 +5840,8 @@ export interface operations {
          *     - `resourceVersionMatch` set to any other value or unset
          *       Invalid error is returned.
          *
-         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise. */
+         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
+         */
         sendInitialEvents?: boolean
         /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
         timeoutSeconds?: number
@@ -5473,9 +5881,11 @@ export interface operations {
       query?: {
         /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
         pretty?: string
-        /** @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersion?: string
       }
       header?: never
@@ -5681,29 +6091,38 @@ export interface operations {
       query?: {
         /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
         allowWatchBookmarks?: boolean
-        /** @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
+        /**
+         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
          *
-         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications. */
+         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
+         */
         continue?: string
         /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
         fieldSelector?: string
         /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
         labelSelector?: string
-        /** @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
+        /**
+         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
          *
-         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned. */
+         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
+         */
         limit?: number
         /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
         pretty?: string
-        /** @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersion?: string
-        /** @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+        /**
+         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
-         *     Defaults to unset */
+         *     Defaults to unset
+         */
         resourceVersionMatch?: string
-        /** @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
+        /**
+         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
          *
          *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
          *       is interpreted as "data at least as new as the provided `resourceVersion`"
@@ -5715,7 +6134,8 @@ export interface operations {
          *     - `resourceVersionMatch` set to any other value or unset
          *       Invalid error is returned.
          *
-         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise. */
+         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
+         */
         sendInitialEvents?: boolean
         /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
         timeoutSeconds?: number
