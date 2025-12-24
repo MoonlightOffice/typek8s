@@ -1,6 +1,6 @@
 import { FileIOClient } from "internal/core/client/io.ts"
 import { K8sClient } from "internal/core/client/k8s.ts"
-import { apiVersionToFileName } from "internal/core/entity/k8s-util.ts"
+import { apiVersionToFileName, fileNameToExportAlias } from "internal/core/entity/k8s-util.ts"
 
 export class AppService {
   constructor(
@@ -22,12 +22,33 @@ export class AppService {
     this.fileIoClient.write(dir, apiVersionToFileName(apiVersion), tsContent)
   }
 
+  /**
+   * Create mod.ts files in the specified directory that contains all files in the same directory.
+   * @param dir output directory
+   */
+  private createModFile(dir: string) {
+    const files = this.fileIoClient.listFiles(dir, "*.ts")
+    const tsFiles = files.filter((f) => f !== "mod.ts") // Exclude mod.ts itself
+
+    const exportStatements = tsFiles
+      .sort() // Sort alphabetically
+      .map((filename) => {
+        const alias = fileNameToExportAlias(filename)
+        return `export type { api as ${alias} } from "./${filename}"`
+      })
+      .join("\n")
+
+    this.fileIoClient.write(dir, "mod.ts", exportStatements + "\n")
+  }
+
   async runWithFile(outDir: string, apiVersion: string, openApiFilePath: string) {
     await this.createTypeFilesFromOpenApi(
       outDir,
       apiVersion,
       this.fileIoClient.read(openApiFilePath),
     )
+
+    this.createModFile(outDir)
   }
 
   async runWithServer(outDir: string) {
@@ -35,5 +56,7 @@ export class AppService {
     for (const { apiVersion, openApi } of openApis) {
       await this.createTypeFilesFromOpenApi(outDir, apiVersion, openApi)
     }
+
+    this.createModFile(outDir)
   }
 }

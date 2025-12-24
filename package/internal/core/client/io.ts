@@ -16,6 +16,15 @@ export interface FileIOClient {
    * @param content TypeScript code generated from OpenAPI spec
    */
   write(dir: string, fname: string, content: string): void
+
+  /**
+   * List all files in a directory matching the given pattern.
+   *
+   * @param dir Directory path
+   * @param pattern Optional glob pattern (e.g., "*.ts")
+   * @returns Array of file names (not full paths)
+   */
+  listFiles(dir: string, pattern?: string): string[]
 }
 
 /** Application's overall parameter */
