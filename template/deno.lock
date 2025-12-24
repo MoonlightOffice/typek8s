@@ -1,0 +1,32 @@
+{
+  "version": "5",
+  "remote": {
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/admissionregistration.k8s.io.v1.ts": "1a26d8e20bfa2345f3888a10a2ef6c8c81a1a96c44a74dbd047ca1c6decfd553",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/apiextensions.k8s.io.v1.ts": "1976f368f4d2f61b2626e51263172fb607940a9d15d11c543e7bb9617d06efda",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/apiregistration.k8s.io.v1.ts": "c94d0539186cc3be9c8b3ae3877f662cc28a785c805aea26d2fdd15b1d8339bc",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/apps.v1.ts": "c2be638879567f3b068d272209a91d210970b51b80bd43ec63a9cbf8c709dfff",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/authentication.k8s.io.v1.ts": "0656f998a786f7f2c82c16793cbbd736540f2480fa779220fa608677f82a2279",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/authorization.k8s.io.v1.ts": "d6ab8569f74f24fb7d7299996ea119b10030d9d221053e4c2ee640f58192a76d",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/autoscaling.v1.ts": "9bc5a4a2172b35cddaea739dd8d7eb0e746dc391c368c10bed69950efe59c8d2",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/autoscaling.v2.ts": "60402639828a824083d41ae166fd84461e2cc7904a52772292375d64650ea32c",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/batch.v1.ts": "dedf5babc6f3693ad3bc7911162641f771794d02655d6e33f81c2f1e62ce154b",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/certificates.k8s.io.v1.ts": "b396f6ef798475aad919d7d170242260b52a5020b3d641b643173e3de0bea5ee",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/coordination.k8s.io.v1.ts": "6799f3e75935f7c5083cbe86c13aeb6b56a29e4c64c33f981cd2646dd2d4f746",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/discovery.k8s.io.v1.ts": "fea7ae4160f0dc9f43dbf17bbc51fa64b8bc611f0948dc38c00524337744bb5e",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/events.k8s.io.v1.ts": "3d6beaec71a7f15a49cf87ca4c934cf5acb73b62aed04b08f0d4bda8daf66e9a",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/flowcontrol.apiserver.k8s.io.v1.ts": "7e0d0c22699394deae84c86044bfc0b954270c3899c6b65065145c2518899b35",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/gateway.networking.k8s.io.v1.ts": "250ecdb0f4fab7a3bb53800b76d4760c8597ec1c73fee6b9ebbf4eeeac832206",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/gateway.networking.k8s.io.v1beta1.ts": "5d34b8f4377b813929245848ccf93b9f236b05333d4c885e4a3f68657bcf003f",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/gateway.nginx.org.v1alpha1.ts": "1e4978636e37a03730819982e3b744ed3fba21299ed357c7429cd8bc8df381d6",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/gateway.nginx.org.v1alpha2.ts": "e9254d85861fced527e5559750b66d97593d556527a41a982825e45bbac2c8b0",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/mod.ts": "ccfd21eb0a7ca72b7f44ca56e5b57020eacd04f48e3d2b40e3a88e67757d2faa",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/networking.k8s.io.v1.ts": "5181aa74d50f0383952935c10d9a04f6a1d3f4f66346cb65dbfd33d4c18f4bdd",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/node.k8s.io.v1.ts": "7dbc245dc85a226332c3e9c6e38241debbfff1a600411d9645ba991bc68c6446",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/policy.v1.ts": "0fc19d2ddc8c670359b605ce665ff82ed1a6213224cd63b7743f5b9114306560",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/rbac.authorization.k8s.io.v1.ts": "082fe3b5f5e2034eccbeb13cd9da7c989e4ac8078cbd793920e1835e57a57081",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/resource.k8s.io.v1.ts": "4c22c17a6edbf4ed1a226b7c37c07a362625c05d9dc7868b4050b9e9e3fdb089",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/scheduling.k8s.io.v1.ts": "dbdd3740e68a869c4dcddc2b39a346e5571d1f90df5901961cacc20d8ffe20ff",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/storage.k8s.io.v1.ts": "faa31c175f15927199969df74c3351056c5430eae9bb8b8dbca40fbfb373bf7e",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/v1.ts": "2183b9e9b24e5e001e29bdabae4db58de6ecb4176f980ff1e0ce58b9425fd555"
+  }
+}
