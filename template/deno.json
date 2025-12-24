@@ -3,6 +3,7 @@
     "dev": "deno run --watch main.ts"
   },
   "imports": {
-    "~/": "./"
+    "~/": "./",
+    "typek8s-api": "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/mod.ts"
   }
 }
