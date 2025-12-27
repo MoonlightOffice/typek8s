@@ -26348,44 +26348,64 @@ export interface operations {
   }
 }
 
+type Resource<T, U> = Omit<T, "status"> & { apiVersion: "v1"; kind: U }
+
 export interface api {
-  Binding: Omit<components["schemas"]["io.k8s.api.core.v1.Binding"], "status">
-  ComponentStatus: Omit<components["schemas"]["io.k8s.api.core.v1.ComponentStatus"], "status">
-  ComponentStatusList: Omit<components["schemas"]["io.k8s.api.core.v1.ComponentStatusList"], "status">
-  ConfigMap: Omit<components["schemas"]["io.k8s.api.core.v1.ConfigMap"], "status">
-  ConfigMapList: Omit<components["schemas"]["io.k8s.api.core.v1.ConfigMapList"], "status">
-  Endpoints: Omit<components["schemas"]["io.k8s.api.core.v1.Endpoints"], "status">
-  EndpointsList: Omit<components["schemas"]["io.k8s.api.core.v1.EndpointsList"], "status">
-  Event: Omit<components["schemas"]["io.k8s.api.core.v1.Event"], "status">
-  EventList: Omit<components["schemas"]["io.k8s.api.core.v1.EventList"], "status">
-  LimitRange: Omit<components["schemas"]["io.k8s.api.core.v1.LimitRange"], "status">
-  LimitRangeList: Omit<components["schemas"]["io.k8s.api.core.v1.LimitRangeList"], "status">
-  Namespace: Omit<components["schemas"]["io.k8s.api.core.v1.Namespace"], "status">
-  NamespaceList: Omit<components["schemas"]["io.k8s.api.core.v1.NamespaceList"], "status">
-  Node: Omit<components["schemas"]["io.k8s.api.core.v1.Node"], "status">
-  NodeList: Omit<components["schemas"]["io.k8s.api.core.v1.NodeList"], "status">
-  PersistentVolume: Omit<components["schemas"]["io.k8s.api.core.v1.PersistentVolume"], "status">
-  PersistentVolumeClaim: Omit<components["schemas"]["io.k8s.api.core.v1.PersistentVolumeClaim"], "status">
-  PersistentVolumeClaimList: Omit<components["schemas"]["io.k8s.api.core.v1.PersistentVolumeClaimList"], "status">
-  PersistentVolumeList: Omit<components["schemas"]["io.k8s.api.core.v1.PersistentVolumeList"], "status">
-  Pod: Omit<components["schemas"]["io.k8s.api.core.v1.Pod"], "status">
-  PodList: Omit<components["schemas"]["io.k8s.api.core.v1.PodList"], "status">
-  PodTemplate: Omit<components["schemas"]["io.k8s.api.core.v1.PodTemplate"], "status">
-  PodTemplateList: Omit<components["schemas"]["io.k8s.api.core.v1.PodTemplateList"], "status">
-  ReplicationController: Omit<components["schemas"]["io.k8s.api.core.v1.ReplicationController"], "status">
-  ReplicationControllerList: Omit<components["schemas"]["io.k8s.api.core.v1.ReplicationControllerList"], "status">
-  ResourceQuota: Omit<components["schemas"]["io.k8s.api.core.v1.ResourceQuota"], "status">
-  ResourceQuotaList: Omit<components["schemas"]["io.k8s.api.core.v1.ResourceQuotaList"], "status">
-  Secret: Omit<components["schemas"]["io.k8s.api.core.v1.Secret"], "status">
-  SecretList: Omit<components["schemas"]["io.k8s.api.core.v1.SecretList"], "status">
-  Service: Omit<components["schemas"]["io.k8s.api.core.v1.Service"], "status">
-  ServiceAccount: Omit<components["schemas"]["io.k8s.api.core.v1.ServiceAccount"], "status">
-  ServiceAccountList: Omit<components["schemas"]["io.k8s.api.core.v1.ServiceAccountList"], "status">
-  ServiceList: Omit<components["schemas"]["io.k8s.api.core.v1.ServiceList"], "status">
-  APIResourceList: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.APIResourceList"], "status">
-  DeleteOptions: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "status">
-  Status: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"], "status">
-  WatchEvent: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "status">
+  Binding: Resource<components["schemas"]["io.k8s.api.core.v1.Binding"], "Binding">
+  ComponentStatus: Resource<components["schemas"]["io.k8s.api.core.v1.ComponentStatus"], "ComponentStatus">
+  ComponentStatusList: Resource<components["schemas"]["io.k8s.api.core.v1.ComponentStatusList"], "ComponentStatusList">
+  ConfigMap: Resource<components["schemas"]["io.k8s.api.core.v1.ConfigMap"], "ConfigMap">
+  ConfigMapList: Resource<components["schemas"]["io.k8s.api.core.v1.ConfigMapList"], "ConfigMapList">
+  Endpoints: Resource<components["schemas"]["io.k8s.api.core.v1.Endpoints"], "Endpoints">
+  EndpointsList: Resource<components["schemas"]["io.k8s.api.core.v1.EndpointsList"], "EndpointsList">
+  Event: Resource<components["schemas"]["io.k8s.api.core.v1.Event"], "Event">
+  EventList: Resource<components["schemas"]["io.k8s.api.core.v1.EventList"], "EventList">
+  LimitRange: Resource<components["schemas"]["io.k8s.api.core.v1.LimitRange"], "LimitRange">
+  LimitRangeList: Resource<components["schemas"]["io.k8s.api.core.v1.LimitRangeList"], "LimitRangeList">
+  Namespace: Resource<components["schemas"]["io.k8s.api.core.v1.Namespace"], "Namespace">
+  NamespaceList: Resource<components["schemas"]["io.k8s.api.core.v1.NamespaceList"], "NamespaceList">
+  Node: Resource<components["schemas"]["io.k8s.api.core.v1.Node"], "Node">
+  NodeList: Resource<components["schemas"]["io.k8s.api.core.v1.NodeList"], "NodeList">
+  PersistentVolume: Resource<components["schemas"]["io.k8s.api.core.v1.PersistentVolume"], "PersistentVolume">
+  PersistentVolumeClaim: Resource<
+    components["schemas"]["io.k8s.api.core.v1.PersistentVolumeClaim"],
+    "PersistentVolumeClaim"
+  >
+  PersistentVolumeClaimList: Resource<
+    components["schemas"]["io.k8s.api.core.v1.PersistentVolumeClaimList"],
+    "PersistentVolumeClaimList"
+  >
+  PersistentVolumeList: Resource<
+    components["schemas"]["io.k8s.api.core.v1.PersistentVolumeList"],
+    "PersistentVolumeList"
+  >
+  Pod: Resource<components["schemas"]["io.k8s.api.core.v1.Pod"], "Pod">
+  PodList: Resource<components["schemas"]["io.k8s.api.core.v1.PodList"], "PodList">
+  PodTemplate: Resource<components["schemas"]["io.k8s.api.core.v1.PodTemplate"], "PodTemplate">
+  PodTemplateList: Resource<components["schemas"]["io.k8s.api.core.v1.PodTemplateList"], "PodTemplateList">
+  ReplicationController: Resource<
+    components["schemas"]["io.k8s.api.core.v1.ReplicationController"],
+    "ReplicationController"
+  >
+  ReplicationControllerList: Resource<
+    components["schemas"]["io.k8s.api.core.v1.ReplicationControllerList"],
+    "ReplicationControllerList"
+  >
+  ResourceQuota: Resource<components["schemas"]["io.k8s.api.core.v1.ResourceQuota"], "ResourceQuota">
+  ResourceQuotaList: Resource<components["schemas"]["io.k8s.api.core.v1.ResourceQuotaList"], "ResourceQuotaList">
+  Secret: Resource<components["schemas"]["io.k8s.api.core.v1.Secret"], "Secret">
+  SecretList: Resource<components["schemas"]["io.k8s.api.core.v1.SecretList"], "SecretList">
+  Service: Resource<components["schemas"]["io.k8s.api.core.v1.Service"], "Service">
+  ServiceAccount: Resource<components["schemas"]["io.k8s.api.core.v1.ServiceAccount"], "ServiceAccount">
+  ServiceAccountList: Resource<components["schemas"]["io.k8s.api.core.v1.ServiceAccountList"], "ServiceAccountList">
+  ServiceList: Resource<components["schemas"]["io.k8s.api.core.v1.ServiceList"], "ServiceList">
+  APIResourceList: Resource<
+    components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.APIResourceList"],
+    "APIResourceList"
+  >
+  DeleteOptions: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "DeleteOptions">
+  Status: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"], "Status">
+  WatchEvent: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "WatchEvent">
 }
 
 export default api

@@ -1909,11 +1909,19 @@ export interface operations {
   }
 }
 
+type Resource<T, U> = Omit<T, "status"> & { apiVersion: "policy/v1"; kind: U }
+
 export interface api {
-  PodDisruptionBudget: Omit<components["schemas"]["io.k8s.api.policy.v1.PodDisruptionBudget"], "status">
-  PodDisruptionBudgetList: Omit<components["schemas"]["io.k8s.api.policy.v1.PodDisruptionBudgetList"], "status">
-  DeleteOptions: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "status">
-  WatchEvent: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "status">
+  PodDisruptionBudget: Resource<
+    components["schemas"]["io.k8s.api.policy.v1.PodDisruptionBudget"],
+    "PodDisruptionBudget"
+  >
+  PodDisruptionBudgetList: Resource<
+    components["schemas"]["io.k8s.api.policy.v1.PodDisruptionBudgetList"],
+    "PodDisruptionBudgetList"
+  >
+  DeleteOptions: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "DeleteOptions">
+  WatchEvent: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "WatchEvent">
 }
 
 export default api

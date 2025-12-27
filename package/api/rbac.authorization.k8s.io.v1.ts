@@ -4554,17 +4554,22 @@ export interface operations {
   }
 }
 
+type Resource<T, U> = Omit<T, "status"> & { apiVersion: "rbac.authorization.k8s.io/v1"; kind: U }
+
 export interface api {
-  ClusterRole: Omit<components["schemas"]["io.k8s.api.rbac.v1.ClusterRole"], "status">
-  ClusterRoleBinding: Omit<components["schemas"]["io.k8s.api.rbac.v1.ClusterRoleBinding"], "status">
-  ClusterRoleBindingList: Omit<components["schemas"]["io.k8s.api.rbac.v1.ClusterRoleBindingList"], "status">
-  ClusterRoleList: Omit<components["schemas"]["io.k8s.api.rbac.v1.ClusterRoleList"], "status">
-  Role: Omit<components["schemas"]["io.k8s.api.rbac.v1.Role"], "status">
-  RoleBinding: Omit<components["schemas"]["io.k8s.api.rbac.v1.RoleBinding"], "status">
-  RoleBindingList: Omit<components["schemas"]["io.k8s.api.rbac.v1.RoleBindingList"], "status">
-  RoleList: Omit<components["schemas"]["io.k8s.api.rbac.v1.RoleList"], "status">
-  DeleteOptions: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "status">
-  WatchEvent: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "status">
+  ClusterRole: Resource<components["schemas"]["io.k8s.api.rbac.v1.ClusterRole"], "ClusterRole">
+  ClusterRoleBinding: Resource<components["schemas"]["io.k8s.api.rbac.v1.ClusterRoleBinding"], "ClusterRoleBinding">
+  ClusterRoleBindingList: Resource<
+    components["schemas"]["io.k8s.api.rbac.v1.ClusterRoleBindingList"],
+    "ClusterRoleBindingList"
+  >
+  ClusterRoleList: Resource<components["schemas"]["io.k8s.api.rbac.v1.ClusterRoleList"], "ClusterRoleList">
+  Role: Resource<components["schemas"]["io.k8s.api.rbac.v1.Role"], "Role">
+  RoleBinding: Resource<components["schemas"]["io.k8s.api.rbac.v1.RoleBinding"], "RoleBinding">
+  RoleBindingList: Resource<components["schemas"]["io.k8s.api.rbac.v1.RoleBindingList"], "RoleBindingList">
+  RoleList: Resource<components["schemas"]["io.k8s.api.rbac.v1.RoleList"], "RoleList">
+  DeleteOptions: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "DeleteOptions">
+  WatchEvent: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "WatchEvent">
 }
 
 export default api

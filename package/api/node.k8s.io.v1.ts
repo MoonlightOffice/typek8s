@@ -1337,11 +1337,13 @@ export interface operations {
   }
 }
 
+type Resource<T, U> = Omit<T, "status"> & { apiVersion: "node.k8s.io/v1"; kind: U }
+
 export interface api {
-  RuntimeClass: Omit<components["schemas"]["io.k8s.api.node.v1.RuntimeClass"], "status">
-  RuntimeClassList: Omit<components["schemas"]["io.k8s.api.node.v1.RuntimeClassList"], "status">
-  DeleteOptions: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "status">
-  WatchEvent: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "status">
+  RuntimeClass: Resource<components["schemas"]["io.k8s.api.node.v1.RuntimeClass"], "RuntimeClass">
+  RuntimeClassList: Resource<components["schemas"]["io.k8s.api.node.v1.RuntimeClassList"], "RuntimeClassList">
+  DeleteOptions: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "DeleteOptions">
+  WatchEvent: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "WatchEvent">
 }
 
 export default api

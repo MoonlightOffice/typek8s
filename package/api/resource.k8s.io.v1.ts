@@ -5698,17 +5698,25 @@ export interface operations {
   }
 }
 
+type Resource<T, U> = Omit<T, "status"> & { apiVersion: "resource.k8s.io/v1"; kind: U }
+
 export interface api {
-  DeviceClass: Omit<components["schemas"]["io.k8s.api.resource.v1.DeviceClass"], "status">
-  DeviceClassList: Omit<components["schemas"]["io.k8s.api.resource.v1.DeviceClassList"], "status">
-  ResourceClaim: Omit<components["schemas"]["io.k8s.api.resource.v1.ResourceClaim"], "status">
-  ResourceClaimList: Omit<components["schemas"]["io.k8s.api.resource.v1.ResourceClaimList"], "status">
-  ResourceClaimTemplate: Omit<components["schemas"]["io.k8s.api.resource.v1.ResourceClaimTemplate"], "status">
-  ResourceClaimTemplateList: Omit<components["schemas"]["io.k8s.api.resource.v1.ResourceClaimTemplateList"], "status">
-  ResourceSlice: Omit<components["schemas"]["io.k8s.api.resource.v1.ResourceSlice"], "status">
-  ResourceSliceList: Omit<components["schemas"]["io.k8s.api.resource.v1.ResourceSliceList"], "status">
-  DeleteOptions: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "status">
-  WatchEvent: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "status">
+  DeviceClass: Resource<components["schemas"]["io.k8s.api.resource.v1.DeviceClass"], "DeviceClass">
+  DeviceClassList: Resource<components["schemas"]["io.k8s.api.resource.v1.DeviceClassList"], "DeviceClassList">
+  ResourceClaim: Resource<components["schemas"]["io.k8s.api.resource.v1.ResourceClaim"], "ResourceClaim">
+  ResourceClaimList: Resource<components["schemas"]["io.k8s.api.resource.v1.ResourceClaimList"], "ResourceClaimList">
+  ResourceClaimTemplate: Resource<
+    components["schemas"]["io.k8s.api.resource.v1.ResourceClaimTemplate"],
+    "ResourceClaimTemplate"
+  >
+  ResourceClaimTemplateList: Resource<
+    components["schemas"]["io.k8s.api.resource.v1.ResourceClaimTemplateList"],
+    "ResourceClaimTemplateList"
+  >
+  ResourceSlice: Resource<components["schemas"]["io.k8s.api.resource.v1.ResourceSlice"], "ResourceSlice">
+  ResourceSliceList: Resource<components["schemas"]["io.k8s.api.resource.v1.ResourceSliceList"], "ResourceSliceList">
+  DeleteOptions: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "DeleteOptions">
+  WatchEvent: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "WatchEvent">
 }
 
 export default api

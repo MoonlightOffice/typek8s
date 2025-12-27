@@ -1614,11 +1614,13 @@ export interface operations {
   }
 }
 
+type Resource<T, U> = Omit<T, "status"> & { apiVersion: "coordination.k8s.io/v1"; kind: U }
+
 export interface api {
-  Lease: Omit<components["schemas"]["io.k8s.api.coordination.v1.Lease"], "status">
-  LeaseList: Omit<components["schemas"]["io.k8s.api.coordination.v1.LeaseList"], "status">
-  DeleteOptions: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "status">
-  WatchEvent: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "status">
+  Lease: Resource<components["schemas"]["io.k8s.api.coordination.v1.Lease"], "Lease">
+  LeaseList: Resource<components["schemas"]["io.k8s.api.coordination.v1.LeaseList"], "LeaseList">
+  DeleteOptions: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "DeleteOptions">
+  WatchEvent: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "WatchEvent">
 }
 
 export default api

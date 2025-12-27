@@ -6049,19 +6049,21 @@ export interface operations {
   }
 }
 
+type Resource<T, U> = Omit<T, "status"> & { apiVersion: "networking.k8s.io/v1"; kind: U }
+
 export interface api {
-  IPAddress: Omit<components["schemas"]["io.k8s.api.networking.v1.IPAddress"], "status">
-  IPAddressList: Omit<components["schemas"]["io.k8s.api.networking.v1.IPAddressList"], "status">
-  Ingress: Omit<components["schemas"]["io.k8s.api.networking.v1.Ingress"], "status">
-  IngressClass: Omit<components["schemas"]["io.k8s.api.networking.v1.IngressClass"], "status">
-  IngressClassList: Omit<components["schemas"]["io.k8s.api.networking.v1.IngressClassList"], "status">
-  IngressList: Omit<components["schemas"]["io.k8s.api.networking.v1.IngressList"], "status">
-  NetworkPolicy: Omit<components["schemas"]["io.k8s.api.networking.v1.NetworkPolicy"], "status">
-  NetworkPolicyList: Omit<components["schemas"]["io.k8s.api.networking.v1.NetworkPolicyList"], "status">
-  ServiceCIDR: Omit<components["schemas"]["io.k8s.api.networking.v1.ServiceCIDR"], "status">
-  ServiceCIDRList: Omit<components["schemas"]["io.k8s.api.networking.v1.ServiceCIDRList"], "status">
-  DeleteOptions: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "status">
-  WatchEvent: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "status">
+  IPAddress: Resource<components["schemas"]["io.k8s.api.networking.v1.IPAddress"], "IPAddress">
+  IPAddressList: Resource<components["schemas"]["io.k8s.api.networking.v1.IPAddressList"], "IPAddressList">
+  Ingress: Resource<components["schemas"]["io.k8s.api.networking.v1.Ingress"], "Ingress">
+  IngressClass: Resource<components["schemas"]["io.k8s.api.networking.v1.IngressClass"], "IngressClass">
+  IngressClassList: Resource<components["schemas"]["io.k8s.api.networking.v1.IngressClassList"], "IngressClassList">
+  IngressList: Resource<components["schemas"]["io.k8s.api.networking.v1.IngressList"], "IngressList">
+  NetworkPolicy: Resource<components["schemas"]["io.k8s.api.networking.v1.NetworkPolicy"], "NetworkPolicy">
+  NetworkPolicyList: Resource<components["schemas"]["io.k8s.api.networking.v1.NetworkPolicyList"], "NetworkPolicyList">
+  ServiceCIDR: Resource<components["schemas"]["io.k8s.api.networking.v1.ServiceCIDR"], "ServiceCIDR">
+  ServiceCIDRList: Resource<components["schemas"]["io.k8s.api.networking.v1.ServiceCIDRList"], "ServiceCIDRList">
+  DeleteOptions: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "DeleteOptions">
+  WatchEvent: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "WatchEvent">
 }
 
 export default api

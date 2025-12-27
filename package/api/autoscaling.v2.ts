@@ -2222,14 +2222,19 @@ export interface operations {
   }
 }
 
+type Resource<T, U> = Omit<T, "status"> & { apiVersion: "autoscaling/v2"; kind: U }
+
 export interface api {
-  HorizontalPodAutoscaler: Omit<components["schemas"]["io.k8s.api.autoscaling.v2.HorizontalPodAutoscaler"], "status">
-  HorizontalPodAutoscalerList: Omit<
-    components["schemas"]["io.k8s.api.autoscaling.v2.HorizontalPodAutoscalerList"],
-    "status"
+  HorizontalPodAutoscaler: Resource<
+    components["schemas"]["io.k8s.api.autoscaling.v2.HorizontalPodAutoscaler"],
+    "HorizontalPodAutoscaler"
   >
-  DeleteOptions: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "status">
-  WatchEvent: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "status">
+  HorizontalPodAutoscalerList: Resource<
+    components["schemas"]["io.k8s.api.autoscaling.v2.HorizontalPodAutoscalerList"],
+    "HorizontalPodAutoscalerList"
+  >
+  DeleteOptions: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "DeleteOptions">
+  WatchEvent: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "WatchEvent">
 }
 
 export default api

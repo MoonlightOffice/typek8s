@@ -4730,41 +4730,43 @@ export interface operations {
   }
 }
 
+type Resource<T, U> = Omit<T, "status"> & { apiVersion: "admissionregistration.k8s.io/v1"; kind: U }
+
 export interface api {
-  MutatingWebhookConfiguration: Omit<
+  MutatingWebhookConfiguration: Resource<
     components["schemas"]["io.k8s.api.admissionregistration.v1.MutatingWebhookConfiguration"],
-    "status"
+    "MutatingWebhookConfiguration"
   >
-  MutatingWebhookConfigurationList: Omit<
+  MutatingWebhookConfigurationList: Resource<
     components["schemas"]["io.k8s.api.admissionregistration.v1.MutatingWebhookConfigurationList"],
-    "status"
+    "MutatingWebhookConfigurationList"
   >
-  ValidatingAdmissionPolicy: Omit<
+  ValidatingAdmissionPolicy: Resource<
     components["schemas"]["io.k8s.api.admissionregistration.v1.ValidatingAdmissionPolicy"],
-    "status"
+    "ValidatingAdmissionPolicy"
   >
-  ValidatingAdmissionPolicyBinding: Omit<
+  ValidatingAdmissionPolicyBinding: Resource<
     components["schemas"]["io.k8s.api.admissionregistration.v1.ValidatingAdmissionPolicyBinding"],
-    "status"
+    "ValidatingAdmissionPolicyBinding"
   >
-  ValidatingAdmissionPolicyBindingList: Omit<
+  ValidatingAdmissionPolicyBindingList: Resource<
     components["schemas"]["io.k8s.api.admissionregistration.v1.ValidatingAdmissionPolicyBindingList"],
-    "status"
+    "ValidatingAdmissionPolicyBindingList"
   >
-  ValidatingAdmissionPolicyList: Omit<
+  ValidatingAdmissionPolicyList: Resource<
     components["schemas"]["io.k8s.api.admissionregistration.v1.ValidatingAdmissionPolicyList"],
-    "status"
+    "ValidatingAdmissionPolicyList"
   >
-  ValidatingWebhookConfiguration: Omit<
+  ValidatingWebhookConfiguration: Resource<
     components["schemas"]["io.k8s.api.admissionregistration.v1.ValidatingWebhookConfiguration"],
-    "status"
+    "ValidatingWebhookConfiguration"
   >
-  ValidatingWebhookConfigurationList: Omit<
+  ValidatingWebhookConfigurationList: Resource<
     components["schemas"]["io.k8s.api.admissionregistration.v1.ValidatingWebhookConfigurationList"],
-    "status"
+    "ValidatingWebhookConfigurationList"
   >
-  DeleteOptions: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "status">
-  WatchEvent: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "status">
+  DeleteOptions: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "DeleteOptions">
+  WatchEvent: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "WatchEvent">
 }
 
 export default api

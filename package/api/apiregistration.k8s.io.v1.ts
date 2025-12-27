@@ -1504,13 +1504,18 @@ export interface operations {
   }
 }
 
+type Resource<T, U> = Omit<T, "status"> & { apiVersion: "apiregistration.k8s.io/v1"; kind: U }
+
 export interface api {
-  DeleteOptions: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "status">
-  WatchEvent: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "status">
-  APIService: Omit<components["schemas"]["io.k8s.kube-aggregator.pkg.apis.apiregistration.v1.APIService"], "status">
-  APIServiceList: Omit<
+  DeleteOptions: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "DeleteOptions">
+  WatchEvent: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "WatchEvent">
+  APIService: Resource<
+    components["schemas"]["io.k8s.kube-aggregator.pkg.apis.apiregistration.v1.APIService"],
+    "APIService"
+  >
+  APIServiceList: Resource<
     components["schemas"]["io.k8s.kube-aggregator.pkg.apis.apiregistration.v1.APIServiceList"],
-    "status"
+    "APIServiceList"
   >
 }
 

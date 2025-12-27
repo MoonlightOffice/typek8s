@@ -6946,21 +6946,35 @@ export interface operations {
   }
 }
 
+type Resource<T, U> = Omit<T, "status"> & { apiVersion: "storage.k8s.io/v1"; kind: U }
+
 export interface api {
-  CSIDriver: Omit<components["schemas"]["io.k8s.api.storage.v1.CSIDriver"], "status">
-  CSIDriverList: Omit<components["schemas"]["io.k8s.api.storage.v1.CSIDriverList"], "status">
-  CSINode: Omit<components["schemas"]["io.k8s.api.storage.v1.CSINode"], "status">
-  CSINodeList: Omit<components["schemas"]["io.k8s.api.storage.v1.CSINodeList"], "status">
-  CSIStorageCapacity: Omit<components["schemas"]["io.k8s.api.storage.v1.CSIStorageCapacity"], "status">
-  CSIStorageCapacityList: Omit<components["schemas"]["io.k8s.api.storage.v1.CSIStorageCapacityList"], "status">
-  StorageClass: Omit<components["schemas"]["io.k8s.api.storage.v1.StorageClass"], "status">
-  StorageClassList: Omit<components["schemas"]["io.k8s.api.storage.v1.StorageClassList"], "status">
-  VolumeAttachment: Omit<components["schemas"]["io.k8s.api.storage.v1.VolumeAttachment"], "status">
-  VolumeAttachmentList: Omit<components["schemas"]["io.k8s.api.storage.v1.VolumeAttachmentList"], "status">
-  VolumeAttributesClass: Omit<components["schemas"]["io.k8s.api.storage.v1.VolumeAttributesClass"], "status">
-  VolumeAttributesClassList: Omit<components["schemas"]["io.k8s.api.storage.v1.VolumeAttributesClassList"], "status">
-  DeleteOptions: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "status">
-  WatchEvent: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "status">
+  CSIDriver: Resource<components["schemas"]["io.k8s.api.storage.v1.CSIDriver"], "CSIDriver">
+  CSIDriverList: Resource<components["schemas"]["io.k8s.api.storage.v1.CSIDriverList"], "CSIDriverList">
+  CSINode: Resource<components["schemas"]["io.k8s.api.storage.v1.CSINode"], "CSINode">
+  CSINodeList: Resource<components["schemas"]["io.k8s.api.storage.v1.CSINodeList"], "CSINodeList">
+  CSIStorageCapacity: Resource<components["schemas"]["io.k8s.api.storage.v1.CSIStorageCapacity"], "CSIStorageCapacity">
+  CSIStorageCapacityList: Resource<
+    components["schemas"]["io.k8s.api.storage.v1.CSIStorageCapacityList"],
+    "CSIStorageCapacityList"
+  >
+  StorageClass: Resource<components["schemas"]["io.k8s.api.storage.v1.StorageClass"], "StorageClass">
+  StorageClassList: Resource<components["schemas"]["io.k8s.api.storage.v1.StorageClassList"], "StorageClassList">
+  VolumeAttachment: Resource<components["schemas"]["io.k8s.api.storage.v1.VolumeAttachment"], "VolumeAttachment">
+  VolumeAttachmentList: Resource<
+    components["schemas"]["io.k8s.api.storage.v1.VolumeAttachmentList"],
+    "VolumeAttachmentList"
+  >
+  VolumeAttributesClass: Resource<
+    components["schemas"]["io.k8s.api.storage.v1.VolumeAttributesClass"],
+    "VolumeAttributesClass"
+  >
+  VolumeAttributesClassList: Resource<
+    components["schemas"]["io.k8s.api.storage.v1.VolumeAttributesClassList"],
+    "VolumeAttributesClassList"
+  >
+  DeleteOptions: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "DeleteOptions">
+  WatchEvent: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "WatchEvent">
 }
 
 export default api

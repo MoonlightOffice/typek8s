@@ -10674,19 +10674,24 @@ export interface operations {
   }
 }
 
+type Resource<T, U> = Omit<T, "status"> & { apiVersion: "apps/v1"; kind: U }
+
 export interface api {
-  ControllerRevision: Omit<components["schemas"]["io.k8s.api.apps.v1.ControllerRevision"], "status">
-  ControllerRevisionList: Omit<components["schemas"]["io.k8s.api.apps.v1.ControllerRevisionList"], "status">
-  DaemonSet: Omit<components["schemas"]["io.k8s.api.apps.v1.DaemonSet"], "status">
-  DaemonSetList: Omit<components["schemas"]["io.k8s.api.apps.v1.DaemonSetList"], "status">
-  Deployment: Omit<components["schemas"]["io.k8s.api.apps.v1.Deployment"], "status">
-  DeploymentList: Omit<components["schemas"]["io.k8s.api.apps.v1.DeploymentList"], "status">
-  ReplicaSet: Omit<components["schemas"]["io.k8s.api.apps.v1.ReplicaSet"], "status">
-  ReplicaSetList: Omit<components["schemas"]["io.k8s.api.apps.v1.ReplicaSetList"], "status">
-  StatefulSet: Omit<components["schemas"]["io.k8s.api.apps.v1.StatefulSet"], "status">
-  StatefulSetList: Omit<components["schemas"]["io.k8s.api.apps.v1.StatefulSetList"], "status">
-  DeleteOptions: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "status">
-  WatchEvent: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "status">
+  ControllerRevision: Resource<components["schemas"]["io.k8s.api.apps.v1.ControllerRevision"], "ControllerRevision">
+  ControllerRevisionList: Resource<
+    components["schemas"]["io.k8s.api.apps.v1.ControllerRevisionList"],
+    "ControllerRevisionList"
+  >
+  DaemonSet: Resource<components["schemas"]["io.k8s.api.apps.v1.DaemonSet"], "DaemonSet">
+  DaemonSetList: Resource<components["schemas"]["io.k8s.api.apps.v1.DaemonSetList"], "DaemonSetList">
+  Deployment: Resource<components["schemas"]["io.k8s.api.apps.v1.Deployment"], "Deployment">
+  DeploymentList: Resource<components["schemas"]["io.k8s.api.apps.v1.DeploymentList"], "DeploymentList">
+  ReplicaSet: Resource<components["schemas"]["io.k8s.api.apps.v1.ReplicaSet"], "ReplicaSet">
+  ReplicaSetList: Resource<components["schemas"]["io.k8s.api.apps.v1.ReplicaSetList"], "ReplicaSetList">
+  StatefulSet: Resource<components["schemas"]["io.k8s.api.apps.v1.StatefulSet"], "StatefulSet">
+  StatefulSetList: Resource<components["schemas"]["io.k8s.api.apps.v1.StatefulSetList"], "StatefulSetList">
+  DeleteOptions: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "DeleteOptions">
+  WatchEvent: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "WatchEvent">
 }
 
 export default api

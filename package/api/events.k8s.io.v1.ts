@@ -1656,11 +1656,13 @@ export interface operations {
   }
 }
 
+type Resource<T, U> = Omit<T, "status"> & { apiVersion: "events.k8s.io/v1"; kind: U }
+
 export interface api {
-  Event: Omit<components["schemas"]["io.k8s.api.events.v1.Event"], "status">
-  EventList: Omit<components["schemas"]["io.k8s.api.events.v1.EventList"], "status">
-  DeleteOptions: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "status">
-  WatchEvent: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "status">
+  Event: Resource<components["schemas"]["io.k8s.api.events.v1.Event"], "Event">
+  EventList: Resource<components["schemas"]["io.k8s.api.events.v1.EventList"], "EventList">
+  DeleteOptions: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "DeleteOptions">
+  WatchEvent: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "WatchEvent">
 }
 
 export default api

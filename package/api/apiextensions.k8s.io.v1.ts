@@ -1935,17 +1935,19 @@ export interface operations {
   }
 }
 
+type Resource<T, U> = Omit<T, "status"> & { apiVersion: "apiextensions.k8s.io/v1"; kind: U }
+
 export interface api {
-  CustomResourceDefinition: Omit<
+  CustomResourceDefinition: Resource<
     components["schemas"]["io.k8s.apiextensions-apiserver.pkg.apis.apiextensions.v1.CustomResourceDefinition"],
-    "status"
+    "CustomResourceDefinition"
   >
-  CustomResourceDefinitionList: Omit<
+  CustomResourceDefinitionList: Resource<
     components["schemas"]["io.k8s.apiextensions-apiserver.pkg.apis.apiextensions.v1.CustomResourceDefinitionList"],
-    "status"
+    "CustomResourceDefinitionList"
   >
-  DeleteOptions: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "status">
-  WatchEvent: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "status">
+  DeleteOptions: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "DeleteOptions">
+  WatchEvent: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "WatchEvent">
 }
 
 export default api

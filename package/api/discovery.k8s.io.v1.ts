@@ -1702,11 +1702,13 @@ export interface operations {
   }
 }
 
+type Resource<T, U> = Omit<T, "status"> & { apiVersion: "discovery.k8s.io/v1"; kind: U }
+
 export interface api {
-  EndpointSlice: Omit<components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"], "status">
-  EndpointSliceList: Omit<components["schemas"]["io.k8s.api.discovery.v1.EndpointSliceList"], "status">
-  DeleteOptions: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "status">
-  WatchEvent: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "status">
+  EndpointSlice: Resource<components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"], "EndpointSlice">
+  EndpointSliceList: Resource<components["schemas"]["io.k8s.api.discovery.v1.EndpointSliceList"], "EndpointSliceList">
+  DeleteOptions: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "DeleteOptions">
+  WatchEvent: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "WatchEvent">
 }
 
 export default api

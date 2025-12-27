@@ -1257,11 +1257,13 @@ export interface operations {
   }
 }
 
+type Resource<T, U> = Omit<T, "status"> & { apiVersion: "scheduling.k8s.io/v1"; kind: U }
+
 export interface api {
-  PriorityClass: Omit<components["schemas"]["io.k8s.api.scheduling.v1.PriorityClass"], "status">
-  PriorityClassList: Omit<components["schemas"]["io.k8s.api.scheduling.v1.PriorityClassList"], "status">
-  DeleteOptions: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "status">
-  WatchEvent: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "status">
+  PriorityClass: Resource<components["schemas"]["io.k8s.api.scheduling.v1.PriorityClass"], "PriorityClass">
+  PriorityClassList: Resource<components["schemas"]["io.k8s.api.scheduling.v1.PriorityClassList"], "PriorityClassList">
+  DeleteOptions: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "DeleteOptions">
+  WatchEvent: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "WatchEvent">
 }
 
 export default api

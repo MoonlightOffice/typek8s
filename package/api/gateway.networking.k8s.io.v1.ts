@@ -7623,15 +7623,17 @@ export interface operations {
   }
 }
 
+type Resource<T, U> = Omit<T, "status"> & { apiVersion: "gateway.networking.k8s.io/v1"; kind: U }
+
 export interface api {
-  GRPCRoute: Omit<components["schemas"]["io.k8s.networking.gateway.v1.GRPCRoute"], "status">
-  GRPCRouteList: Omit<components["schemas"]["io.k8s.networking.gateway.v1.GRPCRouteList"], "status">
-  Gateway: Omit<components["schemas"]["io.k8s.networking.gateway.v1.Gateway"], "status">
-  GatewayClass: Omit<components["schemas"]["io.k8s.networking.gateway.v1.GatewayClass"], "status">
-  GatewayClassList: Omit<components["schemas"]["io.k8s.networking.gateway.v1.GatewayClassList"], "status">
-  GatewayList: Omit<components["schemas"]["io.k8s.networking.gateway.v1.GatewayList"], "status">
-  HTTPRoute: Omit<components["schemas"]["io.k8s.networking.gateway.v1.HTTPRoute"], "status">
-  HTTPRouteList: Omit<components["schemas"]["io.k8s.networking.gateway.v1.HTTPRouteList"], "status">
+  GRPCRoute: Resource<components["schemas"]["io.k8s.networking.gateway.v1.GRPCRoute"], "GRPCRoute">
+  GRPCRouteList: Resource<components["schemas"]["io.k8s.networking.gateway.v1.GRPCRouteList"], "GRPCRouteList">
+  Gateway: Resource<components["schemas"]["io.k8s.networking.gateway.v1.Gateway"], "Gateway">
+  GatewayClass: Resource<components["schemas"]["io.k8s.networking.gateway.v1.GatewayClass"], "GatewayClass">
+  GatewayClassList: Resource<components["schemas"]["io.k8s.networking.gateway.v1.GatewayClassList"], "GatewayClassList">
+  GatewayList: Resource<components["schemas"]["io.k8s.networking.gateway.v1.GatewayList"], "GatewayList">
+  HTTPRoute: Resource<components["schemas"]["io.k8s.networking.gateway.v1.HTTPRoute"], "HTTPRoute">
+  HTTPRouteList: Resource<components["schemas"]["io.k8s.networking.gateway.v1.HTTPRouteList"], "HTTPRouteList">
 }
 
 export default api

@@ -852,14 +852,25 @@ export interface operations {
   }
 }
 
+type Resource<T, U> = Omit<T, "status"> & { apiVersion: "authorization.k8s.io/v1"; kind: U }
+
 export interface api {
-  LocalSubjectAccessReview: Omit<
+  LocalSubjectAccessReview: Resource<
     components["schemas"]["io.k8s.api.authorization.v1.LocalSubjectAccessReview"],
-    "status"
+    "LocalSubjectAccessReview"
   >
-  SelfSubjectAccessReview: Omit<components["schemas"]["io.k8s.api.authorization.v1.SelfSubjectAccessReview"], "status">
-  SelfSubjectRulesReview: Omit<components["schemas"]["io.k8s.api.authorization.v1.SelfSubjectRulesReview"], "status">
-  SubjectAccessReview: Omit<components["schemas"]["io.k8s.api.authorization.v1.SubjectAccessReview"], "status">
+  SelfSubjectAccessReview: Resource<
+    components["schemas"]["io.k8s.api.authorization.v1.SelfSubjectAccessReview"],
+    "SelfSubjectAccessReview"
+  >
+  SelfSubjectRulesReview: Resource<
+    components["schemas"]["io.k8s.api.authorization.v1.SelfSubjectRulesReview"],
+    "SelfSubjectRulesReview"
+  >
+  SubjectAccessReview: Resource<
+    components["schemas"]["io.k8s.api.authorization.v1.SubjectAccessReview"],
+    "SubjectAccessReview"
+  >
 }
 
 export default api

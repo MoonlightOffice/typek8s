@@ -6169,15 +6169,23 @@ export interface operations {
   }
 }
 
+type Resource<T, U> = Omit<T, "status"> & { apiVersion: "gateway.networking.k8s.io/v1beta1"; kind: U }
+
 export interface api {
-  Gateway: Omit<components["schemas"]["io.k8s.networking.gateway.v1beta1.Gateway"], "status">
-  GatewayClass: Omit<components["schemas"]["io.k8s.networking.gateway.v1beta1.GatewayClass"], "status">
-  GatewayClassList: Omit<components["schemas"]["io.k8s.networking.gateway.v1beta1.GatewayClassList"], "status">
-  GatewayList: Omit<components["schemas"]["io.k8s.networking.gateway.v1beta1.GatewayList"], "status">
-  HTTPRoute: Omit<components["schemas"]["io.k8s.networking.gateway.v1beta1.HTTPRoute"], "status">
-  HTTPRouteList: Omit<components["schemas"]["io.k8s.networking.gateway.v1beta1.HTTPRouteList"], "status">
-  ReferenceGrant: Omit<components["schemas"]["io.k8s.networking.gateway.v1beta1.ReferenceGrant"], "status">
-  ReferenceGrantList: Omit<components["schemas"]["io.k8s.networking.gateway.v1beta1.ReferenceGrantList"], "status">
+  Gateway: Resource<components["schemas"]["io.k8s.networking.gateway.v1beta1.Gateway"], "Gateway">
+  GatewayClass: Resource<components["schemas"]["io.k8s.networking.gateway.v1beta1.GatewayClass"], "GatewayClass">
+  GatewayClassList: Resource<
+    components["schemas"]["io.k8s.networking.gateway.v1beta1.GatewayClassList"],
+    "GatewayClassList"
+  >
+  GatewayList: Resource<components["schemas"]["io.k8s.networking.gateway.v1beta1.GatewayList"], "GatewayList">
+  HTTPRoute: Resource<components["schemas"]["io.k8s.networking.gateway.v1beta1.HTTPRoute"], "HTTPRoute">
+  HTTPRouteList: Resource<components["schemas"]["io.k8s.networking.gateway.v1beta1.HTTPRouteList"], "HTTPRouteList">
+  ReferenceGrant: Resource<components["schemas"]["io.k8s.networking.gateway.v1beta1.ReferenceGrant"], "ReferenceGrant">
+  ReferenceGrantList: Resource<
+    components["schemas"]["io.k8s.networking.gateway.v1beta1.ReferenceGrantList"],
+    "ReferenceGrantList"
+  >
 }
 
 export default api

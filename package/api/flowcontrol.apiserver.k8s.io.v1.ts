@@ -2725,19 +2725,21 @@ export interface operations {
   }
 }
 
+type Resource<T, U> = Omit<T, "status"> & { apiVersion: "flowcontrol.apiserver.k8s.io/v1"; kind: U }
+
 export interface api {
-  FlowSchema: Omit<components["schemas"]["io.k8s.api.flowcontrol.v1.FlowSchema"], "status">
-  FlowSchemaList: Omit<components["schemas"]["io.k8s.api.flowcontrol.v1.FlowSchemaList"], "status">
-  PriorityLevelConfiguration: Omit<
+  FlowSchema: Resource<components["schemas"]["io.k8s.api.flowcontrol.v1.FlowSchema"], "FlowSchema">
+  FlowSchemaList: Resource<components["schemas"]["io.k8s.api.flowcontrol.v1.FlowSchemaList"], "FlowSchemaList">
+  PriorityLevelConfiguration: Resource<
     components["schemas"]["io.k8s.api.flowcontrol.v1.PriorityLevelConfiguration"],
-    "status"
+    "PriorityLevelConfiguration"
   >
-  PriorityLevelConfigurationList: Omit<
+  PriorityLevelConfigurationList: Resource<
     components["schemas"]["io.k8s.api.flowcontrol.v1.PriorityLevelConfigurationList"],
-    "status"
+    "PriorityLevelConfigurationList"
   >
-  DeleteOptions: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "status">
-  WatchEvent: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "status">
+  DeleteOptions: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "DeleteOptions">
+  WatchEvent: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "WatchEvent">
 }
 
 export default api

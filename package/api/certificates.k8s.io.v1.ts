@@ -1786,17 +1786,19 @@ export interface operations {
   }
 }
 
+type Resource<T, U> = Omit<T, "status"> & { apiVersion: "certificates.k8s.io/v1"; kind: U }
+
 export interface api {
-  CertificateSigningRequest: Omit<
+  CertificateSigningRequest: Resource<
     components["schemas"]["io.k8s.api.certificates.v1.CertificateSigningRequest"],
-    "status"
+    "CertificateSigningRequest"
   >
-  CertificateSigningRequestList: Omit<
+  CertificateSigningRequestList: Resource<
     components["schemas"]["io.k8s.api.certificates.v1.CertificateSigningRequestList"],
-    "status"
+    "CertificateSigningRequestList"
   >
-  DeleteOptions: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "status">
-  WatchEvent: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "status">
+  DeleteOptions: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "DeleteOptions">
+  WatchEvent: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "WatchEvent">
 }
 
 export default api

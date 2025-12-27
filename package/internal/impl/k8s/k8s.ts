@@ -154,12 +154,14 @@ export class K8sClientImpl implements K8sClient {
 
     // Create resource types for default export
     const template = `
+type Resource<T, U> = Omit<T, "status"> & { apiVersion: "${apiVersion}", kind: U}
+
 export interface api {
   ${
       Array
         .from(schemaAndResourceNames)
         .map((s) => {
-          return `${s.resourceName}: Omit<components["schemas"]["${s.schemaName}"], "status">`
+          return `${s.resourceName}: Resource<components["schemas"]["${s.schemaName}"], "${s.resourceName}">`
         })
         .join("\n  ")
     }

@@ -5828,13 +5828,15 @@ export interface operations {
   }
 }
 
+type Resource<T, U> = Omit<T, "status"> & { apiVersion: "batch/v1"; kind: U }
+
 export interface api {
-  CronJob: Omit<components["schemas"]["io.k8s.api.batch.v1.CronJob"], "status">
-  CronJobList: Omit<components["schemas"]["io.k8s.api.batch.v1.CronJobList"], "status">
-  Job: Omit<components["schemas"]["io.k8s.api.batch.v1.Job"], "status">
-  JobList: Omit<components["schemas"]["io.k8s.api.batch.v1.JobList"], "status">
-  DeleteOptions: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "status">
-  WatchEvent: Omit<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "status">
+  CronJob: Resource<components["schemas"]["io.k8s.api.batch.v1.CronJob"], "CronJob">
+  CronJobList: Resource<components["schemas"]["io.k8s.api.batch.v1.CronJobList"], "CronJobList">
+  Job: Resource<components["schemas"]["io.k8s.api.batch.v1.Job"], "Job">
+  JobList: Resource<components["schemas"]["io.k8s.api.batch.v1.JobList"], "JobList">
+  DeleteOptions: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "DeleteOptions">
+  WatchEvent: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "WatchEvent">
 }
 
 export default api
