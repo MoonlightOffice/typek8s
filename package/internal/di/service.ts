@@ -5,9 +5,6 @@ export interface Service {
   appService: AppService
 }
 
-export function newService(serverBaseUrl: string): Service {
-  client.k8sClient.setBaseURL(serverBaseUrl)
-  return {
-    appService: new AppService(client.fileIOClient, client.k8sClient),
-  }
+export const service: Service = {
+  appService: new AppService(client.fileIOClient, client.k8sClient),
 }

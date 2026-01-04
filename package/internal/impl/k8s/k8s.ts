@@ -1,4 +1,5 @@
 import { K8sClient } from "internal/core/client/k8s.ts"
+import { AppStateClient } from "internal/core/client/state.ts"
 import openapiTS, { astToString } from "openapi-typescript"
 
 interface XK8sGroupVersionKind {
@@ -8,11 +9,7 @@ interface XK8sGroupVersionKind {
 }
 
 export class K8sClientImpl implements K8sClient {
-  constructor(private serverBaseUrl: string) {}
-
-  setBaseURL(baseurl: string): void {
-    this.serverBaseUrl = baseurl
-  }
+  constructor(private appStateClient: AppStateClient) {}
 
   /**
    * Paths that doesn't start with api/ or apis/ are ignored.
@@ -22,7 +19,7 @@ export class K8sClientImpl implements K8sClient {
   private async getVersionAndPathMap(): Promise<{ apiVersion: string; serverRelativeURL: string }[]> {
     // Call Kubernetes OpenAPI endpoint to retrieve the list of api resources' OpenAPI endpoints
 
-    const url = new URL("/openapi/v3", this.serverBaseUrl)
+    const url = new URL("/openapi/v3", this.appStateClient.get().generate.serverBaseUrl)
 
     const resp = await fetch(url)
     if (resp.status !== 200) {
@@ -68,7 +65,7 @@ export class K8sClientImpl implements K8sClient {
       apiVersion: string
       serverRelativeURL: string
     }) => {
-      const url = new URL(path.serverRelativeURL, this.serverBaseUrl)
+      const url = new URL(path.serverRelativeURL, this.appStateClient.get().generate.serverBaseUrl)
       const resp = await fetch(url)
       if (resp.status !== 200) {
         throw Error(`status: ${resp.status}, body: ${await resp.text()}`)

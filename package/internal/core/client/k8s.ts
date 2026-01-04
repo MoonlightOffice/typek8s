@@ -1,12 +1,5 @@
 export interface K8sClient {
   /**
-   * Set Kubernetes base url for K8sClient instance.
-   *
-   * @param baseurl Base url of Kubernetes server. i.e.) `http://localhost:8001`
-   */
-  setBaseURL(baseurl: string): void
-
-  /**
    * Calls Kubernetes OpenAPI path and fetch all API schemas available from the server.
    */
   getAllOpenApi(): Promise<{ apiVersion: string; openApi: string }[]>

@@ -13,18 +13,23 @@ export interface Client {
   appStateClient: AppStateClient
 }
 
+const fileIOClient = new FileIOClientImpl()
+const appStateClient = new AppStateClientImpl({
+  synth: { out: "./chart/" },
+  generate: {
+    out: "./api/",
+    source: "server",
+    serverBaseUrl: "http://localhost:8001",
+    apiVersion: "example.com/v1",
+    openApiFilePath: "./path/to/openapi.yaml",
+  },
+})
+const parameterClient = new ParameterClientImpl()
+const k8sClient = new K8sClientImpl(appStateClient)
+
 export const client: Client = {
-  fileIOClient: new FileIOClientImpl(),
-  parameterClient: new ParameterClientImpl(),
-  k8sClient: new K8sClientImpl(""),
-  appStateClient: new AppStateClientImpl({
-    synth: { out: "" },
-    generate: {
-      out: "",
-      source: "server",
-      serverBaseUrl: "",
-      apiVersion: "",
-      openApiFilePath: "",
-    },
-  }),
+  appStateClient: appStateClient,
+  fileIOClient: fileIOClient,
+  parameterClient: parameterClient,
+  k8sClient: k8sClient,
 }
