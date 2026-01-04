@@ -24,7 +24,7 @@ const appStateClient = new AppStateClientImpl({
     openApiFilePath: "./path/to/openapi.yaml",
   },
 })
-const parameterClient = new ParameterClientImpl()
+const parameterClient = new ParameterClientImpl(fileIOClient)
 const k8sClient = new K8sClientImpl(appStateClient)
 
 export const client: Client = {

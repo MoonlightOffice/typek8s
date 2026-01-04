@@ -1,0 +1,19 @@
+typek8s:
+  synth:
+    out: ./chart/
+
+  # Config the source and others to generated Kubernetes TypeScript api files
+  generate:
+    out: ./api/
+
+    ### Specify the source of OpenAPI data, 'server' or 'file'.
+
+    # Server version
+    source: server
+    serverBaseUrl: http://localhost:8001
+
+    ## OpenAPI file version
+    #source: file
+    ## TypeScript api files are created only for specifiled apiVersion's resources.
+    #apiVersion: example.com/v1
+    #openApiFilePath: ./path/to/openapi.yaml

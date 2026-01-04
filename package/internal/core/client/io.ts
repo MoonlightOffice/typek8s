@@ -1,3 +1,5 @@
+import { App } from "internal/core/entity/app.ts"
+
 export interface FileIOClient {
   /**
    * Read content of the given path's file. The file is expected to be utf8-encoded.
@@ -52,7 +54,8 @@ export interface AppParameter {
 
 export interface ParameterClient {
   /**
-   * Load AppParameter, mostly from given cli flag
+   * Load app configuration from typek8s.yaml based on the given command
+   * @param command - The CLI command ("synth" or "generate")
    */
-  readAppParameter(): AppParameter
+  readConfig(command: string): App
 }

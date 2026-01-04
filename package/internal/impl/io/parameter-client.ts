@@ -1,47 +1,91 @@
-import { type AppParameter, ParameterClient } from "internal/core/client/io.ts"
-import { parseArgs } from "@std/cli/parse-args"
+import type { FileIOClient, ParameterClient } from "internal/core/client/io.ts"
+import type { App } from "internal/core/entity/app.ts"
+import { parse } from "@std/yaml"
+
+interface YamlConfig {
+  typek8s: {
+    synth: {
+      out: string
+    }
+    generate: {
+      out: string
+      source: "server" | "file"
+      serverBaseUrl?: string
+      apiVersion?: string
+      openApiFilePath?: string
+    }
+  }
+}
 
 export class ParameterClientImpl implements ParameterClient {
-  constructor() {}
+  constructor(private fileIOClient: FileIOClient) {}
 
-  readAppParameter(): AppParameter {
-    const flags = parseArgs(Deno.args, {
-      string: [
-        "openapi-from",
-        "output-directory",
-        "api-version",
-        "server-base-url",
-        "openapi-file-path",
-      ],
-      default: {
-        "output-directory": "./api/",
+  readConfig(command: string): App {
+    // Validate command
+    if (command !== "synth" && command !== "generate") {
+      throw new Error(`Invalid command: "${command}". Expected "synth" or "generate"`)
+    }
+
+    // Read YAML file as text
+    const content = this.fileIOClient.read("./typek8s.yaml")
+
+    // Parse YAML
+    const yamlConfig = parse(content) as YamlConfig
+
+    // Validate YAML structure
+    if (!yamlConfig?.typek8s) {
+      throw new Error("Invalid typek8s.yaml: missing 'typek8s' root key")
+    }
+
+    // Handle synth command
+    if (command === "synth") {
+      throw new Error("synth command is not implemented yet")
+    }
+
+    // Handle generate command
+    const generate = yamlConfig.typek8s.generate
+
+    if (!generate) {
+      throw new Error("Invalid typek8s.yaml: missing 'typek8s.generate' configuration")
+    }
+
+    if (!generate.source) {
+      throw new Error("Invalid typek8s.yaml: missing 'typek8s.generate.source'")
+    }
+
+    if (generate.source !== "server" && generate.source !== "file") {
+      throw new Error(`Invalid source: "${generate.source}". Expected "server" or "file"`)
+    }
+
+    // Validate server mode
+    if (generate.source === "server") {
+      if (!generate.serverBaseUrl) {
+        throw new Error("serverBaseUrl is required when source is 'server'")
+      }
+    }
+
+    // Validate file mode
+    if (generate.source === "file") {
+      if (!generate.apiVersion) {
+        throw new Error("apiVersion is required when source is 'file'")
+      }
+      if (!generate.openApiFilePath) {
+        throw new Error("openApiFilePath is required when source is 'file'")
+      }
+    }
+
+    // Construct App entity with proper defaults
+    const app: App = {
+      synth: yamlConfig.typek8s.synth,
+      generate: {
+        out: generate.out,
+        source: generate.source,
+        serverBaseUrl: generate.serverBaseUrl ?? "",
+        apiVersion: generate.apiVersion ?? "",
+        openApiFilePath: generate.openApiFilePath ?? "",
       },
-    })
-
-    switch (flags["openapi-from"]) {
-      case "file":
-        if (flags["api-version"] === undefined || flags["api-version"] === "") {
-          throw Error("expected api version for --api-version")
-        }
-        if (flags["openapi-file-path"] === undefined || flags["openapi-file-path"] === "") {
-          throw Error("expected path to OpenAPI file for --openapi-file-path")
-        }
-        break
-      case "server":
-        if (flags["server-base-url"] === undefined || flags["server-base-url"] === "") {
-          throw Error("expected Kubernetes base url for --server-base-url")
-        }
-        break
-      default:
-        throw Error(`expected "server" or "file" for --openapi-from`)
     }
 
-    return {
-      openApiFrom: flags["openapi-from"] as AppParameter["openApiFrom"],
-      outputDirectory: flags["output-directory"],
-      apiVersion: flags["api-version"] ?? "",
-      openApiFilePath: flags["openapi-file-path"] ?? "",
-      serverBaseUrl: flags["server-base-url"] ?? "",
-    }
+    return app
   }
 }

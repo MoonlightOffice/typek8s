@@ -1,6 +1,5 @@
 import type { AppStateClient } from "internal/core/client/state.ts"
 import type { ParameterClient } from "internal/core/client/io.ts"
-import type { App } from "internal/core/entity/app.ts"
 
 export class InitService {
   constructor(
@@ -9,24 +8,10 @@ export class InitService {
   ) {}
 
   /**
-   * Initialize application state from CLI parameters
+   * Initialize application state from configuration
    */
-  init(): void {
-    const params = this.parameterClient.readAppParameter()
-
-    const appState: App = {
-      synth: {
-        out: params.outputDirectory,
-      },
-      generate: {
-        out: params.outputDirectory,
-        source: params.openApiFrom,
-        serverBaseUrl: params.serverBaseUrl,
-        apiVersion: params.apiVersion,
-        openApiFilePath: params.openApiFilePath,
-      },
-    }
-
+  init(command: string): void {
+    const appState = this.parameterClient.readConfig(command)
     this.appStateClient.set(appState)
   }
 }
