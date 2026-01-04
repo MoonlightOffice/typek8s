@@ -40,14 +40,14 @@ export interface AppParameter {
   // file-only
 
   /** Specify Kubernetes' apiVersion for the OpenAPI file. This name will be the name for auto-generated TypeScript file */
-  apiVersion?: string
+  apiVersion: string
 
-  openApiFilePath?: string
+  openApiFilePath: string
 
   // server-only
 
   /** Base url of Kubernetes server. i.e.) `http://localhost:8001` */
-  serverBaseUrl?: string
+  serverBaseUrl: string
 }
 
 export interface ParameterClient {

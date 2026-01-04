@@ -39,9 +39,9 @@ export class ParameterClientImpl implements ParameterClient {
     return {
       openApiFrom: flags["openapi-from"] as AppParameter["openApiFrom"],
       outputDirectory: flags["output-directory"],
-      apiVersion: flags["api-version"],
-      openApiFilePath: flags["openapi-file-path"],
-      serverBaseUrl: flags["server-base-url"],
+      apiVersion: flags["api-version"] ?? "",
+      openApiFilePath: flags["openapi-file-path"] ?? "",
+      serverBaseUrl: flags["server-base-url"] ?? "",
     }
   }
 }
