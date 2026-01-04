@@ -1,5 +1,8 @@
 import type { App } from "internal/core/entity/app.ts"
 
+/**
+ * Manage global state
+ */
 export interface State<T> {
   get(): T
   set(value: T): void
