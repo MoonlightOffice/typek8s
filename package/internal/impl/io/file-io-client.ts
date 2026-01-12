@@ -1,4 +1,4 @@
-import type { FileIOClient } from "internal/core/client/io.ts"
+import type { FileIOClient } from "internal/app/client/io.ts"
 import { join } from "@std/path"
 
 export class FileIOClientImpl implements FileIOClient {

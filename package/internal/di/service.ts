@@ -1,5 +1,5 @@
-import { AppService } from "internal/core/service/app.ts"
-import { InitService } from "internal/core/service/init.ts"
+import { AppService } from "internal/app/service/app.ts"
+import { InitService } from "internal/app/service/init.ts"
 import { client } from "./client.ts"
 
 export interface Service {

@@ -1,5 +1,5 @@
-import { K8sClient } from "internal/core/client/k8s.ts"
-import { AppStateClient } from "internal/core/client/state.ts"
+import { K8sClient } from "internal/app/client/k8s.ts"
+import { AppStateClient } from "internal/app/client/state.ts"
 import openapiTS, { astToString } from "openapi-typescript"
 
 interface XK8sGroupVersionKind {

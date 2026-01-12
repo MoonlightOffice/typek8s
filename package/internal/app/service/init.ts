@@ -1,5 +1,5 @@
-import type { AppStateClient } from "internal/core/client/state.ts"
-import type { ParameterClient } from "internal/core/client/io.ts"
+import type { AppStateClient } from "internal/app/client/state.ts"
+import type { ParameterClient } from "internal/app/client/io.ts"
 
 export class InitService {
   constructor(

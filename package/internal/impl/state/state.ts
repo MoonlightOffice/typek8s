@@ -1,4 +1,4 @@
-import type { State } from "internal/core/client/state.ts"
+import type { State } from "internal/app/client/state.ts"
 
 /**
  * Generic implementation of the State<T> interface

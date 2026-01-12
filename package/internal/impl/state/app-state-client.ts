@@ -1,5 +1,5 @@
-import type { App } from "internal/core/entity/app.ts"
-import type { AppStateClient } from "internal/core/client/state.ts"
+import type { App } from "internal/app/entity/app.ts"
+import type { AppStateClient } from "internal/app/client/state.ts"
 import { StateImpl } from "internal/impl/state/state.ts"
 
 /**
