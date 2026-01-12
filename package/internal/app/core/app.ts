@@ -1,3 +1,6 @@
+/**
+ * Parameters for overall typek8s application
+ */
 export interface App {
   synth: {
     out: string
