@@ -3,6 +3,7 @@ import { "@std/yaml" as stdYaml, client, core } from "../deps.ts"
 interface YamlConfig {
   typek8s: {
     synth: {
+      type: "chart" | "manifest"
       out: string
     }
     generate: {

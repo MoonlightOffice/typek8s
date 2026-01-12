@@ -9,7 +9,7 @@ export interface Client {
 
 const fileIOClient = new impl.io.FileIOClientImpl()
 const appStateClient = new impl.state.AppStateClientImpl({
-  synth: { out: "./chart/" },
+  synth: { type: "chart", out: "./chart/" },
   generate: {
     out: "./api/",
     source: "server",

@@ -3,6 +3,7 @@
  */
 export interface App {
   synth: {
+    type: "chart" | "manifest"
     out: string
   }
 
