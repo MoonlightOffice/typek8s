@@ -1,7 +1,6 @@
-import type { FileIOClient } from "internal/app/client/io.ts"
-import { join } from "@std/path"
+import { "@std/path" as stdPath, client } from "../deps.ts"
 
-export class FileIOClientImpl implements FileIOClient {
+export class FileIOClientImpl implements client.FileIOClient {
   constructor() {}
 
   read(path: string): string {
@@ -13,7 +12,7 @@ export class FileIOClientImpl implements FileIOClient {
       Deno.mkdirSync(dir, { recursive: true })
     }
 
-    const path = join(dir, fname)
+    const path = stdPath.join(dir, fname)
     Deno.writeTextFileSync(path, content)
   }
 

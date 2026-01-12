@@ -1,11 +1,9 @@
-import { FileIOClient } from "internal/app/client/io.ts"
-import { K8sClient } from "internal/app/client/k8s.ts"
-import { apiVersionToFileName, fileNameToExportAlias } from "internal/app/core/k8s-util.ts"
+import { client, core } from "./deps.ts"
 
 export class AppService {
   constructor(
-    private readonly fileIoClient: FileIOClient,
-    private readonly k8sClient: K8sClient,
+    private readonly fileIoClient: client.FileIOClient,
+    private readonly k8sClient: client.K8sClient,
   ) {}
 
   /**
@@ -19,7 +17,7 @@ export class AppService {
     if (tsContent === "") {
       return
     }
-    this.fileIoClient.write(dir, apiVersionToFileName(apiVersion), tsContent)
+    this.fileIoClient.write(dir, core.apiVersionToFileName(apiVersion), tsContent)
   }
 
   /**
@@ -33,7 +31,7 @@ export class AppService {
     const exportStatements = tsFiles
       .sort() // Sort alphabetically
       .map((filename) => {
-        const alias = fileNameToExportAlias(filename)
+        const alias = core.fileNameToExportAlias(filename)
         return `export type { api as ${alias} } from "./${filename}"`
       })
       .join("\n")

@@ -1,6 +1,4 @@
-import { K8sClient } from "internal/app/client/k8s.ts"
-import { AppStateClient } from "internal/app/client/state.ts"
-import openapiTS, { astToString } from "openapi-typescript"
+import { "openapi-typescript" as openapiTypeScript, client } from "../deps.ts"
 
 interface XK8sGroupVersionKind {
   group: string
@@ -8,8 +6,8 @@ interface XK8sGroupVersionKind {
   version: string
 }
 
-export class K8sClientImpl implements K8sClient {
-  constructor(private appStateClient: AppStateClient) {}
+export class K8sClientImpl implements client.K8sClient {
+  constructor(private appStateClient: client.AppStateClient) {}
 
   /**
    * Paths that doesn't start with api/ or apis/ are ignored.
@@ -147,7 +145,7 @@ export class K8sClientImpl implements K8sClient {
       return ""
     }
 
-    const ts = astToString(await openapiTS(JSON.parse(openapi)))
+    const ts = openapiTypeScript.astToString(await openapiTypeScript.default(JSON.parse(openapi)))
 
     // Create resource types for default export
     const template = `

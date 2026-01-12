@@ -1,13 +1,12 @@
-import type { App } from "internal/app/core/app.ts"
-import type { AppStateClient } from "internal/app/client/state.ts"
-import { StateImpl } from "internal/impl/state/state.ts"
+import { client, core } from "../deps.ts"
+import { StateImpl } from "./state.ts"
 
 /**
  * Implementation of AppStateClient
  * Manages application state
  */
-export class AppStateClientImpl extends StateImpl<App> implements AppStateClient {
-  constructor(initialValue: App) {
+export class AppStateClientImpl extends StateImpl<core.App> implements client.AppStateClient {
+  constructor(initialValue: core.App) {
     super(initialValue)
   }
 }

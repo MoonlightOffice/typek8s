@@ -1,6 +1,4 @@
-import type { FileIOClient, ParameterClient } from "internal/app/client/io.ts"
-import type { App } from "internal/app/core/app.ts"
-import { parse } from "@std/yaml"
+import { "@std/yaml" as stdYaml, client, core } from "../deps.ts"
 
 interface YamlConfig {
   typek8s: {
@@ -17,10 +15,10 @@ interface YamlConfig {
   }
 }
 
-export class ParameterClientImpl implements ParameterClient {
-  constructor(private fileIOClient: FileIOClient) {}
+export class ParameterClientImpl implements client.ParameterClient {
+  constructor(private fileIOClient: client.FileIOClient) {}
 
-  readConfig(command: string): App {
+  readConfig(command: string): core.App {
     // Validate command
     if (command !== "synth" && command !== "generate") {
       throw new Error(`Invalid command: "${command}". Expected "synth" or "generate"`)
@@ -30,7 +28,7 @@ export class ParameterClientImpl implements ParameterClient {
     const content = this.fileIOClient.read("./typek8s.yaml")
 
     // Parse YAML
-    const yamlConfig = parse(content) as YamlConfig
+    const yamlConfig = stdYaml.parse(content) as YamlConfig
 
     // Validate YAML structure
     if (!yamlConfig?.typek8s) {
@@ -75,7 +73,7 @@ export class ParameterClientImpl implements ParameterClient {
     }
 
     // Construct App entity with proper defaults
-    const app: App = {
+    const app: core.App = {
       synth: yamlConfig.typek8s.synth,
       generate: {
         out: generate.out,

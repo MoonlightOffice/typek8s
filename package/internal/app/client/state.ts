@@ -1,4 +1,4 @@
-import type { App } from "internal/app/core/app.ts"
+import { core } from "./deps.ts"
 
 /**
  * Manage global state
@@ -9,4 +9,4 @@ export interface State<T> {
   update(updater: (prev: T) => T): void
 }
 
-export interface AppStateClient extends State<App> {}
+export interface AppStateClient extends State<core.App> {}

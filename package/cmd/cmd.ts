@@ -1,5 +1,5 @@
-import { client } from "internal/di/client.ts"
-import { service } from "internal/di/service.ts"
+import { di } from "./deps.ts"
+const { client, service } = di
 
 async function run() {
   const command = Deno.args[0]

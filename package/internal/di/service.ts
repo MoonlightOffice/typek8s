@@ -1,13 +1,12 @@
-import { AppService } from "internal/app/service/app.ts"
-import { InitService } from "internal/app/service/init.ts"
-import { client } from "./client.ts"
+import client from "./client.ts"
+import { service } from "./deps.ts"
 
 export interface Service {
-  appService: AppService
-  initService: InitService
+  appService: service.AppService
+  initService: service.InitService
 }
 
-export const service: Service = {
-  appService: new AppService(client.fileIOClient, client.k8sClient),
-  initService: new InitService(client.appStateClient, client.parameterClient),
-}
+export default {
+  appService: new service.AppService(client.fileIOClient, client.k8sClient),
+  initService: new service.InitService(client.appStateClient, client.parameterClient),
+} satisfies Service

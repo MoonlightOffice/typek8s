@@ -1,10 +1,9 @@
-import type { AppStateClient } from "internal/app/client/state.ts"
-import type { ParameterClient } from "internal/app/client/io.ts"
+import { client } from "./deps.ts"
 
 export class InitService {
   constructor(
-    private readonly appStateClient: AppStateClient,
-    private readonly parameterClient: ParameterClient,
+    private readonly appStateClient: client.AppStateClient,
+    private readonly parameterClient: client.ParameterClient,
   ) {}
 
   /**

@@ -1,10 +1,10 @@
-import type { State } from "internal/app/client/state.ts"
+import { client } from "../deps.ts"
 
 /**
  * Generic implementation of the State<T> interface
  * Manages state with get, set, and update operations
  */
-export class StateImpl<T> implements State<T> {
+export class StateImpl<T> implements client.State<T> {
   private value: T
 
   constructor(initialValue: T) {

@@ -1,20 +1,14 @@
-import type { FileIOClient, ParameterClient } from "internal/app/client/io.ts"
-import type { K8sClient } from "internal/app/client/k8s.ts"
-import type { AppStateClient } from "internal/app/client/state.ts"
-import { FileIOClientImpl } from "internal/impl/io/file-io-client.ts"
-import { ParameterClientImpl } from "internal/impl/io/parameter-client.ts"
-import { K8sClientImpl } from "internal/impl/k8s/k8s.ts"
-import { AppStateClientImpl } from "internal/impl/state/app-state-client.ts"
+import { client, impl } from "./deps.ts"
 
 export interface Client {
-  fileIOClient: FileIOClient
-  parameterClient: ParameterClient
-  k8sClient: K8sClient
-  appStateClient: AppStateClient
+  fileIOClient: client.FileIOClient
+  parameterClient: client.ParameterClient
+  k8sClient: client.K8sClient
+  appStateClient: client.AppStateClient
 }
 
-const fileIOClient = new FileIOClientImpl()
-const appStateClient = new AppStateClientImpl({
+const fileIOClient = new impl.io.FileIOClientImpl()
+const appStateClient = new impl.state.AppStateClientImpl({
   synth: { out: "./chart/" },
   generate: {
     out: "./api/",
@@ -24,12 +18,12 @@ const appStateClient = new AppStateClientImpl({
     openApiFilePath: "./path/to/openapi.yaml",
   },
 })
-const parameterClient = new ParameterClientImpl(fileIOClient)
-const k8sClient = new K8sClientImpl(appStateClient)
+const parameterClient = new impl.io.ParameterClientImpl(fileIOClient)
+const k8sClient = new impl.k8s.K8sClientImpl(appStateClient)
 
-export const client: Client = {
+export default {
   appStateClient: appStateClient,
   fileIOClient: fileIOClient,
   parameterClient: parameterClient,
   k8sClient: k8sClient,
-}
+} satisfies Client

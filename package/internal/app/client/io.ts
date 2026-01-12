@@ -1,4 +1,4 @@
-import { App } from "internal/app/core/app.ts"
+import { core } from "./deps.ts"
 
 export interface FileIOClient {
   /**
@@ -57,5 +57,5 @@ export interface ParameterClient {
    * Load app configuration from typek8s.yaml based on the given command
    * @param command - The CLI command ("synth" or "generate")
    */
-  readConfig(command: string): App
+  readConfig(command: string): core.App
 }
