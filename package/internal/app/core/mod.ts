@@ -1,2 +1,5 @@
 export * from "./app.ts"
 export * from "./k8s-util.ts"
+export * from "./chart.ts"
+export * from "./crd.ts"
+export * from "./manifest.ts"
