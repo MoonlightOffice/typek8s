@@ -1,4 +1,4 @@
-import { App } from "internal/app/entity/app.ts"
+import { App } from "internal/app/core/app.ts"
 
 export interface FileIOClient {
   /**

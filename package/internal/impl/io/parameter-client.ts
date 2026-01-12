@@ -1,5 +1,5 @@
 import type { FileIOClient, ParameterClient } from "internal/app/client/io.ts"
-import type { App } from "internal/app/entity/app.ts"
+import type { App } from "internal/app/core/app.ts"
 import { parse } from "@std/yaml"
 
 interface YamlConfig {

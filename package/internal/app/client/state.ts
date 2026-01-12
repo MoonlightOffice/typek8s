@@ -1,4 +1,4 @@
-import type { App } from "internal/app/entity/app.ts"
+import type { App } from "internal/app/core/app.ts"
 
 /**
  * Manage global state

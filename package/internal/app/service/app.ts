@@ -1,6 +1,6 @@
 import { FileIOClient } from "internal/app/client/io.ts"
 import { K8sClient } from "internal/app/client/k8s.ts"
-import { apiVersionToFileName, fileNameToExportAlias } from "internal/app/entity/k8s-util.ts"
+import { apiVersionToFileName, fileNameToExportAlias } from "internal/app/core/k8s-util.ts"
 
 export class AppService {
   constructor(
