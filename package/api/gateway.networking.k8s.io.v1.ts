@@ -1,4 +1,74 @@
 export interface paths {
+  "/apis/gateway.networking.k8s.io/v1/backendtlspolicies": {
+    parameters: {
+      query?: {
+        /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
+        allowWatchBookmarks?: boolean
+        /**
+         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
+         *
+         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
+         */
+        continue?: string
+        /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
+        fieldSelector?: string
+        /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
+        labelSelector?: string
+        /**
+         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
+         *
+         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
+         */
+        limit?: number
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+         *
+         *     Defaults to unset
+         */
+        resourceVersion?: string
+        /**
+         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+         *
+         *     Defaults to unset
+         */
+        resourceVersionMatch?: string
+        /**
+         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
+         *
+         *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
+         *       is interpreted as "data at least as new as the provided `resourceVersion`"
+         *       and the bookmark event is send when the state is synced
+         *       to a `resourceVersion` at least as fresh as the one provided by the ListOptions.
+         *       If `resourceVersion` is unset, this is interpreted as "consistent read" and the
+         *       bookmark event is send when the state is synced at least to the moment
+         *       when request started being processed.
+         *     - `resourceVersionMatch` set to any other value or unset
+         *       Invalid error is returned.
+         *
+         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
+         */
+        sendInitialEvents?: boolean
+        /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
+        timeoutSeconds?: number
+        /** @description Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion. */
+        watch?: boolean
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** @description list objects of kind BackendTLSPolicy */
+    get: operations["listGatewayNetworkingV1BackendTLSPolicyForAllNamespaces"]
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   "/apis/gateway.networking.k8s.io/v1/gatewayclasses": {
     parameters: {
       query?: {
@@ -280,6 +350,86 @@ export interface paths {
     options?: never
     head?: never
     patch?: never
+    trace?: never
+  }
+  "/apis/gateway.networking.k8s.io/v1/namespaces/{namespace}/backendtlspolicies": {
+    parameters: {
+      query?: {
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+      }
+      header?: never
+      path: {
+        /** @description object name and auth scope, such as for teams and projects */
+        namespace: string
+      }
+      cookie?: never
+    }
+    /** @description list objects of kind BackendTLSPolicy */
+    get: operations["listGatewayNetworkingV1NamespacedBackendTLSPolicy"]
+    put?: never
+    /** @description create a BackendTLSPolicy */
+    post: operations["createGatewayNetworkingV1NamespacedBackendTLSPolicy"]
+    /** @description delete collection of BackendTLSPolicy */
+    delete: operations["deleteGatewayNetworkingV1CollectionNamespacedBackendTLSPolicy"]
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  "/apis/gateway.networking.k8s.io/v1/namespaces/{namespace}/backendtlspolicies/{name}": {
+    parameters: {
+      query?: {
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+      }
+      header?: never
+      path: {
+        /** @description name of the BackendTLSPolicy */
+        name: string
+        /** @description object name and auth scope, such as for teams and projects */
+        namespace: string
+      }
+      cookie?: never
+    }
+    /** @description read the specified BackendTLSPolicy */
+    get: operations["readGatewayNetworkingV1NamespacedBackendTLSPolicy"]
+    /** @description replace the specified BackendTLSPolicy */
+    put: operations["replaceGatewayNetworkingV1NamespacedBackendTLSPolicy"]
+    post?: never
+    /** @description delete a BackendTLSPolicy */
+    delete: operations["deleteGatewayNetworkingV1NamespacedBackendTLSPolicy"]
+    options?: never
+    head?: never
+    /** @description partially update the specified BackendTLSPolicy */
+    patch: operations["patchGatewayNetworkingV1NamespacedBackendTLSPolicy"]
+    trace?: never
+  }
+  "/apis/gateway.networking.k8s.io/v1/namespaces/{namespace}/backendtlspolicies/{name}/status": {
+    parameters: {
+      query?: {
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+      }
+      header?: never
+      path: {
+        /** @description name of the BackendTLSPolicy */
+        name: string
+        /** @description object name and auth scope, such as for teams and projects */
+        namespace: string
+      }
+      cookie?: never
+    }
+    /** @description read status of the specified BackendTLSPolicy */
+    get: operations["readGatewayNetworkingV1NamespacedBackendTLSPolicyStatus"]
+    /** @description replace status of the specified BackendTLSPolicy */
+    put: operations["replaceGatewayNetworkingV1NamespacedBackendTLSPolicyStatus"]
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    /** @description partially update status of the specified BackendTLSPolicy */
+    patch: operations["patchGatewayNetworkingV1NamespacedBackendTLSPolicyStatus"]
     trace?: never
   }
   "/apis/gateway.networking.k8s.io/v1/namespaces/{namespace}/gateways": {
@@ -756,6 +906,423 @@ export interface components {
      */
     "io.k8s.apimachinery.pkg.apis.meta.v1.Time": string
     /**
+     * @description BackendTLSPolicy provides a way to configure how a Gateway
+     *     connects to a Backend via TLS.
+     */
+    "io.k8s.networking.gateway.v1.BackendTLSPolicy": {
+      /** @description APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources */
+      apiVersion?: string
+      /** @description Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds */
+      kind?: string
+      /** @description Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata */
+      metadata?: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"]
+      /** @description Spec defines the desired state of BackendTLSPolicy. */
+      spec: {
+        /**
+         * @description Options are a list of key/value pairs to enable extended TLS
+         *     configuration for each implementation. For example, configuring the
+         *     minimum TLS version or supported cipher suites.
+         *
+         *     A set of common keys MAY be defined by the API in the future. To avoid
+         *     any ambiguity, implementation-specific definitions MUST use
+         *     domain-prefixed names, such as `example.com/my-custom-option`.
+         *     Un-prefixed names are reserved for key names defined by Gateway API.
+         *
+         *     Support: Implementation-specific
+         */
+        options?: {
+          [key: string]: string
+        }
+        /**
+         * @description TargetRefs identifies an API object to apply the policy to.
+         *     Only Services have Extended support. Implementations MAY support
+         *     additional objects, with Implementation Specific support.
+         *     Note that this config applies to the entire referenced resource
+         *     by default, but this default may change in the future to provide
+         *     a more granular application of the policy.
+         *
+         *     TargetRefs must be _distinct_. This means either that:
+         *
+         *     * They select different targets. If this is the case, then targetRef
+         *       entries are distinct. In terms of fields, this means that the
+         *       multi-part key defined by `group`, `kind`, and `name` must
+         *       be unique across all targetRef entries in the BackendTLSPolicy.
+         *     * They select different sectionNames in the same target.
+         *
+         *     When more than one BackendTLSPolicy selects the same target and
+         *     sectionName, implementations MUST determine precedence using the
+         *     following criteria, continuing on ties:
+         *
+         *     * The older policy by creation timestamp takes precedence. For
+         *       example, a policy with a creation timestamp of "2021-07-15
+         *       01:02:03" MUST be given precedence over a policy with a
+         *       creation timestamp of "2021-07-15 01:02:04".
+         *     * The policy appearing first in alphabetical order by {name}.
+         *       For example, a policy named `bar` is given precedence over a
+         *       policy named `baz`.
+         *
+         *     For any BackendTLSPolicy that does not take precedence, the
+         *     implementation MUST ensure the `Accepted` Condition is set to
+         *     `status: False`, with Reason `Conflicted`.
+         *
+         *     Implementations SHOULD NOT support more than one targetRef at this
+         *     time. Although the API technically allows for this, the current guidance
+         *     for conflict resolution and status handling is lacking. Until that can be
+         *     clarified in a future release, the safest approach is to support a single
+         *     targetRef.
+         *
+         *     Support: Extended for Kubernetes Service
+         *
+         *     Support: Implementation-specific for any other resource
+         */
+        targetRefs: {
+          /** @description Group is the group of the target resource. */
+          group: string
+          /** @description Kind is kind of the target resource. */
+          kind: string
+          /** @description Name is the name of the target resource. */
+          name: string
+          /**
+           * @description SectionName is the name of a section within the target resource. When
+           *     unspecified, this targetRef targets the entire resource. In the following
+           *     resources, SectionName is interpreted as the following:
+           *
+           *     * Gateway: Listener name
+           *     * HTTPRoute: HTTPRouteRule name
+           *     * Service: Port name
+           *
+           *     If a SectionName is specified, but does not exist on the targeted object,
+           *     the Policy must fail to attach, and the policy implementation should record
+           *     a `ResolvedRefs` or similar Condition in the Policy's status.
+           */
+          sectionName?: string
+        }[]
+        /** @description Validation contains backend TLS validation configuration. */
+        validation: {
+          /**
+           * @description CACertificateRefs contains one or more references to Kubernetes objects that
+           *     contain a PEM-encoded TLS CA certificate bundle, which is used to
+           *     validate a TLS handshake between the Gateway and backend Pod.
+           *
+           *     If CACertificateRefs is empty or unspecified, then WellKnownCACertificates must be
+           *     specified. Only one of CACertificateRefs or WellKnownCACertificates may be specified,
+           *     not both. If CACertificateRefs is empty or unspecified, the configuration for
+           *     WellKnownCACertificates MUST be honored instead if supported by the implementation.
+           *
+           *     A CACertificateRef is invalid if:
+           *
+           *     * It refers to a resource that cannot be resolved (e.g., the referenced resource
+           *       does not exist) or is misconfigured (e.g., a ConfigMap does not contain a key
+           *       named `ca.crt`). In this case, the Reason must be set to `InvalidCACertificateRef`
+           *       and the Message of the Condition must indicate which reference is invalid and why.
+           *
+           *     * It refers to an unknown or unsupported kind of resource. In this case, the Reason
+           *       must be set to `InvalidKind` and the Message of the Condition must explain which
+           *       kind of resource is unknown or unsupported.
+           *
+           *     * It refers to a resource in another namespace. This may change in future
+           *       spec updates.
+           *
+           *     Implementations MAY choose to perform further validation of the certificate
+           *     content (e.g., checking expiry or enforcing specific formats). In such cases,
+           *     an implementation-specific Reason and Message must be set for the invalid reference.
+           *
+           *     In all cases, the implementation MUST ensure the `ResolvedRefs` Condition on
+           *     the BackendTLSPolicy is set to `status: False`, with a Reason and Message
+           *     that indicate the cause of the error. Connections using an invalid
+           *     CACertificateRef MUST fail, and the client MUST receive an HTTP 5xx error
+           *     response. If ALL CACertificateRefs are invalid, the implementation MUST also
+           *     ensure the `Accepted` Condition on the BackendTLSPolicy is set to
+           *     `status: False`, with a Reason `NoValidCACertificate`.
+           *
+           *     A single CACertificateRef to a Kubernetes ConfigMap kind has "Core" support.
+           *     Implementations MAY choose to support attaching multiple certificates to
+           *     a backend, but this behavior is implementation-specific.
+           *
+           *     Support: Core - An optional single reference to a Kubernetes ConfigMap,
+           *     with the CA certificate in a key named `ca.crt`.
+           *
+           *     Support: Implementation-specific - More than one reference, other kinds
+           *     of resources, or a single reference that includes multiple certificates.
+           */
+          caCertificateRefs?: {
+            /**
+             * @description Group is the group of the referent. For example, "gateway.networking.k8s.io".
+             *     When unspecified or empty string, core API group is inferred.
+             */
+            group: string
+            /** @description Kind is kind of the referent. For example "HTTPRoute" or "Service". */
+            kind: string
+            /** @description Name is the name of the referent. */
+            name: string
+          }[]
+          /**
+           * @description Hostname is used for two purposes in the connection between Gateways and
+           *     backends:
+           *
+           *     1. Hostname MUST be used as the SNI to connect to the backend (RFC 6066).
+           *     2. Hostname MUST be used for authentication and MUST match the certificate
+           *        served by the matching backend, unless SubjectAltNames is specified.
+           *     3. If SubjectAltNames are specified, Hostname can be used for certificate selection
+           *        but MUST NOT be used for authentication. If you want to use the value
+           *        of the Hostname field for authentication, you MUST add it to the SubjectAltNames list.
+           *
+           *     Support: Core
+           */
+          hostname: string
+          /**
+           * @description SubjectAltNames contains one or more Subject Alternative Names.
+           *     When specified the certificate served from the backend MUST
+           *     have at least one Subject Alternate Name matching one of the specified SubjectAltNames.
+           *
+           *     Support: Extended
+           */
+          subjectAltNames?: {
+            /**
+             * @description Hostname contains Subject Alternative Name specified in DNS name format.
+             *     Required when Type is set to Hostname, ignored otherwise.
+             *
+             *     Support: Core
+             */
+            hostname?: string
+            /**
+             * @description Type determines the format of the Subject Alternative Name. Always required.
+             *
+             *     Support: Core
+             * @enum {string}
+             */
+            type: "Hostname" | "URI"
+            /**
+             * @description URI contains Subject Alternative Name specified in a full URI format.
+             *     It MUST include both a scheme (e.g., "http" or "ftp") and a scheme-specific-part.
+             *     Common values include SPIFFE IDs like "spiffe://mycluster.example.com/ns/myns/sa/svc1sa".
+             *     Required when Type is set to URI, ignored otherwise.
+             *
+             *     Support: Core
+             */
+            uri?: string
+          }[]
+          /**
+           * @description WellKnownCACertificates specifies whether system CA certificates may be used in
+           *     the TLS handshake between the gateway and backend pod.
+           *
+           *     If WellKnownCACertificates is unspecified or empty (""), then CACertificateRefs
+           *     must be specified with at least one entry for a valid configuration. Only one of
+           *     CACertificateRefs or WellKnownCACertificates may be specified, not both.
+           *     If an implementation does not support the WellKnownCACertificates field, or
+           *     the supplied value is not recognized, the implementation MUST ensure the
+           *     `Accepted` Condition on the BackendTLSPolicy is set to `status: False`, with
+           *     a Reason `Invalid`.
+           *
+           *     Support: Implementation-specific
+           * @enum {string}
+           */
+          wellKnownCACertificates?: "System"
+        }
+      }
+      /** @description Status defines the current state of BackendTLSPolicy. */
+      status?: {
+        /**
+         * @description Ancestors is a list of ancestor resources (usually Gateways) that are
+         *     associated with the policy, and the status of the policy with respect to
+         *     each ancestor. When this policy attaches to a parent, the controller that
+         *     manages the parent and the ancestors MUST add an entry to this list when
+         *     the controller first sees the policy and SHOULD update the entry as
+         *     appropriate when the relevant ancestor is modified.
+         *
+         *     Note that choosing the relevant ancestor is left to the Policy designers;
+         *     an important part of Policy design is designing the right object level at
+         *     which to namespace this status.
+         *
+         *     Note also that implementations MUST ONLY populate ancestor status for
+         *     the Ancestor resources they are responsible for. Implementations MUST
+         *     use the ControllerName field to uniquely identify the entries in this list
+         *     that they are responsible for.
+         *
+         *     Note that to achieve this, the list of PolicyAncestorStatus structs
+         *     MUST be treated as a map with a composite key, made up of the AncestorRef
+         *     and ControllerName fields combined.
+         *
+         *     A maximum of 16 ancestors will be represented in this list. An empty list
+         *     means the Policy is not relevant for any ancestors.
+         *
+         *     If this slice is full, implementations MUST NOT add further entries.
+         *     Instead they MUST consider the policy unimplementable and signal that
+         *     on any related resources such as the ancestor that would be referenced
+         *     here. For example, if this list was full on BackendTLSPolicy, no
+         *     additional Gateways would be able to reference the Service targeted by
+         *     the BackendTLSPolicy.
+         */
+        ancestors: {
+          /**
+           * @description AncestorRef corresponds with a ParentRef in the spec that this
+           *     PolicyAncestorStatus struct describes the status of.
+           */
+          ancestorRef: {
+            /**
+             * @description Group is the group of the referent.
+             *     When unspecified, "gateway.networking.k8s.io" is inferred.
+             *     To set the core API group (such as for a "Service" kind referent),
+             *     Group must be explicitly set to "" (empty string).
+             *
+             *     Support: Core
+             * @default gateway.networking.k8s.io
+             */
+            group: string
+            /**
+             * @description Kind is kind of the referent.
+             *
+             *     There are two kinds of parent resources with "Core" support:
+             *
+             *     * Gateway (Gateway conformance profile)
+             *     * Service (Mesh conformance profile, ClusterIP Services only)
+             *
+             *     Support for other resources is Implementation-Specific.
+             * @default Gateway
+             */
+            kind: string
+            /**
+             * @description Name is the name of the referent.
+             *
+             *     Support: Core
+             */
+            name: string
+            /**
+             * @description Namespace is the namespace of the referent. When unspecified, this refers
+             *     to the local namespace of the Route.
+             *
+             *     Note that there are specific rules for ParentRefs which cross namespace
+             *     boundaries. Cross-namespace references are only valid if they are explicitly
+             *     allowed by something in the namespace they are referring to. For example:
+             *     Gateway has the AllowedRoutes field, and ReferenceGrant provides a
+             *     generic way to enable any other kind of cross-namespace reference.
+             *
+             *     Support: Core
+             */
+            namespace?: string
+            /**
+             * Format: int32
+             * @description Port is the network port this Route targets. It can be interpreted
+             *     differently based on the type of parent resource.
+             *
+             *     When the parent resource is a Gateway, this targets all listeners
+             *     listening on the specified port that also support this kind of Route(and
+             *     select this Route). It's not recommended to set `Port` unless the
+             *     networking behaviors specified in a Route must apply to a specific port
+             *     as opposed to a listener(s) whose port(s) may be changed. When both Port
+             *     and SectionName are specified, the name and port of the selected listener
+             *     must match both specified values.
+             *
+             *     Implementations MAY choose to support other parent resources.
+             *     Implementations supporting other types of parent resources MUST clearly
+             *     document how/if Port is interpreted.
+             *
+             *     For the purpose of status, an attachment is considered successful as
+             *     long as the parent resource accepts it partially. For example, Gateway
+             *     listeners can restrict which Routes can attach to them by Route kind,
+             *     namespace, or hostname. If 1 of 2 Gateway listeners accept attachment
+             *     from the referencing Route, the Route MUST be considered successfully
+             *     attached. If no Gateway listeners accept attachment from this Route,
+             *     the Route MUST be considered detached from the Gateway.
+             *
+             *     Support: Extended
+             */
+            port?: number
+            /**
+             * @description SectionName is the name of a section within the target resource. In the
+             *     following resources, SectionName is interpreted as the following:
+             *
+             *     * Gateway: Listener name. When both Port (experimental) and SectionName
+             *     are specified, the name and port of the selected listener must match
+             *     both specified values.
+             *     * Service: Port name. When both Port (experimental) and SectionName
+             *     are specified, the name and port of the selected listener must match
+             *     both specified values.
+             *
+             *     Implementations MAY choose to support attaching Routes to other resources.
+             *     If that is the case, they MUST clearly document how SectionName is
+             *     interpreted.
+             *
+             *     When unspecified (empty string), this will reference the entire resource.
+             *     For the purpose of status, an attachment is considered successful if at
+             *     least one section in the parent resource accepts it. For example, Gateway
+             *     listeners can restrict which Routes can attach to them by Route kind,
+             *     namespace, or hostname. If 1 of 2 Gateway listeners accept attachment from
+             *     the referencing Route, the Route MUST be considered successfully
+             *     attached. If no Gateway listeners accept attachment from this Route, the
+             *     Route MUST be considered detached from the Gateway.
+             *
+             *     Support: Core
+             */
+            sectionName?: string
+          }
+          /** @description Conditions describes the status of the Policy with respect to the given Ancestor. */
+          conditions: {
+            /**
+             * Format: date-time
+             * @description lastTransitionTime is the last time the condition transitioned from one status to another.
+             *     This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+             */
+            lastTransitionTime: string
+            /**
+             * @description message is a human readable message indicating details about the transition.
+             *     This may be an empty string.
+             */
+            message: string
+            /**
+             * Format: int64
+             * @description observedGeneration represents the .metadata.generation that the condition was set based upon.
+             *     For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+             *     with respect to the current state of the instance.
+             */
+            observedGeneration?: number
+            /**
+             * @description reason contains a programmatic identifier indicating the reason for the condition's last transition.
+             *     Producers of specific condition types may define expected values and meanings for this field,
+             *     and whether the values are considered a guaranteed API.
+             *     The value should be a CamelCase string.
+             *     This field may not be empty.
+             */
+            reason: string
+            /**
+             * @description status of the condition, one of True, False, Unknown.
+             * @enum {string}
+             */
+            status: "True" | "False" | "Unknown"
+            /** @description type of condition in CamelCase or in foo.example.com/CamelCase. */
+            type: string
+          }[]
+          /**
+           * @description ControllerName is a domain/path string that indicates the name of the
+           *     controller that wrote this status. This corresponds with the
+           *     controllerName field on GatewayClass.
+           *
+           *     Example: "example.net/gateway-controller".
+           *
+           *     The format of this field is DOMAIN "/" PATH, where DOMAIN and PATH are
+           *     valid Kubernetes names
+           *     (https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names).
+           *
+           *     Controllers MUST populate this field when writing status. Controllers should ensure that
+           *     entries to status populated with their ControllerName are cleaned up when they are no
+           *     longer necessary.
+           */
+          controllerName: string
+        }[]
+      }
+    }
+    /** @description BackendTLSPolicyList is a list of BackendTLSPolicy */
+    "io.k8s.networking.gateway.v1.BackendTLSPolicyList": {
+      /** @description APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources */
+      apiVersion?: string
+      /** @description List of backendtlspolicies. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md */
+      items: components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"][]
+      /** @description Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds */
+      kind?: string
+      /** @description Standard list metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds */
+      metadata?: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"]
+    }
+    /**
      * @description GRPCRoute provides a way to route gRPC requests. This includes the capability
      *     to match requests by hostname, gRPC service, gRPC method, or HTTP/2 header.
      *     Filters can be used to specify additional processing steps. Backends specify
@@ -792,7 +1359,7 @@ export interface components {
       /** @description Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata */
       metadata?: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"]
       /** @description Spec defines the desired state of GRPCRoute. */
-      spec?: {
+      spec: {
         /**
          * @description Hostnames defines a set of hostnames to match against the GRPC
          *     Host header to select a GRPCRoute to process the request. This matches
@@ -1937,6 +2504,12 @@ export interface components {
               type: "Exact" | "RegularExpression"
             }
           }[]
+          /**
+           * @description Name is the name of the route rule. This name MUST be unique within a Route if it is set.
+           *
+           *     Support: Extended
+           */
+          name?: string
         }[]
       }
       /** @description Status defines the current state of GRPCRoute. */
@@ -1979,7 +2552,7 @@ export interface components {
            *     * The Route is of a type that the controller does not support.
            *     * The Route is in a namespace the controller does not have access to.
            */
-          conditions?: {
+          conditions: {
             /**
              * Format: date-time
              * @description lastTransitionTime is the last time the condition transitioned from one status to another.
@@ -2163,7 +2736,7 @@ export interface components {
          * @description Addresses requested for this Gateway. This is optional and behavior can
          *     depend on the implementation. If a value is set in the spec and the
          *     requested address is invalid or unavailable, the implementation MUST
-         *     indicate this in the associated entry in GatewayStatus.Addresses.
+         *     indicate this in an associated entry in GatewayStatus.Conditions.
          *
          *     The Addresses field represents a request for the address(es) on the
          *     "outside of the Gateway", that traffic bound for this Gateway will use.
@@ -2628,7 +3201,7 @@ export interface components {
            *     the Protocol field is "HTTPS" or "TLS". It is invalid to set this field
            *     if the Protocol field is "HTTP", "TCP", or "UDP".
            *
-           *     The association of SNIs to Certificate defined in GatewayTLSConfig is
+           *     The association of SNIs to Certificate defined in ListenerTLSConfig is
            *     defined based on the Hostname field for this listener.
            *
            *     The GatewayClass MUST use the longest matching SNI out of all
@@ -3075,6 +3648,17 @@ export interface components {
           status: "True" | "False" | "Unknown"
           /** @description type of condition in CamelCase or in foo.example.com/CamelCase. */
           type: string
+        }[]
+        /**
+         * @description SupportedFeatures is the set of features the GatewayClass support.
+         *     It MUST be sorted in ascending alphabetical order by the Name key.
+         */
+        supportedFeatures?: {
+          /**
+           * @description FeatureName is used to describe distinct features that are covered by
+           *     conformance tests.
+           */
+          name: string
         }[]
       }
     }
@@ -4762,6 +5346,12 @@ export interface components {
             }[]
           }[]
           /**
+           * @description Name is the name of the route rule. This name MUST be unique within a Route if it is set.
+           *
+           *     Support: Extended
+           */
+          name?: string
+          /**
            * @description Timeouts defines the timeouts that can be configured for an HTTP request.
            *
            *     Support: Extended
@@ -4857,7 +5447,7 @@ export interface components {
            *     * The Route is of a type that the controller does not support.
            *     * The Route is in a namespace the controller does not have access to.
            */
-          conditions?: {
+          conditions: {
             /**
              * Format: date-time
              * @description lastTransitionTime is the last time the condition transitioned from one status to another.
@@ -5033,6 +5623,87 @@ export interface components {
 }
 export type $defs = Record<string, never>
 export interface operations {
+  listGatewayNetworkingV1BackendTLSPolicyForAllNamespaces: {
+    parameters: {
+      query?: {
+        /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
+        allowWatchBookmarks?: boolean
+        /**
+         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
+         *
+         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
+         */
+        continue?: string
+        /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
+        fieldSelector?: string
+        /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
+        labelSelector?: string
+        /**
+         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
+         *
+         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
+         */
+        limit?: number
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+         *
+         *     Defaults to unset
+         */
+        resourceVersion?: string
+        /**
+         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+         *
+         *     Defaults to unset
+         */
+        resourceVersionMatch?: string
+        /**
+         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
+         *
+         *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
+         *       is interpreted as "data at least as new as the provided `resourceVersion`"
+         *       and the bookmark event is send when the state is synced
+         *       to a `resourceVersion` at least as fresh as the one provided by the ListOptions.
+         *       If `resourceVersion` is unset, this is interpreted as "consistent read" and the
+         *       bookmark event is send when the state is synced at least to the moment
+         *       when request started being processed.
+         *     - `resourceVersionMatch` set to any other value or unset
+         *       Invalid error is returned.
+         *
+         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
+         */
+        sendInitialEvents?: boolean
+        /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
+        timeoutSeconds?: number
+        /** @description Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion. */
+        watch?: boolean
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicyList"]
+          "application/yaml": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicyList"]
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
   listGatewayNetworkingV1GatewayClass: {
     parameters: {
       query?: {
@@ -5834,6 +6505,598 @@ export interface operations {
         content: {
           "application/json": components["schemas"]["io.k8s.networking.gateway.v1.HTTPRouteList"]
           "application/yaml": components["schemas"]["io.k8s.networking.gateway.v1.HTTPRouteList"]
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  listGatewayNetworkingV1NamespacedBackendTLSPolicy: {
+    parameters: {
+      query?: {
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+        /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
+        allowWatchBookmarks?: boolean
+        /**
+         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
+         *
+         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
+         */
+        continue?: string
+        /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
+        fieldSelector?: string
+        /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
+        labelSelector?: string
+        /**
+         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
+         *
+         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
+         */
+        limit?: number
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+         *
+         *     Defaults to unset
+         */
+        resourceVersion?: string
+        /**
+         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+         *
+         *     Defaults to unset
+         */
+        resourceVersionMatch?: string
+        /**
+         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
+         *
+         *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
+         *       is interpreted as "data at least as new as the provided `resourceVersion`"
+         *       and the bookmark event is send when the state is synced
+         *       to a `resourceVersion` at least as fresh as the one provided by the ListOptions.
+         *       If `resourceVersion` is unset, this is interpreted as "consistent read" and the
+         *       bookmark event is send when the state is synced at least to the moment
+         *       when request started being processed.
+         *     - `resourceVersionMatch` set to any other value or unset
+         *       Invalid error is returned.
+         *
+         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
+         */
+        sendInitialEvents?: boolean
+        /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
+        timeoutSeconds?: number
+        /** @description Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion. */
+        watch?: boolean
+      }
+      header?: never
+      path: {
+        /** @description object name and auth scope, such as for teams and projects */
+        namespace: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicyList"]
+          "application/yaml": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicyList"]
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  createGatewayNetworkingV1NamespacedBackendTLSPolicy: {
+    parameters: {
+      query?: {
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+        /** @description When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed */
+        dryRun?: string
+        /** @description fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint. */
+        fieldManager?: string
+        /** @description fieldValidation instructs the server on how to handle objects in the request (POST/PUT/PATCH) containing unknown or duplicate fields. Valid values are: - Ignore: This will ignore any unknown fields that are silently dropped from the object, and will ignore all but the last duplicate field that the decoder encounters. This is the default behavior prior to v1.23. - Warn: This will send a warning via the standard warning response header for each unknown field that is dropped from the object, and for each duplicate field that is encountered. The request will still succeed if there are no other errors, and will only persist the last of any duplicate fields. This is the default in v1.23+ - Strict: This will fail the request with a BadRequest error if any unknown fields would be dropped from the object, or if any duplicate fields are present. The error returned from the server will contain all unknown and duplicate fields encountered. */
+        fieldValidation?: string
+      }
+      header?: never
+      path: {
+        /** @description object name and auth scope, such as for teams and projects */
+        namespace: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+        "application/yaml": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+          "application/yaml": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+        }
+      }
+      /** @description Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+          "application/yaml": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+        }
+      }
+      /** @description Accepted */
+      202: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+          "application/yaml": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  deleteGatewayNetworkingV1CollectionNamespacedBackendTLSPolicy: {
+    parameters: {
+      query?: {
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+        /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
+        allowWatchBookmarks?: boolean
+        /**
+         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
+         *
+         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
+         */
+        continue?: string
+        /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
+        fieldSelector?: string
+        /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
+        labelSelector?: string
+        /**
+         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
+         *
+         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
+         */
+        limit?: number
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+         *
+         *     Defaults to unset
+         */
+        resourceVersion?: string
+        /**
+         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+         *
+         *     Defaults to unset
+         */
+        resourceVersionMatch?: string
+        /**
+         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
+         *
+         *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
+         *       is interpreted as "data at least as new as the provided `resourceVersion`"
+         *       and the bookmark event is send when the state is synced
+         *       to a `resourceVersion` at least as fresh as the one provided by the ListOptions.
+         *       If `resourceVersion` is unset, this is interpreted as "consistent read" and the
+         *       bookmark event is send when the state is synced at least to the moment
+         *       when request started being processed.
+         *     - `resourceVersionMatch` set to any other value or unset
+         *       Invalid error is returned.
+         *
+         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
+         */
+        sendInitialEvents?: boolean
+        /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
+        timeoutSeconds?: number
+        /** @description Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion. */
+        watch?: boolean
+      }
+      header?: never
+      path: {
+        /** @description object name and auth scope, such as for teams and projects */
+        namespace: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
+          "application/yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  readGatewayNetworkingV1NamespacedBackendTLSPolicy: {
+    parameters: {
+      query?: {
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+         *
+         *     Defaults to unset
+         */
+        resourceVersion?: string
+      }
+      header?: never
+      path: {
+        /** @description name of the BackendTLSPolicy */
+        name: string
+        /** @description object name and auth scope, such as for teams and projects */
+        namespace: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+          "application/yaml": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  replaceGatewayNetworkingV1NamespacedBackendTLSPolicy: {
+    parameters: {
+      query?: {
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+        /** @description When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed */
+        dryRun?: string
+        /** @description fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint. */
+        fieldManager?: string
+        /** @description fieldValidation instructs the server on how to handle objects in the request (POST/PUT/PATCH) containing unknown or duplicate fields. Valid values are: - Ignore: This will ignore any unknown fields that are silently dropped from the object, and will ignore all but the last duplicate field that the decoder encounters. This is the default behavior prior to v1.23. - Warn: This will send a warning via the standard warning response header for each unknown field that is dropped from the object, and for each duplicate field that is encountered. The request will still succeed if there are no other errors, and will only persist the last of any duplicate fields. This is the default in v1.23+ - Strict: This will fail the request with a BadRequest error if any unknown fields would be dropped from the object, or if any duplicate fields are present. The error returned from the server will contain all unknown and duplicate fields encountered. */
+        fieldValidation?: string
+      }
+      header?: never
+      path: {
+        /** @description name of the BackendTLSPolicy */
+        name: string
+        /** @description object name and auth scope, such as for teams and projects */
+        namespace: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+        "application/yaml": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+          "application/yaml": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+        }
+      }
+      /** @description Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+          "application/yaml": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  deleteGatewayNetworkingV1NamespacedBackendTLSPolicy: {
+    parameters: {
+      query?: {
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+        /** @description When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed */
+        dryRun?: string
+        /** @description The duration in seconds before the object should be deleted. Value must be non-negative integer. The value zero indicates delete immediately. If this value is nil, the default grace period for the specified type will be used. Defaults to a per object value if not specified. zero means delete immediately. */
+        gracePeriodSeconds?: number
+        /** @description if set to true, it will trigger an unsafe deletion of the resource in case the normal deletion flow fails with a corrupt object error. A resource is considered corrupt if it can not be retrieved from the underlying storage successfully because of a) its data can not be transformed e.g. decryption failure, or b) it fails to decode into an object. NOTE: unsafe deletion ignores finalizer constraints, skips precondition checks, and removes the object from the storage. WARNING: This may potentially break the cluster if the workload associated with the resource being unsafe-deleted relies on normal deletion flow. Use only if you REALLY know what you are doing. The default value is false, and the user must opt in to enable it */
+        ignoreStoreReadErrorWithClusterBreakingPotential?: boolean
+        /** @description Deprecated: please use the PropagationPolicy, this field will be deprecated in 1.7. Should the dependent objects be orphaned. If true/false, the "orphan" finalizer will be added to/removed from the object's finalizers list. Either this field or PropagationPolicy may be set, but not both. */
+        orphanDependents?: boolean
+        /** @description Whether and how garbage collection will be performed. Either this field or OrphanDependents may be set, but not both. The default policy is decided by the existing finalizer set in the metadata.finalizers and the resource-specific default policy. Acceptable values are: 'Orphan' - orphan the dependents; 'Background' - allow the garbage collector to delete the dependents in the background; 'Foreground' - a cascading policy that deletes all dependents in the foreground. */
+        propagationPolicy?: string
+      }
+      header?: never
+      path: {
+        /** @description name of the BackendTLSPolicy */
+        name: string
+        /** @description object name and auth scope, such as for teams and projects */
+        namespace: string
+      }
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        "application/json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"]
+        "application/yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"]
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
+          "application/yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
+        }
+      }
+      /** @description Accepted */
+      202: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
+          "application/yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  patchGatewayNetworkingV1NamespacedBackendTLSPolicy: {
+    parameters: {
+      query?: {
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+        /** @description When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed */
+        dryRun?: string
+        /** @description fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint. This field is required for apply requests (application/apply-patch) but optional for non-apply patch types (JsonPatch, MergePatch, StrategicMergePatch). */
+        fieldManager?: string
+        /** @description fieldValidation instructs the server on how to handle objects in the request (POST/PUT/PATCH) containing unknown or duplicate fields. Valid values are: - Ignore: This will ignore any unknown fields that are silently dropped from the object, and will ignore all but the last duplicate field that the decoder encounters. This is the default behavior prior to v1.23. - Warn: This will send a warning via the standard warning response header for each unknown field that is dropped from the object, and for each duplicate field that is encountered. The request will still succeed if there are no other errors, and will only persist the last of any duplicate fields. This is the default in v1.23+ - Strict: This will fail the request with a BadRequest error if any unknown fields would be dropped from the object, or if any duplicate fields are present. The error returned from the server will contain all unknown and duplicate fields encountered. */
+        fieldValidation?: string
+        /** @description Force is going to "force" Apply requests. It means user will re-acquire conflicting fields owned by other people. Force flag must be unset for non-apply patch requests. */
+        force?: boolean
+      }
+      header?: never
+      path: {
+        /** @description name of the BackendTLSPolicy */
+        name: string
+        /** @description object name and auth scope, such as for teams and projects */
+        namespace: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        "application/apply-patch+yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Patch"]
+        "application/json-patch+json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Patch"]
+        "application/merge-patch+json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Patch"]
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+          "application/yaml": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  readGatewayNetworkingV1NamespacedBackendTLSPolicyStatus: {
+    parameters: {
+      query?: {
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+         *
+         *     Defaults to unset
+         */
+        resourceVersion?: string
+      }
+      header?: never
+      path: {
+        /** @description name of the BackendTLSPolicy */
+        name: string
+        /** @description object name and auth scope, such as for teams and projects */
+        namespace: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+          "application/yaml": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  replaceGatewayNetworkingV1NamespacedBackendTLSPolicyStatus: {
+    parameters: {
+      query?: {
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+        /** @description When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed */
+        dryRun?: string
+        /** @description fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint. */
+        fieldManager?: string
+        /** @description fieldValidation instructs the server on how to handle objects in the request (POST/PUT/PATCH) containing unknown or duplicate fields. Valid values are: - Ignore: This will ignore any unknown fields that are silently dropped from the object, and will ignore all but the last duplicate field that the decoder encounters. This is the default behavior prior to v1.23. - Warn: This will send a warning via the standard warning response header for each unknown field that is dropped from the object, and for each duplicate field that is encountered. The request will still succeed if there are no other errors, and will only persist the last of any duplicate fields. This is the default in v1.23+ - Strict: This will fail the request with a BadRequest error if any unknown fields would be dropped from the object, or if any duplicate fields are present. The error returned from the server will contain all unknown and duplicate fields encountered. */
+        fieldValidation?: string
+      }
+      header?: never
+      path: {
+        /** @description name of the BackendTLSPolicy */
+        name: string
+        /** @description object name and auth scope, such as for teams and projects */
+        namespace: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+        "application/yaml": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+          "application/yaml": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+        }
+      }
+      /** @description Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+          "application/yaml": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  patchGatewayNetworkingV1NamespacedBackendTLSPolicyStatus: {
+    parameters: {
+      query?: {
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+        /** @description When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed */
+        dryRun?: string
+        /** @description fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint. This field is required for apply requests (application/apply-patch) but optional for non-apply patch types (JsonPatch, MergePatch, StrategicMergePatch). */
+        fieldManager?: string
+        /** @description fieldValidation instructs the server on how to handle objects in the request (POST/PUT/PATCH) containing unknown or duplicate fields. Valid values are: - Ignore: This will ignore any unknown fields that are silently dropped from the object, and will ignore all but the last duplicate field that the decoder encounters. This is the default behavior prior to v1.23. - Warn: This will send a warning via the standard warning response header for each unknown field that is dropped from the object, and for each duplicate field that is encountered. The request will still succeed if there are no other errors, and will only persist the last of any duplicate fields. This is the default in v1.23+ - Strict: This will fail the request with a BadRequest error if any unknown fields would be dropped from the object, or if any duplicate fields are present. The error returned from the server will contain all unknown and duplicate fields encountered. */
+        fieldValidation?: string
+        /** @description Force is going to "force" Apply requests. It means user will re-acquire conflicting fields owned by other people. Force flag must be unset for non-apply patch requests. */
+        force?: boolean
+      }
+      header?: never
+      path: {
+        /** @description name of the BackendTLSPolicy */
+        name: string
+        /** @description object name and auth scope, such as for teams and projects */
+        namespace: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        "application/apply-patch+yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Patch"]
+        "application/json-patch+json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Patch"]
+        "application/merge-patch+json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Patch"]
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
+          "application/yaml": components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"]
         }
       }
       /** @description Unauthorized */
@@ -7626,6 +8889,11 @@ export interface operations {
 type Resource<T, U> = Omit<T, "status"> & { apiVersion: "gateway.networking.k8s.io/v1"; kind: U }
 
 export interface api {
+  BackendTLSPolicy: Resource<components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicy"], "BackendTLSPolicy">
+  BackendTLSPolicyList: Resource<
+    components["schemas"]["io.k8s.networking.gateway.v1.BackendTLSPolicyList"],
+    "BackendTLSPolicyList"
+  >
   GRPCRoute: Resource<components["schemas"]["io.k8s.networking.gateway.v1.GRPCRoute"], "GRPCRoute">
   GRPCRouteList: Resource<components["schemas"]["io.k8s.networking.gateway.v1.GRPCRouteList"], "GRPCRouteList">
   Gateway: Resource<components["schemas"]["io.k8s.networking.gateway.v1.Gateway"], "Gateway">

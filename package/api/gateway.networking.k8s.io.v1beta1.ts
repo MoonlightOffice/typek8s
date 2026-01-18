@@ -745,7 +745,7 @@ export interface components {
          * @description Addresses requested for this Gateway. This is optional and behavior can
          *     depend on the implementation. If a value is set in the spec and the
          *     requested address is invalid or unavailable, the implementation MUST
-         *     indicate this in the associated entry in GatewayStatus.Addresses.
+         *     indicate this in an associated entry in GatewayStatus.Conditions.
          *
          *     The Addresses field represents a request for the address(es) on the
          *     "outside of the Gateway", that traffic bound for this Gateway will use.
@@ -1210,7 +1210,7 @@ export interface components {
            *     the Protocol field is "HTTPS" or "TLS". It is invalid to set this field
            *     if the Protocol field is "HTTP", "TCP", or "UDP".
            *
-           *     The association of SNIs to Certificate defined in GatewayTLSConfig is
+           *     The association of SNIs to Certificate defined in ListenerTLSConfig is
            *     defined based on the Hostname field for this listener.
            *
            *     The GatewayClass MUST use the longest matching SNI out of all
@@ -1657,6 +1657,17 @@ export interface components {
           status: "True" | "False" | "Unknown"
           /** @description type of condition in CamelCase or in foo.example.com/CamelCase. */
           type: string
+        }[]
+        /**
+         * @description SupportedFeatures is the set of features the GatewayClass support.
+         *     It MUST be sorted in ascending alphabetical order by the Name key.
+         */
+        supportedFeatures?: {
+          /**
+           * @description FeatureName is used to describe distinct features that are covered by
+           *     conformance tests.
+           */
+          name: string
         }[]
       }
     }
@@ -3344,6 +3355,12 @@ export interface components {
             }[]
           }[]
           /**
+           * @description Name is the name of the route rule. This name MUST be unique within a Route if it is set.
+           *
+           *     Support: Extended
+           */
+          name?: string
+          /**
            * @description Timeouts defines the timeouts that can be configured for an HTTP request.
            *
            *     Support: Extended
@@ -3439,7 +3456,7 @@ export interface components {
            *     * The Route is of a type that the controller does not support.
            *     * The Route is in a namespace the controller does not have access to.
            */
-          conditions?: {
+          conditions: {
             /**
              * Format: date-time
              * @description lastTransitionTime is the last time the condition transitioned from one status to another.
