@@ -1,5 +1,5 @@
 import { di } from "./deps.ts"
-const { client, service } = di
+const { service } = di
 
 async function run() {
   const command = Deno.args[0]
@@ -9,22 +9,15 @@ async function run() {
     Deno.exit(1)
   }
 
-  const app = client.parameterClient.readConfig(command)
+  // Initialize app state from configuration
+  service.initService.init(command)
 
-  // At this point, command is "generate" (synth would have thrown)
-  const generate = app.generate
-
-  switch (generate.source) {
-    case "file":
-      await service.appService.runWithFile(
-        generate.out,
-        generate.apiVersion,
-        generate.openApiFilePath,
-      )
-      break
-    case "server":
-      await service.appService.runWithServer(generate.out)
-      break
+  // Run the appropriate command
+  if (command === "generate") {
+    await service.appService.run()
+  } else if (command === "synth") {
+    // Future synth implementation
+    throw new Error("synth command is not implemented yet")
   }
 }
 

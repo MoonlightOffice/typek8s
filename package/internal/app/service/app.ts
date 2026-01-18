@@ -4,6 +4,7 @@ export class AppService {
   constructor(
     private readonly fileIoClient: client.FileIOClient,
     private readonly k8sClient: client.K8sClient,
+    private readonly appStateClient: client.AppStateClient,
   ) {}
 
   /**
@@ -39,22 +40,29 @@ export class AppService {
     this.fileIoClient.write(dir, "mod.ts", exportStatements + "\n")
   }
 
-  async runWithFile(outDir: string, apiVersion: string, openApiFilePath: string) {
-    await this.createTypeFilesFromOpenApi(
-      outDir,
-      apiVersion,
-      this.fileIoClient.read(openApiFilePath),
-    )
+  async run(): Promise<void> {
+    const config = this.appStateClient.get()
+    const { source, out } = config.generate
 
-    this.createModFile(outDir)
-  }
-
-  async runWithServer(outDir: string) {
-    const openApis = await this.k8sClient.getAllOpenApi()
-    for (const { apiVersion, openApi } of openApis) {
-      await this.createTypeFilesFromOpenApi(outDir, apiVersion, openApi)
+    switch (source) {
+      case "file": {
+        const { apiVersion, openApiFilePath } = config.generate
+        await this.createTypeFilesFromOpenApi(
+          out,
+          apiVersion,
+          this.fileIoClient.read(openApiFilePath),
+        )
+        break
+      }
+      case "server": {
+        const openApis = await this.k8sClient.getAllOpenApi()
+        for (const { apiVersion, openApi } of openApis) {
+          await this.createTypeFilesFromOpenApi(out, apiVersion, openApi)
+        }
+        break
+      }
     }
 
-    this.createModFile(outDir)
+    this.createModFile(out)
   }
 }
