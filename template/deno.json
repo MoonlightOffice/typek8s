@@ -5,7 +5,7 @@
   },
   "imports": {
     "~/": "./",
-    "typek8s": "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.4.0/package/mod.ts"
+    "typek8s": "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.5.0/package/mod.ts"
   },
   "fmt": {
     "semiColons": false,
