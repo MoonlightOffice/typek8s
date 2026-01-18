@@ -1,9 +1,10 @@
 {
   "tasks": {
-    "dev": "deno run --watch main.ts"
+    "tidy": "deno fmt && deno check && deno lint",
+    "synth": "deno run -A main.ts"
   },
   "imports": {
     "~/": "./",
-    "typek8s-api": "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.2.0/package/api/mod.ts"
+    "typek8s": "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.4.0/package/mod.ts"
   }
 }
