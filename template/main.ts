@@ -1,5 +1,5 @@
-import { TypeK8s } from "typek8s";
-import { deployments } from "~/lib/deploy.ts";
+import { TypeK8s } from "typek8s"
+import { deployments } from "~/lib/deploy.ts"
 
 TypeK8s.synth({
   manifests: [
@@ -9,4 +9,4 @@ TypeK8s.synth({
   type: "chart",
   chartName: "sample-ap",
   outputDir: "./dist/",
-});
+})
