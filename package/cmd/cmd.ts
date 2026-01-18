@@ -15,9 +15,6 @@ async function run() {
   // Run the appropriate command
   if (command === "generate") {
     await service.appService.run()
-  } else if (command === "synth") {
-    // Future synth implementation
-    throw new Error("synth command is not implemented yet")
   }
 }
 

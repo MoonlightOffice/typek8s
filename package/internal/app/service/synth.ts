@@ -1,4 +1,4 @@
-import { "@std/path" as stdPath, "@std/yaml" as stdYaml, client, core } from "./deps.ts"
+import { "@std/path" as stdPath, client, core } from "./deps.ts"
 
 /**
  * Options for synth operation
@@ -19,7 +19,9 @@ export interface HelmChartInput {
 export class SynthService {
   constructor(
     private readonly fileIOClient: client.FileIOClient,
-    private readonly httpClient: client.HttpClient,
+    private readonly manifestSerializer: client.ManifestSerializerClient,
+    private readonly helmBuilder: client.HelmBuilderClient,
+    private readonly crdLoader: client.CrdLoaderClient,
   ) {}
 
   /**
@@ -53,12 +55,9 @@ export class SynthService {
     // Ensure output directory exists
     this.fileIOClient.mkdir(outputDir)
 
-    // Convert each manifest to YAML and join with separator
-    const yamlParts = manifests.map((manifest) => stdYaml.stringify(manifest).trim())
-    const combinedYaml = yamlParts.join("\n---\n")
-
-    // Write to file
-    this.fileIOClient.write(outputDir, "manifest.yaml", combinedYaml + "\n")
+    // Serialize manifests to YAML and write to file
+    const yaml = this.manifestSerializer.serializeManifests(manifests)
+    this.fileIOClient.write(outputDir, "manifest.yaml", yaml)
   }
 
   /**
@@ -85,11 +84,16 @@ export class SynthService {
     this.fileIOClient.mkdir(chartDir)
 
     // Generate and write Chart.yaml
-    const chartYamlContent = this.generateChartYaml(chartName, input.charts)
+    const dependencies = input.charts?.map((chart) => ({
+      name: chart.name,
+      version: chart.version,
+      repository: chart.repository,
+    }))
+    const chartYamlContent = this.helmBuilder.buildChartYaml(chartName, dependencies)
     this.fileIOClient.writeYaml(chartDir, "Chart.yaml", chartYamlContent)
 
     // Generate and write values.yaml
-    const valuesYamlContent = this.generateValuesYaml(input.charts)
+    const valuesYamlContent = this.helmBuilder.mergeChartValues(input.charts || [])
     this.fileIOClient.writeYaml(chartDir, "values.yaml", valuesYamlContent)
 
     // Create templates directory and write manifests
@@ -103,7 +107,9 @@ export class SynthService {
       this.fileIOClient.mkdir(crdsDir)
 
       for (const crd of input.crds) {
-        await this.writeCrd(crd, crdsDir)
+        const content = await this.crdLoader.loadCrd(crd)
+        const filename = stdPath.basename(crd.path)
+        this.fileIOClient.write(crdsDir, filename, content)
       }
     }
 
@@ -112,67 +118,5 @@ export class SynthService {
       const chartsDir = stdPath.join(chartDir, "charts")
       this.fileIOClient.mkdir(chartsDir)
     }
-  }
-
-  /**
-   * Generate Chart.yaml content
-   */
-  private generateChartYaml(
-    chartName: string,
-    charts?: core.Chart[],
-  ): Record<string, unknown> {
-    const chartYaml: Record<string, unknown> = {
-      apiVersion: "v2",
-      name: chartName,
-      version: "0.0.0",
-      type: "application",
-    }
-
-    // Add dependencies if charts are provided
-    if (charts && charts.length > 0) {
-      chartYaml.dependencies = charts.map((chart) => ({
-        name: chart.name,
-        version: chart.version,
-        repository: chart.repository,
-      }))
-    }
-
-    return chartYaml
-  }
-
-  /**
-   * Generate values.yaml content by merging all chart values
-   */
-  private generateValuesYaml(charts?: core.Chart[]): Record<string, unknown> {
-    if (!charts || charts.length === 0) {
-      return {}
-    }
-
-    // Merge all chart values into a single object
-    const mergedValues: Record<string, unknown> = {}
-    for (const chart of charts) {
-      Object.assign(mergedValues, chart.values)
-    }
-
-    return mergedValues
-  }
-
-  /**
-   * Fetch CRD content and write to file
-   */
-  private async writeCrd(crd: core.CRD, crdsDir: string): Promise<void> {
-    let content: string
-
-    if (crd.source === "file") {
-      content = this.fileIOClient.read(crd.path)
-    } else if (crd.source === "http") {
-      content = await this.httpClient.fetch(crd.path)
-    } else {
-      throw new Error(`Unknown CRD source: ${crd.source}`)
-    }
-
-    // Extract filename from path
-    const filename = stdPath.basename(crd.path)
-    this.fileIOClient.write(crdsDir, filename, content)
   }
 }

@@ -10,5 +10,10 @@ export interface Service {
 export default {
   appService: new service.AppService(client.fileIOClient, client.k8sClient, client.appStateClient),
   initService: new service.InitService(client.appStateClient, client.parameterClient),
-  synthService: new service.SynthService(client.fileIOClient, client.httpClient),
+  synthService: new service.SynthService(
+    client.fileIOClient,
+    client.manifestSerializerClient,
+    client.helmBuilderClient,
+    client.crdLoaderClient,
+  ),
 } satisfies Service

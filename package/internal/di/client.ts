@@ -6,6 +6,9 @@ export interface Client {
   parameterClient: client.ParameterClient
   k8sClient: client.K8sClient
   appStateClient: client.AppStateClient
+  manifestSerializerClient: client.ManifestSerializerClient
+  helmBuilderClient: client.HelmBuilderClient
+  crdLoaderClient: client.CrdLoaderClient
 }
 
 const fileIOClient = new impl.io.FileIOClientImpl()
@@ -22,6 +25,9 @@ const appStateClient = new impl.state.AppStateClientImpl({
 })
 const parameterClient = new impl.io.ParameterClientImpl(fileIOClient)
 const k8sClient = new impl.k8s.K8sClientImpl(appStateClient)
+const manifestSerializerClient = new impl.io.ManifestSerializerClientImpl()
+const helmBuilderClient = new impl.helm.HelmBuilderClientImpl()
+const crdLoaderClient = new impl.io.CrdLoaderClientImpl(fileIOClient, httpClient)
 
 export default {
   appStateClient: appStateClient,
@@ -29,4 +35,7 @@ export default {
   httpClient: httpClient,
   parameterClient: parameterClient,
   k8sClient: k8sClient,
+  manifestSerializerClient: manifestSerializerClient,
+  helmBuilderClient: helmBuilderClient,
+  crdLoaderClient: crdLoaderClient,
 } satisfies Client
