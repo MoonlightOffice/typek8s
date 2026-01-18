@@ -27,6 +27,22 @@ export interface FileIOClient {
    * @returns Array of file names (not full paths)
    */
   listFiles(dir: string, pattern?: string): string[]
+
+  /**
+   * Create a directory if it doesn't exist.
+   *
+   * @param path Directory path to create
+   */
+  mkdir(path: string): void
+
+  /**
+   * Serialize object to YAML and write to file.
+   *
+   * @param dir Directory to put the file
+   * @param fname Name for output file
+   * @param obj Object to serialize to YAML
+   */
+  writeYaml(dir: string, fname: string, obj: unknown): void
 }
 
 /** Application's overall parameter */
@@ -58,4 +74,14 @@ export interface ParameterClient {
    * @param command - The CLI command ("synth" or "generate")
    */
   readConfig(command: string): core.App
+}
+
+export interface HttpClient {
+  /**
+   * Fetch text content from URL.
+   *
+   * @param url URL to fetch from
+   * @returns Promise with text content
+   */
+  fetch(url: string): Promise<string>
 }

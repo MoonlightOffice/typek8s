@@ -1,4 +1,4 @@
-import { "@std/path" as stdPath, client } from "../deps.ts"
+import { "@std/path" as stdPath, "@std/yaml" as stdYaml, client } from "../deps.ts"
 
 export class FileIOClientImpl implements client.FileIOClient {
   constructor() {}
@@ -26,5 +26,14 @@ export class FileIOClientImpl implements client.FileIOClient {
       }
     }
     return files
+  }
+
+  mkdir(path: string): void {
+    Deno.mkdirSync(path, { recursive: true })
+  }
+
+  writeYaml(dir: string, fname: string, obj: unknown): void {
+    const yamlContent = stdYaml.stringify(obj)
+    this.write(dir, fname, yamlContent)
   }
 }

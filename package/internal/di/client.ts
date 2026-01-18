@@ -2,12 +2,14 @@ import { client, impl } from "./deps.ts"
 
 export interface Client {
   fileIOClient: client.FileIOClient
+  httpClient: client.HttpClient
   parameterClient: client.ParameterClient
   k8sClient: client.K8sClient
   appStateClient: client.AppStateClient
 }
 
 const fileIOClient = new impl.io.FileIOClientImpl()
+const httpClient = new impl.io.HttpClientImpl()
 const appStateClient = new impl.state.AppStateClientImpl({
   synth: { type: "chart", out: "./chart/" },
   generate: {
@@ -24,6 +26,7 @@ const k8sClient = new impl.k8s.K8sClientImpl(appStateClient)
 export default {
   appStateClient: appStateClient,
   fileIOClient: fileIOClient,
+  httpClient: httpClient,
   parameterClient: parameterClient,
   k8sClient: k8sClient,
 } satisfies Client
