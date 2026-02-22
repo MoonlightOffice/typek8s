@@ -16,7 +16,7 @@ responsibilities for each layer.
 graph TB
     subgraph internal
         direction LR
-        subgraph app
+    subgraph core
             service --> client --> entity
         end
 
@@ -36,16 +36,16 @@ graph TB
 
 ### Layers
 
-**app** — The heart of the application (entities, business logic, abstractions). External services and complex I/O are
+**core** — The heart of the application (entities, business logic, abstractions). External services and complex I/O are
 abstracted through `client` interfaces.
 
-- `entity`: App entities and helper functions (e.g., `apiVersionToFileName`).
+- `entity`: Core entities and helper functions (e.g., `apiVersionToFileName`).
 - `client`: Abstract interfaces that define contracts for external dependencies (e.g., `K8sClient`, `FileIOClient`,
-  `ParameterClient`). These interfaces define input/output operations aligned with app models.
+  `ParameterClient`). These interfaces define input/output operations aligned with core models.
 - `service`: Business logic implementation that orchestrates `client` interfaces and `entity` utilities (e.g.,
   `AppService` handles the workflow of fetching OpenAPI schemas and generating TypeScript files).
 
-**impl** — Implementation layer for `app/client` interfaces.
+**impl** — Implementation layer for `core/client` interfaces.
 
 - `k8s`: Concrete implementation of `K8sClient` (`K8sClientImpl`) that communicates with Kubernetes API and converts
   OpenAPI schemas to TypeScript types using `openapi-typescript`.
@@ -54,7 +54,7 @@ abstracted through `client` interfaces.
 
 **di** — Dependency injection wiring. Combines `impl` implementations and wires them into `app` abstractions.
 
-- `client`: Instantiates and exports concrete client implementations that satisfy `app/client` interfaces.
+- `client`: Instantiates and exports concrete client implementations that satisfy `core/client` interfaces.
 - `service`: Creates service instances with injected dependencies from `di/client`.
 
 **cmd** — CLI entry point. Uses dependency-injected services from `di` to execute the application.
@@ -69,8 +69,8 @@ typek8s/package/
 ├── cmd/
 │   └── cmd.ts              # CLI entry point
 ├── internal/
-│   ├── app/                # App layer
-│   │   ├── entity/         # App entities and utilities
+│   ├── core/               # Core layer
+│   │   ├── entity/         # Core entities and utilities
 │   │   ├── client/         # Abstract interfaces
 │   │   └── service/        # Business logic
 │   ├── impl/               # Implementation layer
@@ -105,14 +105,14 @@ Tests should be written in table-driven test format. Refer to existing test impl
   - External systems must be abstracted through `client` interfaces
   - Concrete implementations go in `impl`
   - Dependency injection happens in `di`
-  - **NEVER** import from `impl` directly in `app` - always go through `di`
-- **Import paths**: Use import map aliases (e.g., `internal/app/client/k8s.ts`) for clean imports
+- **NEVER** import from `impl` directly in `core` - always go through `di`
+- **Import paths**: Use import map aliases (e.g., `internal/core/client/k8s.ts`) for clean imports
 
 ## Implementation Guidelines
 
 - **Follow the established architecture**: Always keep the layered architecture in mind. When adding new features:
-  1. Define abstractions in `app/client` if external dependencies are needed
-  2. Implement business logic in `app/service`
+  1. Define abstractions in `core/client` if external dependencies are needed
+  2. Implement business logic in `core/service`
   3. Create concrete implementations in `impl`
   4. Wire dependencies in `di`
   5. Use from `cmd` or future `api` layer
