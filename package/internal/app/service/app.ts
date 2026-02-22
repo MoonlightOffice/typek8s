@@ -1,4 +1,4 @@
-import { client, core } from "./deps.ts"
+import { client, entity } from "./deps.ts"
 
 export class AppService {
   constructor(
@@ -18,7 +18,7 @@ export class AppService {
     if (tsContent === "") {
       return
     }
-    this.fileIoClient.write(dir, core.apiVersionToFileName(apiVersion), tsContent)
+    this.fileIoClient.write(dir, entity.apiVersionToFileName(apiVersion), tsContent)
   }
 
   /**
@@ -32,7 +32,7 @@ export class AppService {
     const exportStatements = tsFiles
       .sort() // Sort alphabetically
       .map((filename) => {
-        const alias = core.fileNameToExportAlias(filename)
+        const alias = entity.fileNameToExportAlias(filename)
         return `export type { api as ${alias} } from "./${filename}"`
       })
       .join("\n")

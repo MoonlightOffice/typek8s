@@ -17,7 +17,7 @@ graph TB
     subgraph internal
         direction LR
         subgraph app
-            service --> client --> core
+            service --> client --> entity
         end
 
         impl -.-> client
@@ -39,10 +39,10 @@ graph TB
 **app** — The heart of the application (entities, business logic, abstractions). External services and complex I/O are
 abstracted through `client` interfaces.
 
-- `core`: Core utilities and helper functions (e.g., `apiVersionToFileName`).
+- `entity`: App entities and helper functions (e.g., `apiVersionToFileName`).
 - `client`: Abstract interfaces that define contracts for external dependencies (e.g., `K8sClient`, `FileIOClient`,
-  `ParameterClient`). These interfaces define input/output operations aligned with domain models.
-- `service`: Business logic implementation that orchestrates `client` interfaces and `core` utilities (e.g.,
+  `ParameterClient`). These interfaces define input/output operations aligned with app models.
+- `service`: Business logic implementation that orchestrates `client` interfaces and `entity` utilities (e.g.,
   `AppService` handles the workflow of fetching OpenAPI schemas and generating TypeScript files).
 
 **impl** — Implementation layer for `app/client` interfaces.
@@ -69,8 +69,8 @@ typek8s/package/
 ├── cmd/
 │   └── cmd.ts              # CLI entry point
 ├── internal/
-│   ├── app/                # Domain layer
-│   │   ├── core/           # Core utilities
+│   ├── app/                # App layer
+│   │   ├── entity/         # App entities and utilities
 │   │   ├── client/         # Abstract interfaces
 │   │   └── service/        # Business logic
 │   ├── impl/               # Implementation layer
@@ -101,7 +101,7 @@ Tests should be written in table-driven test format. Refer to existing test impl
   - Constants: UPPER_SNAKE_CASE (e.g., `DEFAULT_TIMEOUT`)
   - Files/Directories: kebab-case (e.g., `file-io-client.ts`, `k8s-util.ts`)
 - **Architecture principles**:
-  - Business logic belongs in `service` and `core`
+- Business logic belongs in `service` and `entity`
   - External systems must be abstracted through `client` interfaces
   - Concrete implementations go in `impl`
   - Dependency injection happens in `di`

@@ -1,4 +1,4 @@
-import { "@std/path" as stdPath, client, core } from "./deps.ts"
+import { "@std/path" as stdPath, client, entity } from "./deps.ts"
 
 /**
  * Options for synth operation
@@ -11,9 +11,9 @@ export type SynthOptions =
  * Input for Helm chart generation
  */
 export interface HelmChartInput {
-  manifests: core.Manifest[]
-  crds?: core.CRD[]
-  charts?: core.Chart[]
+  manifests: entity.Manifest[]
+  crds?: entity.CRD[]
+  charts?: entity.Chart[]
 }
 
 export class SynthService {
@@ -28,7 +28,7 @@ export class SynthService {
    * Generate Kubernetes manifests or Helm chart
    */
   async synth(
-    input: core.Manifest[] | HelmChartInput,
+    input: entity.Manifest[] | HelmChartInput,
     options: SynthOptions,
   ): Promise<void> {
     if (options.type === "manifest") {
@@ -47,7 +47,7 @@ export class SynthService {
   /**
    * Generate K8s manifest file with --- separators
    */
-  private synthManifest(manifests: core.Manifest[], outputDir: string): void {
+  private synthManifest(manifests: entity.Manifest[], outputDir: string): void {
     if (manifests.length === 0) {
       throw new Error("Cannot generate manifest from empty manifests array")
     }

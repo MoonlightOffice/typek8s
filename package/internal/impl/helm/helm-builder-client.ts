@@ -1,4 +1,4 @@
-import { client, core } from "../deps.ts"
+import { client, entity } from "../deps.ts"
 
 export class HelmBuilderClientImpl implements client.HelmBuilderClient {
   constructor() {}
@@ -22,7 +22,7 @@ export class HelmBuilderClientImpl implements client.HelmBuilderClient {
     return chartYaml
   }
 
-  mergeChartValues(charts: core.Chart[]): Record<string, unknown> {
+  mergeChartValues(charts: entity.Chart[]): Record<string, unknown> {
     if (charts.length === 0) {
       return {}
     }

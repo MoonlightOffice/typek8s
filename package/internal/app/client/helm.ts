@@ -1,4 +1,4 @@
-import { core } from "./deps.ts"
+import { entity } from "./deps.ts"
 
 export interface HelmBuilderClient {
   /**
@@ -13,5 +13,5 @@ export interface HelmBuilderClient {
   /**
    * Merge values from multiple charts into a single values object.
    */
-  mergeChartValues(charts: core.Chart[]): Record<string, unknown>
+  mergeChartValues(charts: entity.Chart[]): Record<string, unknown>
 }

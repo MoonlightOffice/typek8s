@@ -1,4 +1,4 @@
-import { client, core } from "../deps.ts"
+import { client, entity } from "../deps.ts"
 
 export class CrdLoaderClientImpl implements client.CrdLoaderClient {
   constructor(
@@ -6,7 +6,7 @@ export class CrdLoaderClientImpl implements client.CrdLoaderClient {
     private readonly httpClient: client.HttpClient,
   ) {}
 
-  async loadCrd(crd: core.CRD): Promise<string> {
+  async loadCrd(crd: entity.CRD): Promise<string> {
     if (crd.source === "file") {
       return this.fileIOClient.read(crd.path)
     } else if (crd.source === "http") {

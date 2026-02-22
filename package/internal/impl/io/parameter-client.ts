@@ -1,4 +1,4 @@
-import { "@std/yaml" as stdYaml, client, core } from "../deps.ts"
+import { "@std/yaml" as stdYaml, client, entity } from "../deps.ts"
 
 interface YamlConfig {
   typek8s: {
@@ -19,7 +19,7 @@ interface YamlConfig {
 export class ParameterClientImpl implements client.ParameterClient {
   constructor(private fileIOClient: client.FileIOClient) {}
 
-  readConfig(command: string): core.App {
+  readConfig(command: string): entity.App {
     // Validate command
     if (command !== "synth" && command !== "generate") {
       throw new Error(`Invalid command: "${command}". Expected "synth" or "generate"`)
@@ -74,7 +74,7 @@ export class ParameterClientImpl implements client.ParameterClient {
     }
 
     // Construct App entity with proper defaults
-    const app: core.App = {
+    const app: entity.App = {
       synth: yamlConfig.typek8s.synth,
       generate: {
         out: generate.out,
