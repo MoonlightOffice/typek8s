@@ -1,0 +1,16 @@
+services:
+  dev:
+    image: local/dev:latest
+    build:
+      context: ./build/
+      dockerfile: Dockerfile
+    container_name: dev
+    volumes:
+      - .cache/.vscode-server/:/root/.vscode-server/
+      - .cache/.root-cache/:/root/.cache/
+      - ./:/workspace
+      - ../../../../.codex/:/root/.codex/
+      - ../../../skills/:/root/.agents/skills/
+      - ../../../../.config/jj/:/root/.config/jj/
+    stop_grace_period: 1s
+    command: sleep infinity
