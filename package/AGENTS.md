@@ -47,11 +47,6 @@ abstracted through `client` interfaces.
 
 **impl** — Implementation layer for `core/client` interfaces.
 
-- `k8s`: Concrete implementation of `K8sClient` (`K8sClientImpl`) that communicates with Kubernetes API and converts
-  OpenAPI schemas to TypeScript types using `openapi-typescript`.
-- `io`: Concrete implementations of I/O clients (`FileIOClientImpl`, `ParameterClientImpl`) for file system operations
-  and parameter parsing.
-
 **di** — Dependency injection wiring. Combines `impl` implementations and wires them into `app` abstractions.
 
 - `client`: Instantiates and exports concrete client implementations that satisfy `core/client` interfaces.
@@ -62,39 +57,16 @@ abstracted through `client` interfaces.
 **api** — Auto-generated TypeScript type definitions from Kubernetes OpenAPI. Expected to be imported by users. Do not
 read this directory when you develop in typek8s/package/ directory.
 
-## Project Structure
-
-```
-typek8s/package/
-├── cmd/
-│   └── cmd.ts              # CLI entry point
-├── internal/
-│   ├── core/               # Core layer
-│   │   ├── entity/         # Core entities and utilities
-│   │   ├── client/         # Abstract interfaces
-│   │   └── service/        # Business logic
-│   ├── impl/               # Implementation layer
-│   │   ├── k8s/            # Kubernetes client implementation
-│   │   └── io/             # File I/O implementations
-│   └── di/                 # Dependency injection
-│       ├── client.ts       # Client wiring
-│       └── service.ts      # Service wiring
-├── mod.ts                  # Module entry point
-└── AGENTS.md               # This file
-```
-
 ## Development, Build, and Testing
 
 - `deno task test`: Run test suite
 - `deno task tidy`: Run type checking, linting, and formatting. Keep the codebase free of compilation and lint errors.
-- `deno task fmt`: Format code
 
 Tests should be written in table-driven test format. Refer to existing test implementations for examples.
 
 ## Coding Conventions
 
 - **Language**: TypeScript (Deno runtime)
-- **Formatting**: Use `deno fmt` to automatically format code
 - **Naming**:
   - Classes, Interfaces, Types: PascalCase (e.g., `AppService`, `K8sClient`)
   - Functions, Variables: camelCase (e.g., `getAllOpenApi`, `serverBaseUrl`)
@@ -106,7 +78,7 @@ Tests should be written in table-driven test format. Refer to existing test impl
   - Concrete implementations go in `impl`
   - Dependency injection happens in `di`
 - **NEVER** import from `impl` directly in `core` - always go through `di`
-- **Import paths**: Use import map aliases (e.g., `internal/core/client/k8s.ts`) for clean imports
+- **Import paths**: Use `mod.ts` for export and `deps.ts` for import which exist in each directory.
 
 ## Implementation Guidelines
 
