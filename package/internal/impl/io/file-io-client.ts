@@ -32,6 +32,17 @@ export class FileIOClientImpl implements client.FileIOClient {
     Deno.mkdirSync(path, { recursive: true })
   }
 
+  remove(path: string): void {
+    try {
+      Deno.removeSync(path, { recursive: true })
+    } catch (error) {
+      if (error instanceof Deno.errors.NotFound) {
+        return
+      }
+      throw error
+    }
+  }
+
   writeYaml(dir: string, fname: string, obj: unknown): void {
     const yamlContent = stdYaml.stringify(obj)
     this.write(dir, fname, yamlContent)

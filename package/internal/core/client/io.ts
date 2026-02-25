@@ -34,6 +34,13 @@ export interface FileIOClient {
   mkdir(path: string): void
 
   /**
+   * Remove a file or directory recursively.
+   *
+   * @param path File or directory path to remove
+   */
+  remove(path: string): void
+
+  /**
    * Serialize object to YAML and write to file.
    *
    * @param dir Directory to put the file

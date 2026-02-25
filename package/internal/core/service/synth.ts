@@ -31,6 +31,8 @@ export class SynthService {
     input: entity.Manifest[] | HelmChartInput,
     options: SynthOptions,
   ): Promise<void> {
+    this.fileIOClient.remove(options.outputDir)
+
     if (options.type === "manifest") {
       const manifests = Array.isArray(input) ? input : input.manifests
       this.synthManifest(manifests, options.outputDir)
