@@ -7,6 +7,6 @@ TypeK8s.synth({
   ],
 }, {
   type: "chart",
-  chartName: "sample-ap",
+  chartName: "sample-app",
   outputDir: "./dist/",
 })
