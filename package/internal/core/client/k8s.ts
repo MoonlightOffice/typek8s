@@ -2,7 +2,7 @@ export interface K8sClient {
   /**
    * Calls Kubernetes OpenAPI path and fetch all API schemas available from the server.
    */
-  getAllOpenApi(): Promise<{ apiVersion: string; openApi: string }[]>
+  getAllOpenApi(serverBaseUrl: string): Promise<{ apiVersion: string; openApi: string }[]>
 
   /**
    * Parse given Kubernetes OpenAPI JSON schema and generate TypeScript code.

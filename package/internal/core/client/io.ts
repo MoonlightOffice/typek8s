@@ -1,5 +1,3 @@
-import { entity } from "./deps.ts"
-
 export interface FileIOClient {
   /**
    * Read content of the given path's file. The file is expected to be utf8-encoded.
@@ -43,37 +41,6 @@ export interface FileIOClient {
    * @param obj Object to serialize to YAML
    */
   writeYaml(dir: string, fname: string, obj: unknown): void
-}
-
-/** Application's overall parameter */
-export interface AppParameter {
-  /** Feed OpenAPI from a given file */
-  openApiFrom: "file" | "server"
-
-  // common
-
-  /** specify directory path where output typescript files should be generated */
-  outputDirectory: string
-
-  // file-only
-
-  /** Specify Kubernetes' apiVersion for the OpenAPI file. This name will be the name for auto-generated TypeScript file */
-  apiVersion: string
-
-  openApiFilePath: string
-
-  // server-only
-
-  /** Base url of Kubernetes server. i.e.) `http://localhost:8001` */
-  serverBaseUrl: string
-}
-
-export interface ParameterClient {
-  /**
-   * Load app configuration from typek8s.yaml based on the given command
-   * @param command - The CLI command ("synth" or "generate")
-   */
-  readConfig(command: string): entity.App
 }
 
 export interface HttpClient {

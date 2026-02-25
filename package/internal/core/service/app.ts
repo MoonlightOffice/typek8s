@@ -4,7 +4,6 @@ export class AppService {
   constructor(
     private readonly fileIoClient: client.FileIOClient,
     private readonly k8sClient: client.K8sClient,
-    private readonly appStateClient: client.AppStateClient,
   ) {}
 
   /**
@@ -40,29 +39,16 @@ export class AppService {
     this.fileIoClient.write(dir, "mod.ts", exportStatements + "\n")
   }
 
-  async run(): Promise<void> {
-    const config = this.appStateClient.get()
-    const { source, out } = config.generate
+  async generate(options: entity.GenerateOptions): Promise<void> {
+    const openApis = await this.k8sClient.getAllOpenApi(options.serverBaseUrl)
 
-    switch (source) {
-      case "file": {
-        const { apiVersion, openApiFilePath } = config.generate
-        await this.createTypeFilesFromOpenApi(
-          out,
-          apiVersion,
-          this.fileIoClient.read(openApiFilePath),
-        )
-        break
-      }
-      case "server": {
-        const openApis = await this.k8sClient.getAllOpenApi()
-        for (const { apiVersion, openApi } of openApis) {
-          await this.createTypeFilesFromOpenApi(out, apiVersion, openApi)
-        }
-        break
-      }
+    // Ensure output directory exists even if no OpenAPI documents are returned.
+    this.fileIoClient.mkdir(options.out)
+
+    for (const { apiVersion, openApi } of openApis) {
+      await this.createTypeFilesFromOpenApi(options.out, apiVersion, openApi)
     }
 
-    this.createModFile(out)
+    this.createModFile(options.out)
   }
 }

@@ -3,13 +3,11 @@ import { service } from "./deps.ts"
 
 export interface Service {
   appService: service.AppService
-  initService: service.InitService
   synthService: service.SynthService
 }
 
 export default {
-  appService: new service.AppService(client.fileIOClient, client.k8sClient, client.appStateClient),
-  initService: new service.InitService(client.appStateClient, client.parameterClient),
+  appService: new service.AppService(client.fileIOClient, client.k8sClient),
   synthService: new service.SynthService(
     client.fileIOClient,
     client.manifestSerializerClient,

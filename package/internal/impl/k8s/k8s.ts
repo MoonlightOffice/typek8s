@@ -7,17 +7,17 @@ interface XK8sGroupVersionKind {
 }
 
 export class K8sClientImpl implements client.K8sClient {
-  constructor(private appStateClient: client.AppStateClient) {}
-
   /**
    * Paths that doesn't start with api/ or apis/ are ignored.
    *
    * @returns List of map of apiVersion and serverRelativeURL
    */
-  private async getVersionAndPathMap(): Promise<{ apiVersion: string; serverRelativeURL: string }[]> {
+  private async getVersionAndPathMap(
+    serverBaseUrl: string,
+  ): Promise<{ apiVersion: string; serverRelativeURL: string }[]> {
     // Call Kubernetes OpenAPI endpoint to retrieve the list of api resources' OpenAPI endpoints
 
-    const url = new URL("/openapi/v3", this.appStateClient.get().generate.serverBaseUrl)
+    const url = new URL("/openapi/v3", serverBaseUrl)
 
     const resp = await fetch(url)
     if (resp.status !== 200) {
@@ -56,14 +56,14 @@ export class K8sClientImpl implements client.K8sClient {
   /**
    * @returns List of apiVersion and OpenAPI JSON string
    */
-  async getAllOpenApi(): Promise<{ apiVersion: string; openApi: string }[]> {
+  async getAllOpenApi(serverBaseUrl: string): Promise<{ apiVersion: string; openApi: string }[]> {
     const output: { apiVersion: string; openApi: string }[] = []
 
     const retrieveOutputItem = async (path: {
       apiVersion: string
       serverRelativeURL: string
     }) => {
-      const url = new URL(path.serverRelativeURL, this.appStateClient.get().generate.serverBaseUrl)
+      const url = new URL(path.serverRelativeURL, serverBaseUrl)
       const resp = await fetch(url)
       if (resp.status !== 200) {
         throw Error(`status: ${resp.status}, body: ${await resp.text()}`)
@@ -72,7 +72,7 @@ export class K8sClientImpl implements client.K8sClient {
       output.push({ apiVersion: path.apiVersion, openApi: await resp.text() })
     }
 
-    const openApiMap = await this.getVersionAndPathMap()
+    const openApiMap = await this.getVersionAndPathMap(serverBaseUrl)
     const promises: Promise<void>[] = []
     for (const path of openApiMap) {
       promises.push(retrieveOutputItem(path))
