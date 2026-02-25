@@ -57,12 +57,9 @@ abstracted through `client` interfaces.
 **api** — Auto-generated TypeScript type definitions from Kubernetes OpenAPI. Expected to be imported by users. Do not
 read this directory when you develop in typek8s/package/ directory.
 
-## Development, Build, and Testing
+## Development
 
-- `deno task test`: Run test suite
 - `deno task tidy`: Run type checking, linting, and formatting. Keep the codebase free of compilation and lint errors.
-
-Tests should be written in table-driven test format. Refer to existing test implementations for examples.
 
 ## Coding Conventions
 
@@ -89,11 +86,9 @@ Tests should be written in table-driven test format. Refer to existing test impl
   4. Wire dependencies in `di`
   5. Use from `cmd` or future `api` layer
 - **Mimic existing patterns**: Study and follow existing implementations when adding new code
-- **Test coverage**: Add tests for all new logic and features
-- **Quality checks**: Run `deno task tidy` and `deno task test` before committing to ensure:
+- **Quality checks**: Run `deno task tidy` before committing to ensure:
   - No compilation errors
   - No lint errors
-  - All tests pass
   - Code is properly formatted
 
 ## Key Concepts
