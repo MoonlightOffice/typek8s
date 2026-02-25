@@ -1173,7 +1173,7 @@ export interface components {
       /**
        * @description Driver specifies the name of the DRA driver whose kubelet plugin should be invoked to process the allocation once the claim is needed on a node.
        *
-       *     Must be a DNS subdomain and should end with a DNS domain owned by the vendor of the driver.
+       *     Must be a DNS subdomain and should end with a DNS domain owned by the vendor of the driver. It should use only lower case characters.
        * @default
        */
       driver: string
@@ -1329,7 +1329,7 @@ export interface components {
       value: components["schemas"]["io.k8s.apimachinery.pkg.api.resource.Quantity"]
     }
     /**
-     * @description CounterSet defines a named set of counters that are available to be used by devices defined in the ResourceSlice.
+     * @description CounterSet defines a named set of counters that are available to be used by devices defined in the ResourcePool.
      *
      *     The counters are not allocatable by themselves, but can be referenced by devices. When a device is allocated, the portion of counters it uses will no longer be available for use by other devices.
      */
@@ -1337,7 +1337,7 @@ export interface components {
       /**
        * @description Counters defines the set of counters for this CounterSet The name of each counter must be unique in that set and must be a DNS label.
        *
-       *     The maximum number of counters in all sets is 32.
+       *     The maximum number of counters is 32.
        */
       counters: {
         [key: string]: components["schemas"]["io.k8s.api.resource.v1.Counter"]
@@ -1409,7 +1409,7 @@ export interface components {
        *
        *     There can only be a single entry per counterSet.
        *
-       *     The total number of device counter consumption entries must be <= 32. In addition, the total number in the entire ResourceSlice must be <= 1024 (for example, 64 devices with 16 counters each).
+       *     The maximum number of device counter consumptions per device is 2.
        */
       consumesCounters?: components["schemas"]["io.k8s.api.resource.v1.DeviceCounterConsumption"][]
       /**
@@ -1434,7 +1434,7 @@ export interface components {
       /**
        * @description If specified, these are the driver-defined taints.
        *
-       *     The maximum number of taints is 4.
+       *     The maximum number of taints is 16. If taints are set for any device in a ResourceSlice, then the maximum number of allowed devices per ResourceSlice is 64 instead of 128.
        *
        *     This is an alpha field and requires enabling the DRADeviceTaints feature gate.
        */
@@ -1452,9 +1452,14 @@ export interface components {
       requests?: string[]
       /**
        * @description Source records whether the configuration comes from a class and thus is not something that a normal user would have been able to set or from a claim.
+       *
+       *     Possible enum values:
+       *      - `"FromClaim"`
+       *      - `"FromClass"`
        * @default
+       * @enum {string}
        */
-      source: string
+      source: "FromClaim" | "FromClass"
     }
     /** @description DeviceAllocationResult is the result of allocating devices. */
     "io.k8s.api.resource.v1.DeviceAllocationResult": {
@@ -1616,7 +1621,7 @@ export interface components {
       /**
        * @description Counters defines the counters that will be consumed by the device.
        *
-       *     The maximum number counters in a device is 32. In addition, the maximum number of all counters in all devices is 1024 (for example, 64 devices with 16 counters each).
+       *     The maximum number of counters is 32.
        */
       counters: {
         [key: string]: components["schemas"]["io.k8s.api.resource.v1.Counter"]
@@ -1684,7 +1689,7 @@ export interface components {
       /**
        * @description Driver specifies the name of the DRA driver whose kubelet plugin should be invoked to process the allocation once the claim is needed on a node.
        *
-       *     Must be a DNS subdomain and should end with a DNS domain owned by the vendor of the driver.
+       *     Must be a DNS subdomain and should end with a DNS domain owned by the vendor of the driver. It should use only lower case characters.
        * @default
        */
       driver: string
@@ -1738,8 +1743,13 @@ export interface components {
        *     If AllocationMode is not specified, the default mode is ExactCount. If the mode is ExactCount and count is not specified, the default count is one. Any other subrequests must specify this field.
        *
        *     More modes may get added in the future. Clients must refuse to handle requests with unknown modes.
+       *
+       *     Possible enum values:
+       *      - `"All"`
+       *      - `"ExactCount"`
+       * @enum {string}
        */
-      allocationMode?: string
+      allocationMode?: "All" | "ExactCount"
       /**
        * @description Capacity define resource requirements against each capacity.
        *
@@ -1787,15 +1797,18 @@ export interface components {
     /** @description The device this taint is attached to has the "effect" on any claim which does not tolerate the taint and, through the claim, to pods using the claim. */
     "io.k8s.api.resource.v1.DeviceTaint": {
       /**
-       * @description The effect of the taint on claims that do not tolerate the taint and through such claims on the pods using them. Valid effects are NoSchedule and NoExecute. PreferNoSchedule as used for nodes is not valid here.
+       * @description The effect of the taint on claims that do not tolerate the taint and through such claims on the pods using them.
+       *
+       *     Valid effects are None, NoSchedule and NoExecute. PreferNoSchedule as used for nodes is not valid here. More effects may get added in the future. Consumers must treat unknown effects like None.
        *
        *     Possible enum values:
        *      - `"NoExecute"` Evict any already-running pods that do not tolerate the device taint.
        *      - `"NoSchedule"` Do not allow new pods to schedule which use a tainted device unless they tolerate the taint, but allow all pods submitted to Kubelet without going through the scheduler to start, and allow all already-running pods to continue running.
+       *      - `"None"` No effect, the taint is purely informational.
        * @default
        * @enum {string}
        */
-      effect: "NoExecute" | "NoSchedule"
+      effect: "NoExecute" | "NoSchedule" | "None"
       /**
        * @description The taint key to be applied to a device. Must be a label name.
        * @default
@@ -1814,9 +1827,10 @@ export interface components {
        *     Possible enum values:
        *      - `"NoExecute"` Evict any already-running pods that do not tolerate the device taint.
        *      - `"NoSchedule"` Do not allow new pods to schedule which use a tainted device unless they tolerate the taint, but allow all pods submitted to Kubelet without going through the scheduler to start, and allow all already-running pods to continue running.
+       *      - `"None"` No effect, the taint is purely informational.
        * @enum {string}
        */
-      effect?: "NoExecute" | "NoSchedule"
+      effect?: "NoExecute" | "NoSchedule" | "None"
       /** @description Key is the taint key that the toleration applies to. Empty means match all taint keys. If the key is empty, operator must be Exists; this combination means to match all values and all keys. Must be a label name. */
       key?: string
       /**
@@ -1860,8 +1874,13 @@ export interface components {
        *     If AllocationMode is not specified, the default mode is ExactCount. If the mode is ExactCount and count is not specified, the default count is one. Any other requests must specify this field.
        *
        *     More modes may get added in the future. Clients must refuse to handle requests with unknown modes.
+       *
+       *     Possible enum values:
+       *      - `"All"`
+       *      - `"ExactCount"`
+       * @enum {string}
        */
-      allocationMode?: string
+      allocationMode?: "All" | "ExactCount"
       /**
        * @description Capacity define resource requirements against each capacity.
        *
@@ -1923,7 +1942,7 @@ export interface components {
        *
        *     An admission policy provided by the driver developer could use this to decide whether it needs to validate them.
        *
-       *     Must be a DNS subdomain and should end with a DNS domain owned by the vendor of the driver.
+       *     Must be a DNS subdomain and should end with a DNS domain owned by the vendor of the driver. It should use only lower case characters.
        * @default
        */
       driver: string
@@ -2151,13 +2170,15 @@ export interface components {
       /**
        * @description Devices lists some or all of the devices in this pool.
        *
-       *     Must not have more than 128 entries.
+       *     Must not have more than 128 entries. If any device uses taints or consumes counters the limit is 64.
+       *
+       *     Only one of Devices and SharedCounters can be set in a ResourceSlice.
        */
       devices?: components["schemas"]["io.k8s.api.resource.v1.Device"][]
       /**
        * @description Driver identifies the DRA driver providing the capacity information. A field selector can be used to list only ResourceSlice objects with a certain driver name.
        *
-       *     Must be a DNS subdomain and should end with a DNS domain owned by the vendor of the driver. This field is immutable.
+       *     Must be a DNS subdomain and should end with a DNS domain owned by the vendor of the driver. It should use only lower case characters. This field is immutable.
        * @default
        */
       driver: string
@@ -2191,9 +2212,11 @@ export interface components {
       /**
        * @description SharedCounters defines a list of counter sets, each of which has a name and a list of counters available.
        *
-       *     The names of the SharedCounters must be unique in the ResourceSlice.
+       *     The names of the counter sets must be unique in the ResourcePool.
        *
-       *     The maximum number of counters in all sets is 32.
+       *     Only one of Devices and SharedCounters can be set in a ResourceSlice.
+       *
+       *     The maximum number of counter sets is 8.
        */
       sharedCounters?: components["schemas"]["io.k8s.api.resource.v1.CounterSet"][]
     }

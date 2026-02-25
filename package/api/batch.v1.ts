@@ -939,11 +939,7 @@ export interface components {
        * @description Specifies the desired number of successfully finished pods the job should be run with.  Setting to null means that the success of any pod signals the success of all pods, and allows parallelism to have any positive value.  Setting to 1 means that parallelism is limited to 1 and the success of that pod signals the success of the job. More info: https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/
        */
       completions?: number
-      /**
-       * @description ManagedBy field indicates the controller that manages a Job. The k8s Job controller reconciles jobs which don't have this field at all or the field value is the reserved string `kubernetes.io/job-controller`, but skips reconciling Jobs with a custom value for this field. The value must be a valid domain-prefixed path (e.g. acme.io/foo) - all characters before the first "/" must be a valid subdomain as defined by RFC 1123. All characters trailing the first "/" must be valid HTTP Path characters as defined by RFC 3986. The value cannot exceed 63 characters. This field is immutable.
-       *
-       *     This field is beta-level. The job controller accepts setting the field when the feature gate JobManagedBy is enabled (enabled by default).
-       */
+      /** @description ManagedBy field indicates the controller that manages a Job. The k8s Job controller reconciles jobs which don't have this field at all or the field value is the reserved string `kubernetes.io/job-controller`, but skips reconciling Jobs with a custom value for this field. The value must be a valid domain-prefixed path (e.g. acme.io/foo) - all characters before the first "/" must be a valid subdomain as defined by RFC 1123. All characters trailing the first "/" must be valid HTTP Path characters as defined by RFC 3986. The value cannot exceed 63 characters. This field is immutable. */
       managedBy?: string
       /** @description manualSelector controls generation of pod labels and pod selectors. Leave `manualSelector` unset unless you are certain what you are doing. When false or unset, the system pick labels unique to this job and appends those labels to the pod template.  When true, the user is responsible for picking unique labels and specifying the selector.  Failure to pick a unique label may cause this and other jobs to not function correctly.  However, You may see `manualSelector=true` in jobs that were created with the old `extensions/v1beta1` API. More info: https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/#specifying-your-own-pod-selector */
       manualSelector?: boolean
@@ -1438,7 +1434,7 @@ export interface components {
       ports?: components["schemas"]["io.k8s.api.core.v1.ContainerPort"][]
       /** @description Periodic probe of container service readiness. Container will be removed from service endpoints if the probe fails. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes */
       readinessProbe?: components["schemas"]["io.k8s.api.core.v1.Probe"]
-      /** @description Resources resize policy for the container. */
+      /** @description Resources resize policy for the container. This field cannot be set on ephemeral containers. */
       resizePolicy?: components["schemas"]["io.k8s.api.core.v1.ContainerResizePolicy"][]
       /**
        * @description Compute Resources required by this container. Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
@@ -2251,7 +2247,7 @@ export interface components {
        */
       dataSourceRef?: components["schemas"]["io.k8s.api.core.v1.TypedObjectReference"]
       /**
-       * @description resources represents the minimum resources the volume should have. If RecoverVolumeExpansionFailure feature is enabled users are allowed to specify resource requirements that are lower than previous value but must still be higher than capacity recorded in the status field of the claim. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
+       * @description resources represents the minimum resources the volume should have. Users are allowed to specify resource requirements that are lower than previous value but must still be higher than capacity recorded in the status field of the claim. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
        * @default {}
        */
       resources: components["schemas"]["io.k8s.api.core.v1.VolumeResourceRequirements"]
@@ -2383,6 +2379,18 @@ export interface components {
       maxExpirationSeconds?: number
       /** @description Kubelet's generated CSRs will be addressed to this signer. */
       signerName: string
+      /**
+       * @description userAnnotations allow pod authors to pass additional information to the signer implementation.  Kubernetes does not restrict or validate this metadata in any way.
+       *
+       *     These values are copied verbatim into the `spec.unverifiedUserAnnotations` field of the PodCertificateRequest objects that Kubelet creates.
+       *
+       *     Entries are subject to the same validation as object metadata annotations, with the addition that all keys must be domain-prefixed. No restrictions are placed on values, except an overall size limitation on the entire field.
+       *
+       *     Signers should document the keys and values they support. Signers should deny requests that contain keys they do not recognize.
+       */
+      userAnnotations?: {
+        [key: string]: string
+      }
     }
     /** @description PodDNSConfig defines the DNS parameters of a pod in addition to those generated from DNSPolicy. */
     "io.k8s.api.core.v1.PodDNSConfig": {
@@ -2611,7 +2619,7 @@ export interface components {
       /**
        * @description ResourceClaims defines which ResourceClaims must be allocated and reserved before the Pod is allowed to start. The resources will be made available to those containers which consume them by name.
        *
-       *     This is an alpha field and requires enabling the DynamicResourceAllocation feature gate.
+       *     This is a stable field but requires that the DynamicResourceAllocation feature gate is enabled.
        *
        *     This field is immutable.
        */
@@ -2667,6 +2675,8 @@ export interface components {
       topologySpreadConstraints?: components["schemas"]["io.k8s.api.core.v1.TopologySpreadConstraint"][]
       /** @description List of volumes that can be mounted by containers belonging to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes */
       volumes?: components["schemas"]["io.k8s.api.core.v1.Volume"][]
+      /** @description WorkloadRef provides a reference to the Workload object that this Pod belongs to. This field is used by the scheduler to identify the PodGroup and apply the correct group scheduling policies. The Workload object referenced by this field may not exist at the time the Pod is created. This field is immutable, but a Workload object with the same name may be recreated with different policies. Doing this during pod scheduling may result in the placement not conforming to the expected policies. */
+      workloadRef?: components["schemas"]["io.k8s.api.core.v1.WorkloadReference"]
     }
     /** @description PodTemplateSpec describes the data a pod should have when created from a template */
     "io.k8s.api.core.v1.PodTemplateSpec": {
@@ -3090,14 +3100,16 @@ export interface components {
       /** @description Key is the taint key that the toleration applies to. Empty means match all taint keys. If the key is empty, operator must be Exists; this combination means to match all values and all keys. */
       key?: string
       /**
-       * @description Operator represents a key's relationship to the value. Valid operators are Exists and Equal. Defaults to Equal. Exists is equivalent to wildcard for value, so that a pod can tolerate all taints of a particular category.
+       * @description Operator represents a key's relationship to the value. Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal. Exists is equivalent to wildcard for value, so that a pod can tolerate all taints of a particular category. Lt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).
        *
        *     Possible enum values:
        *      - `"Equal"`
        *      - `"Exists"`
+       *      - `"Gt"`
+       *      - `"Lt"`
        * @enum {string}
        */
-      operator?: "Equal" | "Exists"
+      operator?: "Equal" | "Exists" | "Gt" | "Lt"
       /**
        * Format: int64
        * @description TolerationSeconds represents the period of time the toleration (which must be of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default, it is not set, which means tolerate the taint forever (do not evict). Zero and negative values will be treated as 0 (evict immediately) by the system.
@@ -3431,6 +3443,21 @@ export interface components {
       hostProcess?: boolean
       /** @description The UserName in Windows to run the entrypoint of the container process. Defaults to the user specified in image metadata if unspecified. May also be set in PodSecurityContext. If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. */
       runAsUserName?: string
+    }
+    /** @description WorkloadReference identifies the Workload object and PodGroup membership that a Pod belongs to. The scheduler uses this information to apply workload-aware scheduling semantics. */
+    "io.k8s.api.core.v1.WorkloadReference": {
+      /**
+       * @description Name defines the name of the Workload object this Pod belongs to. Workload must be in the same namespace as the Pod. If it doesn't match any existing Workload, the Pod will remain unschedulable until a Workload object is created and observed by the kube-scheduler. It must be a DNS subdomain.
+       * @default
+       */
+      name: string
+      /**
+       * @description PodGroup is the name of the PodGroup within the Workload that this Pod belongs to. If it doesn't match any existing PodGroup within the Workload, the Pod will remain unschedulable until the Workload object is recreated and observed by the kube-scheduler. It must be a DNS label.
+       * @default
+       */
+      podGroup: string
+      /** @description PodGroupReplicaKey specifies the replica key of the PodGroup to which this Pod belongs. It is used to distinguish pods belonging to different replicas of the same pod group. The pod group policy is applied separately to each replica. When set, it must be a DNS label. */
+      podGroupReplicaKey?: string
     }
     /**
      * @description Quantity is a fixed-point representation of a number. It provides convenient marshaling/unmarshaling in JSON and YAML, in addition to String() and AsInt64() accessors.

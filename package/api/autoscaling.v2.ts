@@ -490,7 +490,7 @@ export interface components {
      *
      *     Scaling Policy Rules are applied after calculating DesiredReplicas from metrics for the HPA. They can limit the scaling velocity by specifying scaling policies. They can prevent flapping by specifying the stabilization window, so that the number of replicas is not set instantly, instead, the safest value from the stabilization window is chosen.
      *
-     *     The tolerance is applied to the metric values and prevents scaling too eagerly for small metric variations. (Note that setting a tolerance requires enabling the alpha HPAConfigurableTolerance feature gate.)
+     *     The tolerance is applied to the metric values and prevents scaling too eagerly for small metric variations. (Note that setting a tolerance requires the beta HPAConfigurableTolerance feature gate to be enabled.)
      */
     "io.k8s.api.autoscaling.v2.HPAScalingRules": {
       /** @description policies is a list of potential scaling polices which can be used during scaling. If not set, use the default values: - For scale up: allow doubling the number of pods, or an absolute change of 4 pods in a 15s window. - For scale down: allow all pods to be removed in a 15s window. */
@@ -507,7 +507,7 @@ export interface components {
        *
        *     For example, if autoscaling is configured with a memory consumption target of 100Mi, and scale-down and scale-up tolerances of 5% and 1% respectively, scaling will be triggered when the actual consumption falls below 95Mi or exceeds 101Mi.
        *
-       *     This is an alpha field and requires enabling the HPAConfigurableTolerance feature gate.
+       *     This is an beta field and requires the HPAConfigurableTolerance feature gate to be enabled.
        */
       tolerance?: components["schemas"]["io.k8s.apimachinery.pkg.api.resource.Quantity"]
     }

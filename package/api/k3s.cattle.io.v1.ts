@@ -1,22 +1,5 @@
 export interface paths {
-  "/apis/discovery.k8s.io/v1/": {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /** @description get available resources */
-    get: operations["getDiscoveryV1APIResources"]
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  "/apis/discovery.k8s.io/v1/endpointslices": {
+  "/apis/k3s.cattle.io/v1/addons": {
     parameters: {
       query?: {
         /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
@@ -76,8 +59,8 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** @description list or watch objects of kind EndpointSlice */
-    get: operations["listDiscoveryV1EndpointSliceForAllNamespaces"]
+    /** @description list objects of kind Addon */
+    get: operations["listK3sCattleIoV1AddonForAllNamespaces"]
     put?: never
     post?: never
     delete?: never
@@ -86,7 +69,55 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  "/apis/discovery.k8s.io/v1/namespaces/{namespace}/endpointslices": {
+  "/apis/k3s.cattle.io/v1/etcdsnapshotfiles": {
+    parameters: {
+      query?: {
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** @description list objects of kind ETCDSnapshotFile */
+    get: operations["listK3sCattleIoV1ETCDSnapshotFile"]
+    put?: never
+    /** @description create an ETCDSnapshotFile */
+    post: operations["createK3sCattleIoV1ETCDSnapshotFile"]
+    /** @description delete collection of ETCDSnapshotFile */
+    delete: operations["deleteK3sCattleIoV1CollectionETCDSnapshotFile"]
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  "/apis/k3s.cattle.io/v1/etcdsnapshotfiles/{name}": {
+    parameters: {
+      query?: {
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+      }
+      header?: never
+      path: {
+        /** @description name of the ETCDSnapshotFile */
+        name: string
+      }
+      cookie?: never
+    }
+    /** @description read the specified ETCDSnapshotFile */
+    get: operations["readK3sCattleIoV1ETCDSnapshotFile"]
+    /** @description replace the specified ETCDSnapshotFile */
+    put: operations["replaceK3sCattleIoV1ETCDSnapshotFile"]
+    post?: never
+    /** @description delete an ETCDSnapshotFile */
+    delete: operations["deleteK3sCattleIoV1ETCDSnapshotFile"]
+    options?: never
+    head?: never
+    /** @description partially update the specified ETCDSnapshotFile */
+    patch: operations["patchK3sCattleIoV1ETCDSnapshotFile"]
+    trace?: never
+  }
+  "/apis/k3s.cattle.io/v1/namespaces/{namespace}/addons": {
     parameters: {
       query?: {
         /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
@@ -99,19 +130,19 @@ export interface paths {
       }
       cookie?: never
     }
-    /** @description list or watch objects of kind EndpointSlice */
-    get: operations["listDiscoveryV1NamespacedEndpointSlice"]
+    /** @description list objects of kind Addon */
+    get: operations["listK3sCattleIoV1NamespacedAddon"]
     put?: never
-    /** @description create an EndpointSlice */
-    post: operations["createDiscoveryV1NamespacedEndpointSlice"]
-    /** @description delete collection of EndpointSlice */
-    delete: operations["deleteDiscoveryV1CollectionNamespacedEndpointSlice"]
+    /** @description create an Addon */
+    post: operations["createK3sCattleIoV1NamespacedAddon"]
+    /** @description delete collection of Addon */
+    delete: operations["deleteK3sCattleIoV1CollectionNamespacedAddon"]
     options?: never
     head?: never
     patch?: never
     trace?: never
   }
-  "/apis/discovery.k8s.io/v1/namespaces/{namespace}/endpointslices/{name}": {
+  "/apis/k3s.cattle.io/v1/namespaces/{namespace}/addons/{name}": {
     parameters: {
       query?: {
         /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
@@ -119,443 +150,154 @@ export interface paths {
       }
       header?: never
       path: {
-        /** @description name of the EndpointSlice */
+        /** @description name of the Addon */
         name: string
         /** @description object name and auth scope, such as for teams and projects */
         namespace: string
       }
       cookie?: never
     }
-    /** @description read the specified EndpointSlice */
-    get: operations["readDiscoveryV1NamespacedEndpointSlice"]
-    /** @description replace the specified EndpointSlice */
-    put: operations["replaceDiscoveryV1NamespacedEndpointSlice"]
+    /** @description read the specified Addon */
+    get: operations["readK3sCattleIoV1NamespacedAddon"]
+    /** @description replace the specified Addon */
+    put: operations["replaceK3sCattleIoV1NamespacedAddon"]
     post?: never
-    /** @description delete an EndpointSlice */
-    delete: operations["deleteDiscoveryV1NamespacedEndpointSlice"]
+    /** @description delete an Addon */
+    delete: operations["deleteK3sCattleIoV1NamespacedAddon"]
     options?: never
     head?: never
-    /** @description partially update the specified EndpointSlice */
-    patch: operations["patchDiscoveryV1NamespacedEndpointSlice"]
-    trace?: never
-  }
-  "/apis/discovery.k8s.io/v1/watch/endpointslices": {
-    parameters: {
-      query?: {
-        /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
-        allowWatchBookmarks?: boolean
-        /**
-         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
-         *
-         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
-         */
-        continue?: string
-        /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
-        fieldSelector?: string
-        /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
-        labelSelector?: string
-        /**
-         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
-         *
-         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
-         */
-        limit?: number
-        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
-        pretty?: string
-        /**
-         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
-         *
-         *     Defaults to unset
-         */
-        resourceVersion?: string
-        /**
-         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
-         *
-         *     Defaults to unset
-         */
-        resourceVersionMatch?: string
-        /**
-         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
-         *
-         *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
-         *       is interpreted as "data at least as new as the provided `resourceVersion`"
-         *       and the bookmark event is send when the state is synced
-         *       to a `resourceVersion` at least as fresh as the one provided by the ListOptions.
-         *       If `resourceVersion` is unset, this is interpreted as "consistent read" and the
-         *       bookmark event is send when the state is synced at least to the moment
-         *       when request started being processed.
-         *     - `resourceVersionMatch` set to any other value or unset
-         *       Invalid error is returned.
-         *
-         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
-         */
-        sendInitialEvents?: boolean
-        /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
-        timeoutSeconds?: number
-        /** @description Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion. */
-        watch?: boolean
-      }
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /** @description watch individual changes to a list of EndpointSlice. deprecated: use the 'watch' parameter with a list operation instead. */
-    get: operations["watchDiscoveryV1EndpointSliceListForAllNamespaces"]
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  "/apis/discovery.k8s.io/v1/watch/namespaces/{namespace}/endpointslices": {
-    parameters: {
-      query?: {
-        /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
-        allowWatchBookmarks?: boolean
-        /**
-         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
-         *
-         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
-         */
-        continue?: string
-        /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
-        fieldSelector?: string
-        /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
-        labelSelector?: string
-        /**
-         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
-         *
-         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
-         */
-        limit?: number
-        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
-        pretty?: string
-        /**
-         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
-         *
-         *     Defaults to unset
-         */
-        resourceVersion?: string
-        /**
-         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
-         *
-         *     Defaults to unset
-         */
-        resourceVersionMatch?: string
-        /**
-         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
-         *
-         *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
-         *       is interpreted as "data at least as new as the provided `resourceVersion`"
-         *       and the bookmark event is send when the state is synced
-         *       to a `resourceVersion` at least as fresh as the one provided by the ListOptions.
-         *       If `resourceVersion` is unset, this is interpreted as "consistent read" and the
-         *       bookmark event is send when the state is synced at least to the moment
-         *       when request started being processed.
-         *     - `resourceVersionMatch` set to any other value or unset
-         *       Invalid error is returned.
-         *
-         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
-         */
-        sendInitialEvents?: boolean
-        /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
-        timeoutSeconds?: number
-        /** @description Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion. */
-        watch?: boolean
-      }
-      header?: never
-      path: {
-        /** @description object name and auth scope, such as for teams and projects */
-        namespace: string
-      }
-      cookie?: never
-    }
-    /** @description watch individual changes to a list of EndpointSlice. deprecated: use the 'watch' parameter with a list operation instead. */
-    get: operations["watchDiscoveryV1NamespacedEndpointSliceList"]
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  "/apis/discovery.k8s.io/v1/watch/namespaces/{namespace}/endpointslices/{name}": {
-    parameters: {
-      query?: {
-        /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
-        allowWatchBookmarks?: boolean
-        /**
-         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
-         *
-         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
-         */
-        continue?: string
-        /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
-        fieldSelector?: string
-        /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
-        labelSelector?: string
-        /**
-         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
-         *
-         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
-         */
-        limit?: number
-        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
-        pretty?: string
-        /**
-         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
-         *
-         *     Defaults to unset
-         */
-        resourceVersion?: string
-        /**
-         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
-         *
-         *     Defaults to unset
-         */
-        resourceVersionMatch?: string
-        /**
-         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
-         *
-         *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
-         *       is interpreted as "data at least as new as the provided `resourceVersion`"
-         *       and the bookmark event is send when the state is synced
-         *       to a `resourceVersion` at least as fresh as the one provided by the ListOptions.
-         *       If `resourceVersion` is unset, this is interpreted as "consistent read" and the
-         *       bookmark event is send when the state is synced at least to the moment
-         *       when request started being processed.
-         *     - `resourceVersionMatch` set to any other value or unset
-         *       Invalid error is returned.
-         *
-         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
-         */
-        sendInitialEvents?: boolean
-        /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
-        timeoutSeconds?: number
-        /** @description Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion. */
-        watch?: boolean
-      }
-      header?: never
-      path: {
-        /** @description name of the EndpointSlice */
-        name: string
-        /** @description object name and auth scope, such as for teams and projects */
-        namespace: string
-      }
-      cookie?: never
-    }
-    /** @description watch changes to an object of kind EndpointSlice. deprecated: use the 'watch' parameter with a list operation instead, filtered to a single item with the 'fieldSelector' parameter. */
-    get: operations["watchDiscoveryV1NamespacedEndpointSlice"]
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
+    /** @description partially update the specified Addon */
+    patch: operations["patchK3sCattleIoV1NamespacedAddon"]
     trace?: never
   }
 }
 export type webhooks = Record<string, never>
 export interface components {
   schemas: {
-    /** @description ObjectReference contains enough information to let you inspect or modify the referred object. */
-    "io.k8s.api.core.v1.ObjectReference": {
-      /** @description API version of the referent. */
+    /**
+     * @description Addon is used to track application of a manifest file on disk. It mostly exists so that the wrangler DesiredSet
+     *     Apply controller has an object to track as the owner, and ensure that all created resources are tracked when the
+     *     manifest is modified or removed.
+     */
+    "io.cattle.k3s.v1.Addon": {
+      /** @description APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources */
       apiVersion?: string
-      /** @description If referring to a piece of an object instead of an entire object, this string should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2]. For example, if the object reference is to a container within a pod, this would take on a value like: "spec.containers{name}" (where "name" refers to the name of the container that triggered the event) or if no container name is specified "spec.containers[2]" (container with index 2 in this pod). This syntax is chosen only to have some well-defined way of referencing a part of an object. */
-      fieldPath?: string
-      /** @description Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds */
+      /** @description Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds */
       kind?: string
-      /** @description Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names */
-      name?: string
-      /** @description Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/ */
-      namespace?: string
-      /** @description Specific resourceVersion to which this reference is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency */
-      resourceVersion?: string
-      /** @description UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids */
-      uid?: string
-    }
-    /** @description Endpoint represents a single logical "backend" implementing a service. */
-    "io.k8s.api.discovery.v1.Endpoint": {
-      /** @description addresses of this endpoint. For EndpointSlices of addressType "IPv4" or "IPv6", the values are IP addresses in canonical form. The syntax and semantics of other addressType values are not defined. This must contain at least one address but no more than 100. EndpointSlices generated by the EndpointSlice controller will always have exactly 1 address. No semantics are defined for additional addresses beyond the first, and kube-proxy does not look at them. */
-      addresses: string[]
-      /**
-       * @description conditions contains information about the current status of the endpoint.
-       * @default {}
-       */
-      conditions: components["schemas"]["io.k8s.api.discovery.v1.EndpointConditions"]
-      /** @description deprecatedTopology contains topology information part of the v1beta1 API. This field is deprecated, and will be removed when the v1beta1 API is removed (no sooner than kubernetes v1.24).  While this field can hold values, it is not writable through the v1 API, and any attempts to write to it will be silently ignored. Topology information can be found in the zone and nodeName fields instead. */
-      deprecatedTopology?: {
-        [key: string]: string
+      /** @description Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata */
+      metadata?: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"]
+      /** @description Spec provides information about the on-disk manifest backing this resource. */
+      spec?: {
+        /** @description Checksum is the SHA256 checksum of the most recently successfully applied manifest file. */
+        checksum?: string
+        /** @description Source is the Path on disk to the manifest file that this Addon tracks. */
+        source?: string
       }
-      /** @description hints contains information associated with how an endpoint should be consumed. */
-      hints?: components["schemas"]["io.k8s.api.discovery.v1.EndpointHints"]
-      /** @description hostname of this endpoint. This field may be used by consumers of endpoints to distinguish endpoints from each other (e.g. in DNS names). Multiple endpoints which use the same hostname should be considered fungible (e.g. multiple A values in DNS). Must be lowercase and pass DNS Label (RFC 1123) validation. */
-      hostname?: string
-      /** @description nodeName represents the name of the Node hosting this endpoint. This can be used to determine endpoints local to a Node. */
-      nodeName?: string
-      /** @description targetRef is a reference to a Kubernetes object that represents this endpoint. */
-      targetRef?: components["schemas"]["io.k8s.api.core.v1.ObjectReference"]
-      /** @description zone is the name of the Zone this endpoint exists in. */
-      zone?: string
     }
-    /** @description EndpointConditions represents the current condition of an endpoint. */
-    "io.k8s.api.discovery.v1.EndpointConditions": {
-      /** @description ready indicates that this endpoint is ready to receive traffic, according to whatever system is managing the endpoint. A nil value should be interpreted as "true". In general, an endpoint should be marked ready if it is serving and not terminating, though this can be overridden in some cases, such as when the associated Service has set the publishNotReadyAddresses flag. */
-      ready?: boolean
-      /** @description serving indicates that this endpoint is able to receive traffic, according to whatever system is managing the endpoint. For endpoints backed by pods, the EndpointSlice controller will mark the endpoint as serving if the pod's Ready condition is True. A nil value should be interpreted as "true". */
-      serving?: boolean
-      /** @description terminating indicates that this endpoint is terminating. A nil value should be interpreted as "false". */
-      terminating?: boolean
-    }
-    /** @description EndpointHints provides hints describing how an endpoint should be consumed. */
-    "io.k8s.api.discovery.v1.EndpointHints": {
-      /** @description forNodes indicates the node(s) this endpoint should be consumed by when using topology aware routing. May contain a maximum of 8 entries. */
-      forNodes?: components["schemas"]["io.k8s.api.discovery.v1.ForNode"][]
-      /** @description forZones indicates the zone(s) this endpoint should be consumed by when using topology aware routing. May contain a maximum of 8 entries. */
-      forZones?: components["schemas"]["io.k8s.api.discovery.v1.ForZone"][]
-    }
-    /** @description EndpointPort represents a Port used by an EndpointSlice */
-    "io.k8s.api.discovery.v1.EndpointPort": {
-      /**
-       * @description The application protocol for this port. This is used as a hint for implementations to offer richer behavior for protocols that they understand. This field follows standard Kubernetes label syntax. Valid values are either:
-       *
-       *     * Un-prefixed protocol names - reserved for IANA standard service names (as per RFC-6335 and https://www.iana.org/assignments/service-names).
-       *
-       *     * Kubernetes-defined prefixed names:
-       *       * 'kubernetes.io/h2c' - HTTP/2 prior knowledge over cleartext as described in https://www.rfc-editor.org/rfc/rfc9113.html#name-starting-http-2-with-prior-
-       *       * 'kubernetes.io/ws'  - WebSocket over cleartext as described in https://www.rfc-editor.org/rfc/rfc6455
-       *       * 'kubernetes.io/wss' - WebSocket over TLS as described in https://www.rfc-editor.org/rfc/rfc6455
-       *
-       *     * Other protocols should use implementation-defined prefixed names such as mycompany.com/my-custom-protocol.
-       */
-      appProtocol?: string
-      /** @description name represents the name of this port. All ports in an EndpointSlice must have a unique name. If the EndpointSlice is derived from a Kubernetes service, this corresponds to the Service.ports[].name. Name must either be an empty string or pass DNS_LABEL validation: * must be no more than 63 characters long. * must consist of lower case alphanumeric characters or '-'. * must start and end with an alphanumeric character. Default is empty string. */
-      name?: string
-      /**
-       * Format: int32
-       * @description port represents the port number of the endpoint. If the EndpointSlice is derived from a Kubernetes service, this must be set to the service's target port. EndpointSlices used for other purposes may have a nil port.
-       */
-      port?: number
-      /**
-       * @description protocol represents the IP protocol for this port. Must be UDP, TCP, or SCTP. Default is TCP.
-       *
-       *     Possible enum values:
-       *      - `"SCTP"` is the SCTP protocol.
-       *      - `"TCP"` is the TCP protocol.
-       *      - `"UDP"` is the UDP protocol.
-       * @enum {string}
-       */
-      protocol?: "SCTP" | "TCP" | "UDP"
-    }
-    /** @description EndpointSlice represents a set of service endpoints. Most EndpointSlices are created by the EndpointSlice controller to represent the Pods selected by Service objects. For a given service there may be multiple EndpointSlice objects which must be joined to produce the full set of endpoints; you can find all of the slices for a given service by listing EndpointSlices in the service's namespace whose `kubernetes.io/service-name` label contains the service's name. */
-    "io.k8s.api.discovery.v1.EndpointSlice": {
-      /**
-       * @description addressType specifies the type of address carried by this EndpointSlice. All addresses in this slice must be the same type. This field is immutable after creation. The following address types are currently supported: * IPv4: Represents an IPv4 Address. * IPv6: Represents an IPv6 Address. * FQDN: Represents a Fully Qualified Domain Name. (Deprecated) The EndpointSlice controller only generates, and kube-proxy only processes, slices of addressType "IPv4" and "IPv6". No semantics are defined for the "FQDN" type.
-       *
-       *     Possible enum values:
-       *      - `"FQDN"` represents a FQDN.
-       *      - `"IPv4"` represents an IPv4 Address.
-       *      - `"IPv6"` represents an IPv6 Address.
-       * @default
-       * @enum {string}
-       */
-      addressType: "FQDN" | "IPv4" | "IPv6"
+    /** @description AddonList is a list of Addon */
+    "io.cattle.k3s.v1.AddonList": {
       /** @description APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources */
       apiVersion?: string
-      /** @description endpoints is a list of unique endpoints in this slice. Each slice may include a maximum of 1000 endpoints. */
-      endpoints: components["schemas"]["io.k8s.api.discovery.v1.Endpoint"][]
+      /** @description List of addons. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md */
+      items: components["schemas"]["io.cattle.k3s.v1.Addon"][]
       /** @description Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds */
       kind?: string
-      /**
-       * @description Standard object's metadata.
-       * @default {}
-       */
-      metadata: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"]
-      /** @description ports specifies the list of network ports exposed by each endpoint in this slice. Each port must have a unique name. Each slice may include a maximum of 100 ports. Services always have at least 1 port, so EndpointSlices generated by the EndpointSlice controller will likewise always have at least 1 port. EndpointSlices used for other purposes may have an empty ports list. */
-      ports?: components["schemas"]["io.k8s.api.discovery.v1.EndpointPort"][]
+      /** @description Standard list metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds */
+      metadata?: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"]
     }
-    /** @description EndpointSliceList represents a list of endpoint slices */
-    "io.k8s.api.discovery.v1.EndpointSliceList": {
+    /** @description ETCDSnapshot tracks a point-in-time snapshot of the etcd datastore. */
+    "io.cattle.k3s.v1.ETCDSnapshotFile": {
       /** @description APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources */
       apiVersion?: string
-      /** @description items is the list of endpoint slices */
-      items: components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"][]
       /** @description Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds */
       kind?: string
-      /**
-       * @description Standard list metadata.
-       * @default {}
-       */
-      metadata: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"]
+      /** @description Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata */
+      metadata?: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"]
+      /** @description Spec defines properties of an etcd snapshot file */
+      spec?: {
+        /** @description Location is the absolute file:// or s3:// URI address of the snapshot. */
+        location: string
+        /**
+         * @description Metadata contains point-in-time snapshot of the contents of the
+         *     k3s-etcd-snapshot-extra-metadata ConfigMap's data field, at the time the
+         *     snapshot was taken. This is intended to contain data about cluster state
+         *     that may be important for an external system to have available when restoring
+         *     the snapshot.
+         */
+        metadata?: {
+          [key: string]: string
+        }
+        /** @description NodeName contains the name of the node that took the snapshot. */
+        nodeName: string
+        /**
+         * @description S3 contains extra metadata about the S3 storage system holding the
+         *     snapshot. This is guaranteed to be set for all snapshots uploaded to S3.
+         *     If not specified, the snapshot was not uploaded to S3.
+         */
+        s3?: {
+          /** @description Bucket is the bucket holding the snapshot */
+          bucket?: string
+          /** @description BucketLookup is the bucket lookup type, one of 'auto', 'dns', 'path'. Default if empty is 'auto'. */
+          bucketLookup?: string
+          /** @description Endpoint is the host or host:port of the S3 service */
+          endpoint?: string
+          /** @description EndpointCA is the path on disk to the S3 service's trusted CA list. Leave empty to use the OS CA bundle. */
+          endpointCA?: string
+          /** @description Insecure is true if the S3 service uses HTTP instead of HTTPS */
+          insecure?: boolean
+          /** @description Prefix is the prefix in which the snapshot file is stored. */
+          prefix?: string
+          /** @description Region is the region of the S3 service */
+          region?: string
+          /** @description SkipSSLVerify is true if TLS certificate verification is disabled */
+          skipSSLVerify?: boolean
+        }
+        /**
+         * @description SnapshotName contains the base name of the snapshot file. CLI actions that act
+         *     on snapshots stored locally or within a pre-configured S3 bucket and
+         *     prefix usually take the snapshot name as their argument.
+         */
+        snapshotName: string
+      }
+      /** @description Status represents current information about a snapshot. */
+      status?: {
+        /**
+         * Format: date-time
+         * @description CreationTime is the timestamp when the snapshot was taken by etcd.
+         */
+        creationTime?: string
+        /**
+         * @description Error is the last observed error during snapshot creation, if any.
+         *     If the snapshot is retried, this field will be cleared on success.
+         */
+        error?: {
+          /**
+           * @description Message is a string detailing the encountered error during snapshot creation if specified.
+           *     NOTE: message may be logged, and it should not contain sensitive information.
+           */
+          message?: string
+          /**
+           * Format: date-time
+           * @description Time is the timestamp when the error was encountered.
+           */
+          time?: string
+        }
+        /** @description ReadyToUse indicates that the snapshot is available to be restored. */
+        readyToUse?: boolean
+        /** @description Size is the size of the snapshot file, in bytes. If not specified, the snapshot failed. */
+        size?: number | string
+      }
     }
-    /** @description ForNode provides information about which nodes should consume this endpoint. */
-    "io.k8s.api.discovery.v1.ForNode": {
-      /**
-       * @description name represents the name of the node.
-       * @default
-       */
-      name: string
-    }
-    /** @description ForZone provides information about which zones should consume this endpoint. */
-    "io.k8s.api.discovery.v1.ForZone": {
-      /**
-       * @description name represents the name of the zone.
-       * @default
-       */
-      name: string
-    }
-    /** @description APIResource specifies the name of a resource and whether it is namespaced. */
-    "io.k8s.apimachinery.pkg.apis.meta.v1.APIResource": {
-      /** @description categories is a list of the grouped resources this resource belongs to (e.g. 'all') */
-      categories?: string[]
-      /** @description group is the preferred group of the resource.  Empty implies the group of the containing resource list. For subresources, this may have a different value, for example: Scale". */
-      group?: string
-      /**
-       * @description kind is the kind for the resource (e.g. 'Foo' is the kind for a resource 'foo')
-       * @default
-       */
-      kind: string
-      /**
-       * @description name is the plural name of the resource.
-       * @default
-       */
-      name: string
-      /**
-       * @description namespaced indicates if a resource is namespaced or not.
-       * @default false
-       */
-      namespaced: boolean
-      /** @description shortNames is a list of suggested short names of the resource. */
-      shortNames?: string[]
-      /**
-       * @description singularName is the singular name of the resource.  This allows clients to handle plural and singular opaquely. The singularName is more correct for reporting status on a single item and both singular and plural are allowed from the kubectl CLI interface.
-       * @default
-       */
-      singularName: string
-      /** @description The hash value of the storage version, the version this resource is converted to when written to the data store. Value must be treated as opaque by clients. Only equality comparison on the value is valid. This is an alpha feature and may change or be removed in the future. The field is populated by the apiserver only if the StorageVersionHash feature gate is enabled. This field will remain optional even if it graduates. */
-      storageVersionHash?: string
-      /** @description verbs is a list of supported kube verbs (this includes get, list, watch, create, update, patch, delete, deletecollection, and proxy) */
-      verbs: string[]
-      /** @description version is the preferred version of the resource.  Empty implies the version of the containing resource list For subresources, this may have a different value, for example: v1 (while inside a v1beta1 version of the core resource's group)". */
-      version?: string
-    }
-    /** @description APIResourceList is a list of APIResource, it is used to expose the name of the resources supported in a specific group and version, and if the resource is namespaced. */
-    "io.k8s.apimachinery.pkg.apis.meta.v1.APIResourceList": {
+    /** @description ETCDSnapshotFileList is a list of ETCDSnapshotFile */
+    "io.cattle.k3s.v1.ETCDSnapshotFileList": {
       /** @description APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources */
       apiVersion?: string
-      /**
-       * @description groupVersion is the group and version this APIResourceList is for.
-       * @default
-       */
-      groupVersion: string
+      /** @description List of etcdsnapshotfiles. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md */
+      items: components["schemas"]["io.cattle.k3s.v1.ETCDSnapshotFile"][]
       /** @description Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds */
       kind?: string
-      /** @description resources contains the name of the resources and if they are namespaced. */
-      resources: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.APIResource"][]
+      /** @description Standard list metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds */
+      metadata?: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"]
     }
     /** @description DeleteOptions may be provided when deleting an API object. */
     "io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions": {
@@ -786,60 +528,6 @@ export interface components {
      * @description Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.
      */
     "io.k8s.apimachinery.pkg.apis.meta.v1.Time": string
-    /** @description Event represents a single event to a watched resource. */
-    "io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent": {
-      /**
-       * @description Object is:
-       *      * If Type is Added or Modified: the new state of the object.
-       *      * If Type is Deleted: the state of the object immediately before deletion.
-       *      * If Type is Error: *Status is recommended; other types may make sense
-       *        depending on context.
-       */
-      object: components["schemas"]["io.k8s.apimachinery.pkg.runtime.RawExtension"]
-      /** @default  */
-      type: string
-    }
-    /**
-     * @description RawExtension is used to hold extensions in external versions.
-     *
-     *     To use this, make a field which has RawExtension as its type in your external, versioned struct, and Object in your internal struct. You also need to register your various plugin types.
-     *
-     *     // Internal package:
-     *
-     *     	type MyAPIObject struct {
-     *     		runtime.TypeMeta `json:",inline"`
-     *     		MyPlugin runtime.Object `json:"myPlugin"`
-     *     	}
-     *
-     *     	type PluginA struct {
-     *     		AOption string `json:"aOption"`
-     *     	}
-     *
-     *     // External package:
-     *
-     *     	type MyAPIObject struct {
-     *     		runtime.TypeMeta `json:",inline"`
-     *     		MyPlugin runtime.RawExtension `json:"myPlugin"`
-     *     	}
-     *
-     *     	type PluginA struct {
-     *     		AOption string `json:"aOption"`
-     *     	}
-     *
-     *     // On the wire, the JSON will look something like this:
-     *
-     *     	{
-     *     		"kind":"MyAPIObject",
-     *     		"apiVersion":"v1",
-     *     		"myPlugin": {
-     *     			"kind":"PluginA",
-     *     			"aOption":"foo",
-     *     		},
-     *     	}
-     *
-     *     So what happens? Decode first uses json or yaml to unmarshal the serialized data into your external MyAPIObject. That causes the raw JSON to be stored, but not unpacked. The next step is to copy (using pkg/conversion) into the internal struct. The runtime package's DefaultScheme has conversion functions installed which will unpack the JSON stored in RawExtension, turning it into the correct object type, and storing it in the Object. (TODO: In the case where the object is of an unknown type, a runtime.Unknown object will be created and stored.)
-     */
-    "io.k8s.apimachinery.pkg.runtime.RawExtension": Record<string, never>
   }
   responses: never
   parameters: never
@@ -849,37 +537,7 @@ export interface components {
 }
 export type $defs = Record<string, never>
 export interface operations {
-  getDiscoveryV1APIResources: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          "application/json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.APIResourceList"]
-          "application/vnd.kubernetes.protobuf":
-            components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.APIResourceList"]
-          "application/yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.APIResourceList"]
-        }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  listDiscoveryV1EndpointSliceForAllNamespaces: {
+  listK3sCattleIoV1AddonForAllNamespaces: {
     parameters: {
       query?: {
         /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
@@ -947,12 +605,8 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          "application/json": components["schemas"]["io.k8s.api.discovery.v1.EndpointSliceList"]
-          "application/json;stream=watch": components["schemas"]["io.k8s.api.discovery.v1.EndpointSliceList"]
-          "application/vnd.kubernetes.protobuf": components["schemas"]["io.k8s.api.discovery.v1.EndpointSliceList"]
-          "application/vnd.kubernetes.protobuf;stream=watch":
-            components["schemas"]["io.k8s.api.discovery.v1.EndpointSliceList"]
-          "application/yaml": components["schemas"]["io.k8s.api.discovery.v1.EndpointSliceList"]
+          "application/json": components["schemas"]["io.cattle.k3s.v1.AddonList"]
+          "application/yaml": components["schemas"]["io.cattle.k3s.v1.AddonList"]
         }
       }
       /** @description Unauthorized */
@@ -964,7 +618,7 @@ export interface operations {
       }
     }
   }
-  listDiscoveryV1NamespacedEndpointSlice: {
+  listK3sCattleIoV1ETCDSnapshotFile: {
     parameters: {
       query?: {
         /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
@@ -1021,10 +675,7 @@ export interface operations {
         watch?: boolean
       }
       header?: never
-      path: {
-        /** @description object name and auth scope, such as for teams and projects */
-        namespace: string
-      }
+      path?: never
       cookie?: never
     }
     requestBody?: never
@@ -1035,12 +686,8 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          "application/json": components["schemas"]["io.k8s.api.discovery.v1.EndpointSliceList"]
-          "application/json;stream=watch": components["schemas"]["io.k8s.api.discovery.v1.EndpointSliceList"]
-          "application/vnd.kubernetes.protobuf": components["schemas"]["io.k8s.api.discovery.v1.EndpointSliceList"]
-          "application/vnd.kubernetes.protobuf;stream=watch":
-            components["schemas"]["io.k8s.api.discovery.v1.EndpointSliceList"]
-          "application/yaml": components["schemas"]["io.k8s.api.discovery.v1.EndpointSliceList"]
+          "application/json": components["schemas"]["io.cattle.k3s.v1.ETCDSnapshotFileList"]
+          "application/yaml": components["schemas"]["io.cattle.k3s.v1.ETCDSnapshotFileList"]
         }
       }
       /** @description Unauthorized */
@@ -1052,7 +699,7 @@ export interface operations {
       }
     }
   }
-  createDiscoveryV1NamespacedEndpointSlice: {
+  createK3sCattleIoV1ETCDSnapshotFile: {
     parameters: {
       query?: {
         /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
@@ -1065,15 +712,13 @@ export interface operations {
         fieldValidation?: string
       }
       header?: never
-      path: {
-        /** @description object name and auth scope, such as for teams and projects */
-        namespace: string
-      }
+      path?: never
       cookie?: never
     }
     requestBody: {
       content: {
-        "*/*": components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"]
+        "application/json": components["schemas"]["io.cattle.k3s.v1.ETCDSnapshotFile"]
+        "application/yaml": components["schemas"]["io.cattle.k3s.v1.ETCDSnapshotFile"]
       }
     }
     responses: {
@@ -1083,9 +728,8 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          "application/json": components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"]
-          "application/vnd.kubernetes.protobuf": components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"]
-          "application/yaml": components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"]
+          "application/json": components["schemas"]["io.cattle.k3s.v1.ETCDSnapshotFile"]
+          "application/yaml": components["schemas"]["io.cattle.k3s.v1.ETCDSnapshotFile"]
         }
       }
       /** @description Created */
@@ -1094,9 +738,8 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          "application/json": components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"]
-          "application/vnd.kubernetes.protobuf": components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"]
-          "application/yaml": components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"]
+          "application/json": components["schemas"]["io.cattle.k3s.v1.ETCDSnapshotFile"]
+          "application/yaml": components["schemas"]["io.cattle.k3s.v1.ETCDSnapshotFile"]
         }
       }
       /** @description Accepted */
@@ -1105,9 +748,8 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          "application/json": components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"]
-          "application/vnd.kubernetes.protobuf": components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"]
-          "application/yaml": components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"]
+          "application/json": components["schemas"]["io.cattle.k3s.v1.ETCDSnapshotFile"]
+          "application/yaml": components["schemas"]["io.cattle.k3s.v1.ETCDSnapshotFile"]
         }
       }
       /** @description Unauthorized */
@@ -1119,25 +761,21 @@ export interface operations {
       }
     }
   }
-  deleteDiscoveryV1CollectionNamespacedEndpointSlice: {
+  deleteK3sCattleIoV1CollectionETCDSnapshotFile: {
     parameters: {
       query?: {
         /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
         pretty?: string
+        /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
+        allowWatchBookmarks?: boolean
         /**
          * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
          *
          *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
          */
         continue?: string
-        /** @description When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed */
-        dryRun?: string
         /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
         fieldSelector?: string
-        /** @description The duration in seconds before the object should be deleted. Value must be non-negative integer. The value zero indicates delete immediately. If this value is nil, the default grace period for the specified type will be used. Defaults to a per object value if not specified. zero means delete immediately. */
-        gracePeriodSeconds?: number
-        /** @description if set to true, it will trigger an unsafe deletion of the resource in case the normal deletion flow fails with a corrupt object error. A resource is considered corrupt if it can not be retrieved from the underlying storage successfully because of a) its data can not be transformed e.g. decryption failure, or b) it fails to decode into an object. NOTE: unsafe deletion ignores finalizer constraints, skips precondition checks, and removes the object from the storage. WARNING: This may potentially break the cluster if the workload associated with the resource being unsafe-deleted relies on normal deletion flow. Use only if you REALLY know what you are doing. The default value is false, and the user must opt in to enable it */
-        ignoreStoreReadErrorWithClusterBreakingPotential?: boolean
         /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
         labelSelector?: string
         /**
@@ -1146,10 +784,6 @@ export interface operations {
          *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
          */
         limit?: number
-        /** @description Deprecated: please use the PropagationPolicy, this field will be deprecated in 1.7. Should the dependent objects be orphaned. If true/false, the "orphan" finalizer will be added to/removed from the object's finalizers list. Either this field or PropagationPolicy may be set, but not both. */
-        orphanDependents?: boolean
-        /** @description Whether and how garbage collection will be performed. Either this field or OrphanDependents may be set, but not both. The default policy is decided by the existing finalizer set in the metadata.finalizers and the resource-specific default policy. Acceptable values are: 'Orphan' - orphan the dependents; 'Background' - allow the garbage collector to delete the dependents in the background; 'Foreground' - a cascading policy that deletes all dependents in the foreground. */
-        propagationPolicy?: string
         /**
          * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
          *
@@ -1180,19 +814,14 @@ export interface operations {
         sendInitialEvents?: boolean
         /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
         timeoutSeconds?: number
+        /** @description Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion. */
+        watch?: boolean
       }
       header?: never
-      path: {
-        /** @description object name and auth scope, such as for teams and projects */
-        namespace: string
-      }
+      path?: never
       cookie?: never
     }
-    requestBody?: {
-      content: {
-        "*/*": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"]
-      }
-    }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
@@ -1201,7 +830,6 @@ export interface operations {
         }
         content: {
           "application/json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
-          "application/vnd.kubernetes.protobuf": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
           "application/yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
         }
       }
@@ -1214,18 +842,22 @@ export interface operations {
       }
     }
   }
-  readDiscoveryV1NamespacedEndpointSlice: {
+  readK3sCattleIoV1ETCDSnapshotFile: {
     parameters: {
       query?: {
         /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
         pretty?: string
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+         *
+         *     Defaults to unset
+         */
+        resourceVersion?: string
       }
       header?: never
       path: {
-        /** @description name of the EndpointSlice */
+        /** @description name of the ETCDSnapshotFile */
         name: string
-        /** @description object name and auth scope, such as for teams and projects */
-        namespace: string
       }
       cookie?: never
     }
@@ -1237,9 +869,8 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          "application/json": components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"]
-          "application/vnd.kubernetes.protobuf": components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"]
-          "application/yaml": components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"]
+          "application/json": components["schemas"]["io.cattle.k3s.v1.ETCDSnapshotFile"]
+          "application/yaml": components["schemas"]["io.cattle.k3s.v1.ETCDSnapshotFile"]
         }
       }
       /** @description Unauthorized */
@@ -1251,7 +882,7 @@ export interface operations {
       }
     }
   }
-  replaceDiscoveryV1NamespacedEndpointSlice: {
+  replaceK3sCattleIoV1ETCDSnapshotFile: {
     parameters: {
       query?: {
         /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
@@ -1265,16 +896,15 @@ export interface operations {
       }
       header?: never
       path: {
-        /** @description name of the EndpointSlice */
+        /** @description name of the ETCDSnapshotFile */
         name: string
-        /** @description object name and auth scope, such as for teams and projects */
-        namespace: string
       }
       cookie?: never
     }
     requestBody: {
       content: {
-        "*/*": components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"]
+        "application/json": components["schemas"]["io.cattle.k3s.v1.ETCDSnapshotFile"]
+        "application/yaml": components["schemas"]["io.cattle.k3s.v1.ETCDSnapshotFile"]
       }
     }
     responses: {
@@ -1284,9 +914,8 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          "application/json": components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"]
-          "application/vnd.kubernetes.protobuf": components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"]
-          "application/yaml": components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"]
+          "application/json": components["schemas"]["io.cattle.k3s.v1.ETCDSnapshotFile"]
+          "application/yaml": components["schemas"]["io.cattle.k3s.v1.ETCDSnapshotFile"]
         }
       }
       /** @description Created */
@@ -1295,9 +924,8 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          "application/json": components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"]
-          "application/vnd.kubernetes.protobuf": components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"]
-          "application/yaml": components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"]
+          "application/json": components["schemas"]["io.cattle.k3s.v1.ETCDSnapshotFile"]
+          "application/yaml": components["schemas"]["io.cattle.k3s.v1.ETCDSnapshotFile"]
         }
       }
       /** @description Unauthorized */
@@ -1309,7 +937,7 @@ export interface operations {
       }
     }
   }
-  deleteDiscoveryV1NamespacedEndpointSlice: {
+  deleteK3sCattleIoV1ETCDSnapshotFile: {
     parameters: {
       query?: {
         /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
@@ -1327,16 +955,15 @@ export interface operations {
       }
       header?: never
       path: {
-        /** @description name of the EndpointSlice */
+        /** @description name of the ETCDSnapshotFile */
         name: string
-        /** @description object name and auth scope, such as for teams and projects */
-        namespace: string
       }
       cookie?: never
     }
     requestBody?: {
       content: {
-        "*/*": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"]
+        "application/json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"]
+        "application/yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"]
       }
     }
     responses: {
@@ -1347,7 +974,6 @@ export interface operations {
         }
         content: {
           "application/json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
-          "application/vnd.kubernetes.protobuf": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
           "application/yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
         }
       }
@@ -1358,7 +984,6 @@ export interface operations {
         }
         content: {
           "application/json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
-          "application/vnd.kubernetes.protobuf": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
           "application/yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
         }
       }
@@ -1371,7 +996,7 @@ export interface operations {
       }
     }
   }
-  patchDiscoveryV1NamespacedEndpointSlice: {
+  patchK3sCattleIoV1ETCDSnapshotFile: {
     parameters: {
       query?: {
         /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
@@ -1387,7 +1012,448 @@ export interface operations {
       }
       header?: never
       path: {
-        /** @description name of the EndpointSlice */
+        /** @description name of the ETCDSnapshotFile */
+        name: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        "application/apply-patch+yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Patch"]
+        "application/json-patch+json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Patch"]
+        "application/merge-patch+json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Patch"]
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.cattle.k3s.v1.ETCDSnapshotFile"]
+          "application/yaml": components["schemas"]["io.cattle.k3s.v1.ETCDSnapshotFile"]
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  listK3sCattleIoV1NamespacedAddon: {
+    parameters: {
+      query?: {
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+        /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
+        allowWatchBookmarks?: boolean
+        /**
+         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
+         *
+         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
+         */
+        continue?: string
+        /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
+        fieldSelector?: string
+        /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
+        labelSelector?: string
+        /**
+         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
+         *
+         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
+         */
+        limit?: number
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+         *
+         *     Defaults to unset
+         */
+        resourceVersion?: string
+        /**
+         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+         *
+         *     Defaults to unset
+         */
+        resourceVersionMatch?: string
+        /**
+         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
+         *
+         *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
+         *       is interpreted as "data at least as new as the provided `resourceVersion`"
+         *       and the bookmark event is send when the state is synced
+         *       to a `resourceVersion` at least as fresh as the one provided by the ListOptions.
+         *       If `resourceVersion` is unset, this is interpreted as "consistent read" and the
+         *       bookmark event is send when the state is synced at least to the moment
+         *       when request started being processed.
+         *     - `resourceVersionMatch` set to any other value or unset
+         *       Invalid error is returned.
+         *
+         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
+         */
+        sendInitialEvents?: boolean
+        /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
+        timeoutSeconds?: number
+        /** @description Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion. */
+        watch?: boolean
+      }
+      header?: never
+      path: {
+        /** @description object name and auth scope, such as for teams and projects */
+        namespace: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.cattle.k3s.v1.AddonList"]
+          "application/yaml": components["schemas"]["io.cattle.k3s.v1.AddonList"]
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  createK3sCattleIoV1NamespacedAddon: {
+    parameters: {
+      query?: {
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+        /** @description When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed */
+        dryRun?: string
+        /** @description fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint. */
+        fieldManager?: string
+        /** @description fieldValidation instructs the server on how to handle objects in the request (POST/PUT/PATCH) containing unknown or duplicate fields. Valid values are: - Ignore: This will ignore any unknown fields that are silently dropped from the object, and will ignore all but the last duplicate field that the decoder encounters. This is the default behavior prior to v1.23. - Warn: This will send a warning via the standard warning response header for each unknown field that is dropped from the object, and for each duplicate field that is encountered. The request will still succeed if there are no other errors, and will only persist the last of any duplicate fields. This is the default in v1.23+ - Strict: This will fail the request with a BadRequest error if any unknown fields would be dropped from the object, or if any duplicate fields are present. The error returned from the server will contain all unknown and duplicate fields encountered. */
+        fieldValidation?: string
+      }
+      header?: never
+      path: {
+        /** @description object name and auth scope, such as for teams and projects */
+        namespace: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["io.cattle.k3s.v1.Addon"]
+        "application/yaml": components["schemas"]["io.cattle.k3s.v1.Addon"]
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.cattle.k3s.v1.Addon"]
+          "application/yaml": components["schemas"]["io.cattle.k3s.v1.Addon"]
+        }
+      }
+      /** @description Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.cattle.k3s.v1.Addon"]
+          "application/yaml": components["schemas"]["io.cattle.k3s.v1.Addon"]
+        }
+      }
+      /** @description Accepted */
+      202: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.cattle.k3s.v1.Addon"]
+          "application/yaml": components["schemas"]["io.cattle.k3s.v1.Addon"]
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  deleteK3sCattleIoV1CollectionNamespacedAddon: {
+    parameters: {
+      query?: {
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+        /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
+        allowWatchBookmarks?: boolean
+        /**
+         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
+         *
+         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
+         */
+        continue?: string
+        /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
+        fieldSelector?: string
+        /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
+        labelSelector?: string
+        /**
+         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
+         *
+         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
+         */
+        limit?: number
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+         *
+         *     Defaults to unset
+         */
+        resourceVersion?: string
+        /**
+         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+         *
+         *     Defaults to unset
+         */
+        resourceVersionMatch?: string
+        /**
+         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
+         *
+         *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
+         *       is interpreted as "data at least as new as the provided `resourceVersion`"
+         *       and the bookmark event is send when the state is synced
+         *       to a `resourceVersion` at least as fresh as the one provided by the ListOptions.
+         *       If `resourceVersion` is unset, this is interpreted as "consistent read" and the
+         *       bookmark event is send when the state is synced at least to the moment
+         *       when request started being processed.
+         *     - `resourceVersionMatch` set to any other value or unset
+         *       Invalid error is returned.
+         *
+         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
+         */
+        sendInitialEvents?: boolean
+        /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
+        timeoutSeconds?: number
+        /** @description Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion. */
+        watch?: boolean
+      }
+      header?: never
+      path: {
+        /** @description object name and auth scope, such as for teams and projects */
+        namespace: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
+          "application/yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  readK3sCattleIoV1NamespacedAddon: {
+    parameters: {
+      query?: {
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+         *
+         *     Defaults to unset
+         */
+        resourceVersion?: string
+      }
+      header?: never
+      path: {
+        /** @description name of the Addon */
+        name: string
+        /** @description object name and auth scope, such as for teams and projects */
+        namespace: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.cattle.k3s.v1.Addon"]
+          "application/yaml": components["schemas"]["io.cattle.k3s.v1.Addon"]
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  replaceK3sCattleIoV1NamespacedAddon: {
+    parameters: {
+      query?: {
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+        /** @description When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed */
+        dryRun?: string
+        /** @description fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint. */
+        fieldManager?: string
+        /** @description fieldValidation instructs the server on how to handle objects in the request (POST/PUT/PATCH) containing unknown or duplicate fields. Valid values are: - Ignore: This will ignore any unknown fields that are silently dropped from the object, and will ignore all but the last duplicate field that the decoder encounters. This is the default behavior prior to v1.23. - Warn: This will send a warning via the standard warning response header for each unknown field that is dropped from the object, and for each duplicate field that is encountered. The request will still succeed if there are no other errors, and will only persist the last of any duplicate fields. This is the default in v1.23+ - Strict: This will fail the request with a BadRequest error if any unknown fields would be dropped from the object, or if any duplicate fields are present. The error returned from the server will contain all unknown and duplicate fields encountered. */
+        fieldValidation?: string
+      }
+      header?: never
+      path: {
+        /** @description name of the Addon */
+        name: string
+        /** @description object name and auth scope, such as for teams and projects */
+        namespace: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["io.cattle.k3s.v1.Addon"]
+        "application/yaml": components["schemas"]["io.cattle.k3s.v1.Addon"]
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.cattle.k3s.v1.Addon"]
+          "application/yaml": components["schemas"]["io.cattle.k3s.v1.Addon"]
+        }
+      }
+      /** @description Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.cattle.k3s.v1.Addon"]
+          "application/yaml": components["schemas"]["io.cattle.k3s.v1.Addon"]
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  deleteK3sCattleIoV1NamespacedAddon: {
+    parameters: {
+      query?: {
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+        /** @description When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed */
+        dryRun?: string
+        /** @description The duration in seconds before the object should be deleted. Value must be non-negative integer. The value zero indicates delete immediately. If this value is nil, the default grace period for the specified type will be used. Defaults to a per object value if not specified. zero means delete immediately. */
+        gracePeriodSeconds?: number
+        /** @description if set to true, it will trigger an unsafe deletion of the resource in case the normal deletion flow fails with a corrupt object error. A resource is considered corrupt if it can not be retrieved from the underlying storage successfully because of a) its data can not be transformed e.g. decryption failure, or b) it fails to decode into an object. NOTE: unsafe deletion ignores finalizer constraints, skips precondition checks, and removes the object from the storage. WARNING: This may potentially break the cluster if the workload associated with the resource being unsafe-deleted relies on normal deletion flow. Use only if you REALLY know what you are doing. The default value is false, and the user must opt in to enable it */
+        ignoreStoreReadErrorWithClusterBreakingPotential?: boolean
+        /** @description Deprecated: please use the PropagationPolicy, this field will be deprecated in 1.7. Should the dependent objects be orphaned. If true/false, the "orphan" finalizer will be added to/removed from the object's finalizers list. Either this field or PropagationPolicy may be set, but not both. */
+        orphanDependents?: boolean
+        /** @description Whether and how garbage collection will be performed. Either this field or OrphanDependents may be set, but not both. The default policy is decided by the existing finalizer set in the metadata.finalizers and the resource-specific default policy. Acceptable values are: 'Orphan' - orphan the dependents; 'Background' - allow the garbage collector to delete the dependents in the background; 'Foreground' - a cascading policy that deletes all dependents in the foreground. */
+        propagationPolicy?: string
+      }
+      header?: never
+      path: {
+        /** @description name of the Addon */
+        name: string
+        /** @description object name and auth scope, such as for teams and projects */
+        namespace: string
+      }
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        "application/json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"]
+        "application/yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"]
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
+          "application/yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
+        }
+      }
+      /** @description Accepted */
+      202: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
+          "application/yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  patchK3sCattleIoV1NamespacedAddon: {
+    parameters: {
+      query?: {
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+        /** @description When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed */
+        dryRun?: string
+        /** @description fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint. This field is required for apply requests (application/apply-patch) but optional for non-apply patch types (JsonPatch, MergePatch, StrategicMergePatch). */
+        fieldManager?: string
+        /** @description fieldValidation instructs the server on how to handle objects in the request (POST/PUT/PATCH) containing unknown or duplicate fields. Valid values are: - Ignore: This will ignore any unknown fields that are silently dropped from the object, and will ignore all but the last duplicate field that the decoder encounters. This is the default behavior prior to v1.23. - Warn: This will send a warning via the standard warning response header for each unknown field that is dropped from the object, and for each duplicate field that is encountered. The request will still succeed if there are no other errors, and will only persist the last of any duplicate fields. This is the default in v1.23+ - Strict: This will fail the request with a BadRequest error if any unknown fields would be dropped from the object, or if any duplicate fields are present. The error returned from the server will contain all unknown and duplicate fields encountered. */
+        fieldValidation?: string
+        /** @description Force is going to "force" Apply requests. It means user will re-acquire conflicting fields owned by other people. Force flag must be unset for non-apply patch requests. */
+        force?: boolean
+      }
+      header?: never
+      path: {
+        /** @description name of the Addon */
         name: string
         /** @description object name and auth scope, such as for teams and projects */
         namespace: string
@@ -1399,7 +1465,6 @@ export interface operations {
         "application/apply-patch+yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Patch"]
         "application/json-patch+json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Patch"]
         "application/merge-patch+json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Patch"]
-        "application/strategic-merge-patch+json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Patch"]
       }
     }
     responses: {
@@ -1409,286 +1474,8 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          "application/json": components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"]
-          "application/vnd.kubernetes.protobuf": components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"]
-          "application/yaml": components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"]
-        }
-      }
-      /** @description Created */
-      201: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          "application/json": components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"]
-          "application/vnd.kubernetes.protobuf": components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"]
-          "application/yaml": components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"]
-        }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  watchDiscoveryV1EndpointSliceListForAllNamespaces: {
-    parameters: {
-      query?: {
-        /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
-        allowWatchBookmarks?: boolean
-        /**
-         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
-         *
-         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
-         */
-        continue?: string
-        /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
-        fieldSelector?: string
-        /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
-        labelSelector?: string
-        /**
-         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
-         *
-         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
-         */
-        limit?: number
-        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
-        pretty?: string
-        /**
-         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
-         *
-         *     Defaults to unset
-         */
-        resourceVersion?: string
-        /**
-         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
-         *
-         *     Defaults to unset
-         */
-        resourceVersionMatch?: string
-        /**
-         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
-         *
-         *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
-         *       is interpreted as "data at least as new as the provided `resourceVersion`"
-         *       and the bookmark event is send when the state is synced
-         *       to a `resourceVersion` at least as fresh as the one provided by the ListOptions.
-         *       If `resourceVersion` is unset, this is interpreted as "consistent read" and the
-         *       bookmark event is send when the state is synced at least to the moment
-         *       when request started being processed.
-         *     - `resourceVersionMatch` set to any other value or unset
-         *       Invalid error is returned.
-         *
-         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
-         */
-        sendInitialEvents?: boolean
-        /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
-        timeoutSeconds?: number
-        /** @description Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion. */
-        watch?: boolean
-      }
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          "application/json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"]
-          "application/json;stream=watch": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"]
-          "application/vnd.kubernetes.protobuf":
-            components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"]
-          "application/vnd.kubernetes.protobuf;stream=watch":
-            components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"]
-          "application/yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"]
-        }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  watchDiscoveryV1NamespacedEndpointSliceList: {
-    parameters: {
-      query?: {
-        /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
-        allowWatchBookmarks?: boolean
-        /**
-         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
-         *
-         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
-         */
-        continue?: string
-        /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
-        fieldSelector?: string
-        /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
-        labelSelector?: string
-        /**
-         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
-         *
-         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
-         */
-        limit?: number
-        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
-        pretty?: string
-        /**
-         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
-         *
-         *     Defaults to unset
-         */
-        resourceVersion?: string
-        /**
-         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
-         *
-         *     Defaults to unset
-         */
-        resourceVersionMatch?: string
-        /**
-         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
-         *
-         *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
-         *       is interpreted as "data at least as new as the provided `resourceVersion`"
-         *       and the bookmark event is send when the state is synced
-         *       to a `resourceVersion` at least as fresh as the one provided by the ListOptions.
-         *       If `resourceVersion` is unset, this is interpreted as "consistent read" and the
-         *       bookmark event is send when the state is synced at least to the moment
-         *       when request started being processed.
-         *     - `resourceVersionMatch` set to any other value or unset
-         *       Invalid error is returned.
-         *
-         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
-         */
-        sendInitialEvents?: boolean
-        /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
-        timeoutSeconds?: number
-        /** @description Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion. */
-        watch?: boolean
-      }
-      header?: never
-      path: {
-        /** @description object name and auth scope, such as for teams and projects */
-        namespace: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          "application/json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"]
-          "application/json;stream=watch": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"]
-          "application/vnd.kubernetes.protobuf":
-            components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"]
-          "application/vnd.kubernetes.protobuf;stream=watch":
-            components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"]
-          "application/yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"]
-        }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  watchDiscoveryV1NamespacedEndpointSlice: {
-    parameters: {
-      query?: {
-        /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
-        allowWatchBookmarks?: boolean
-        /**
-         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
-         *
-         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
-         */
-        continue?: string
-        /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
-        fieldSelector?: string
-        /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
-        labelSelector?: string
-        /**
-         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
-         *
-         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
-         */
-        limit?: number
-        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
-        pretty?: string
-        /**
-         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
-         *
-         *     Defaults to unset
-         */
-        resourceVersion?: string
-        /**
-         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
-         *
-         *     Defaults to unset
-         */
-        resourceVersionMatch?: string
-        /**
-         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
-         *
-         *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
-         *       is interpreted as "data at least as new as the provided `resourceVersion`"
-         *       and the bookmark event is send when the state is synced
-         *       to a `resourceVersion` at least as fresh as the one provided by the ListOptions.
-         *       If `resourceVersion` is unset, this is interpreted as "consistent read" and the
-         *       bookmark event is send when the state is synced at least to the moment
-         *       when request started being processed.
-         *     - `resourceVersionMatch` set to any other value or unset
-         *       Invalid error is returned.
-         *
-         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
-         */
-        sendInitialEvents?: boolean
-        /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
-        timeoutSeconds?: number
-        /** @description Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion. */
-        watch?: boolean
-      }
-      header?: never
-      path: {
-        /** @description name of the EndpointSlice */
-        name: string
-        /** @description object name and auth scope, such as for teams and projects */
-        namespace: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          "application/json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"]
-          "application/json;stream=watch": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"]
-          "application/vnd.kubernetes.protobuf":
-            components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"]
-          "application/vnd.kubernetes.protobuf;stream=watch":
-            components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"]
-          "application/yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"]
+          "application/json": components["schemas"]["io.cattle.k3s.v1.Addon"]
+          "application/yaml": components["schemas"]["io.cattle.k3s.v1.Addon"]
         }
       }
       /** @description Unauthorized */
@@ -1702,13 +1489,13 @@ export interface operations {
   }
 }
 
-type Resource<T, U> = Omit<T, "status"> & { apiVersion: "discovery.k8s.io/v1"; kind: U }
+type Resource<T, U> = Omit<T, "status"> & { apiVersion: "k3s.cattle.io/v1"; kind: U }
 
 export interface api {
-  EndpointSlice: Resource<components["schemas"]["io.k8s.api.discovery.v1.EndpointSlice"], "EndpointSlice">
-  EndpointSliceList: Resource<components["schemas"]["io.k8s.api.discovery.v1.EndpointSliceList"], "EndpointSliceList">
-  DeleteOptions: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "DeleteOptions">
-  WatchEvent: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "WatchEvent">
+  Addon: Resource<components["schemas"]["io.cattle.k3s.v1.Addon"], "Addon">
+  AddonList: Resource<components["schemas"]["io.cattle.k3s.v1.AddonList"], "AddonList">
+  ETCDSnapshotFile: Resource<components["schemas"]["io.cattle.k3s.v1.ETCDSnapshotFile"], "ETCDSnapshotFile">
+  ETCDSnapshotFileList: Resource<components["schemas"]["io.cattle.k3s.v1.ETCDSnapshotFileList"], "ETCDSnapshotFileList">
 }
 
 export default api

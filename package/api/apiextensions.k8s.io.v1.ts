@@ -304,6 +304,11 @@ export interface components {
       lastTransitionTime?: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Time"]
       /** @description message is a human-readable message indicating details about last transition. */
       message?: string
+      /**
+       * Format: int64
+       * @description observedGeneration represents the .metadata.generation that the condition was set based upon. For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date with respect to the current state of the instance.
+       */
+      observedGeneration?: number
       /** @description reason is a unique, one-word, CamelCase reason for the condition's last transition. */
       reason?: string
       /**
@@ -393,6 +398,11 @@ export interface components {
       conditions?: components["schemas"][
         "io.k8s.apiextensions-apiserver.pkg.apis.apiextensions.v1.CustomResourceDefinitionCondition"
       ][]
+      /**
+       * Format: int64
+       * @description The generation observed by the CRD controller.
+       */
+      observedGeneration?: number
       /** @description storedVersions lists all versions of CustomResources that were ever persisted. Tracking these versions allows a migration path for stored versions in etcd. The field is mutable so a migration controller can finish a migration to another version (ensuring no old objects are left in storage), and then remove the rest of the versions from this list. Versions may not be removed from `spec.versions` while they exist in this list. */
       storedVersions?: string[]
     }

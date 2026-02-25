@@ -1,5 +1,5 @@
 export interface paths {
-  "/apis/node.k8s.io/v1/": {
+  "/apis/metrics.k8s.io/v1beta1/": {
     parameters: {
       query?: never
       header?: never
@@ -7,7 +7,7 @@ export interface paths {
       cookie?: never
     }
     /** @description get available resources */
-    get: operations["getNodeV1APIResources"]
+    get: operations["getMetricsV1beta1APIResources"]
     put?: never
     post?: never
     delete?: never
@@ -16,29 +16,80 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  "/apis/node.k8s.io/v1/runtimeclasses": {
+  "/apis/metrics.k8s.io/v1beta1/namespaces/{namespace}/pods": {
     parameters: {
       query?: {
+        /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
+        allowWatchBookmarks?: boolean
+        /**
+         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
+         *
+         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
+         */
+        continue?: string
+        /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
+        fieldSelector?: string
+        /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
+        labelSelector?: string
+        /**
+         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
+         *
+         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
+         */
+        limit?: number
         /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
         pretty?: string
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+         *
+         *     Defaults to unset
+         */
+        resourceVersion?: string
+        /**
+         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+         *
+         *     Defaults to unset
+         */
+        resourceVersionMatch?: string
+        /**
+         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
+         *
+         *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
+         *       is interpreted as "data at least as new as the provided `resourceVersion`"
+         *       and the bookmark event is send when the state is synced
+         *       to a `resourceVersion` at least as fresh as the one provided by the ListOptions.
+         *       If `resourceVersion` is unset, this is interpreted as "consistent read" and the
+         *       bookmark event is send when the state is synced at least to the moment
+         *       when request started being processed.
+         *     - `resourceVersionMatch` set to any other value or unset
+         *       Invalid error is returned.
+         *
+         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
+         */
+        sendInitialEvents?: boolean
+        /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
+        timeoutSeconds?: number
+        /** @description Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion. */
+        watch?: boolean
       }
       header?: never
-      path?: never
+      path: {
+        /** @description object name and auth scope, such as for teams and projects */
+        namespace: string
+      }
       cookie?: never
     }
-    /** @description list or watch objects of kind RuntimeClass */
-    get: operations["listNodeV1RuntimeClass"]
+    /** @description list objects of kind PodMetrics */
+    get: operations["listMetricsV1beta1NamespacedPodMetrics"]
     put?: never
-    /** @description create a RuntimeClass */
-    post: operations["createNodeV1RuntimeClass"]
-    /** @description delete collection of RuntimeClass */
-    delete: operations["deleteNodeV1CollectionRuntimeClass"]
+    post?: never
+    delete?: never
     options?: never
     head?: never
     patch?: never
     trace?: never
   }
-  "/apis/node.k8s.io/v1/runtimeclasses/{name}": {
+  "/apis/metrics.k8s.io/v1beta1/namespaces/{namespace}/pods/{name}": {
     parameters: {
       query?: {
         /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
@@ -46,25 +97,24 @@ export interface paths {
       }
       header?: never
       path: {
-        /** @description name of the RuntimeClass */
+        /** @description name of the PodMetrics */
         name: string
+        /** @description object name and auth scope, such as for teams and projects */
+        namespace: string
       }
       cookie?: never
     }
-    /** @description read the specified RuntimeClass */
-    get: operations["readNodeV1RuntimeClass"]
-    /** @description replace the specified RuntimeClass */
-    put: operations["replaceNodeV1RuntimeClass"]
+    /** @description read the specified PodMetrics */
+    get: operations["readMetricsV1beta1NamespacedPodMetrics"]
+    put?: never
     post?: never
-    /** @description delete a RuntimeClass */
-    delete: operations["deleteNodeV1RuntimeClass"]
+    delete?: never
     options?: never
     head?: never
-    /** @description partially update the specified RuntimeClass */
-    patch: operations["patchNodeV1RuntimeClass"]
+    patch?: never
     trace?: never
   }
-  "/apis/node.k8s.io/v1/watch/runtimeclasses": {
+  "/apis/metrics.k8s.io/v1beta1/nodes": {
     parameters: {
       query?: {
         /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
@@ -124,8 +174,8 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** @description watch individual changes to a list of RuntimeClass. deprecated: use the 'watch' parameter with a list operation instead. */
-    get: operations["watchNodeV1RuntimeClassList"]
+    /** @description list objects of kind NodeMetrics */
+    get: operations["listMetricsV1beta1NodeMetrics"]
     put?: never
     post?: never
     delete?: never
@@ -134,7 +184,30 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  "/apis/node.k8s.io/v1/watch/runtimeclasses/{name}": {
+  "/apis/metrics.k8s.io/v1beta1/nodes/{name}": {
+    parameters: {
+      query?: {
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+      }
+      header?: never
+      path: {
+        /** @description name of the NodeMetrics */
+        name: string
+      }
+      cookie?: never
+    }
+    /** @description read the specified NodeMetrics */
+    get: operations["readMetricsV1beta1NodeMetrics"]
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  "/apis/metrics.k8s.io/v1beta1/pods": {
     parameters: {
       query?: {
         /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
@@ -191,14 +264,11 @@ export interface paths {
         watch?: boolean
       }
       header?: never
-      path: {
-        /** @description name of the RuntimeClass */
-        name: string
-      }
+      path?: never
       cookie?: never
     }
-    /** @description watch changes to an object of kind RuntimeClass. deprecated: use the 'watch' parameter with a list operation instead, filtered to a single item with the 'fieldSelector' parameter. */
-    get: operations["watchNodeV1RuntimeClass"]
+    /** @description list objects of kind PodMetrics */
+    get: operations["listMetricsV1beta1PodMetricsForAllNamespaces"]
     put?: never
     post?: never
     delete?: never
@@ -211,93 +281,6 @@ export interface paths {
 export type webhooks = Record<string, never>
 export interface components {
   schemas: {
-    /** @description The pod this Toleration is attached to tolerates any taint that matches the triple <key,value,effect> using the matching operator <operator>. */
-    "io.k8s.api.core.v1.Toleration": {
-      /**
-       * @description Effect indicates the taint effect to match. Empty means match all taint effects. When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
-       *
-       *     Possible enum values:
-       *      - `"NoExecute"` Evict any already-running pods that do not tolerate the taint. Currently enforced by NodeController.
-       *      - `"NoSchedule"` Do not allow new pods to schedule onto the node unless they tolerate the taint, but allow all pods submitted to Kubelet without going through the scheduler to start, and allow all already-running pods to continue running. Enforced by the scheduler.
-       *      - `"PreferNoSchedule"` Like TaintEffectNoSchedule, but the scheduler tries not to schedule new pods onto the node, rather than prohibiting new pods from scheduling onto the node entirely. Enforced by the scheduler.
-       * @enum {string}
-       */
-      effect?: "NoExecute" | "NoSchedule" | "PreferNoSchedule"
-      /** @description Key is the taint key that the toleration applies to. Empty means match all taint keys. If the key is empty, operator must be Exists; this combination means to match all values and all keys. */
-      key?: string
-      /**
-       * @description Operator represents a key's relationship to the value. Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal. Exists is equivalent to wildcard for value, so that a pod can tolerate all taints of a particular category. Lt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).
-       *
-       *     Possible enum values:
-       *      - `"Equal"`
-       *      - `"Exists"`
-       *      - `"Gt"`
-       *      - `"Lt"`
-       * @enum {string}
-       */
-      operator?: "Equal" | "Exists" | "Gt" | "Lt"
-      /**
-       * Format: int64
-       * @description TolerationSeconds represents the period of time the toleration (which must be of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default, it is not set, which means tolerate the taint forever (do not evict). Zero and negative values will be treated as 0 (evict immediately) by the system.
-       */
-      tolerationSeconds?: number
-      /** @description Value is the taint value the toleration matches to. If the operator is Exists, the value should be empty, otherwise just a regular string. */
-      value?: string
-    }
-    /** @description Overhead structure represents the resource overhead associated with running a pod. */
-    "io.k8s.api.node.v1.Overhead": {
-      /** @description podFixed represents the fixed resource overhead associated with running a pod. */
-      podFixed?: {
-        [key: string]: components["schemas"]["io.k8s.apimachinery.pkg.api.resource.Quantity"]
-      }
-    }
-    /** @description RuntimeClass defines a class of container runtime supported in the cluster. The RuntimeClass is used to determine which container runtime is used to run all containers in a pod. RuntimeClasses are manually defined by a user or cluster provisioner, and referenced in the PodSpec. The Kubelet is responsible for resolving the RuntimeClassName reference before running the pod.  For more details, see https://kubernetes.io/docs/concepts/containers/runtime-class/ */
-    "io.k8s.api.node.v1.RuntimeClass": {
-      /** @description APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources */
-      apiVersion?: string
-      /**
-       * @description handler specifies the underlying runtime and configuration that the CRI implementation will use to handle pods of this class. The possible values are specific to the node & CRI configuration.  It is assumed that all handlers are available on every node, and handlers of the same name are equivalent on every node. For example, a handler called "runc" might specify that the runc OCI runtime (using native Linux containers) will be used to run the containers in a pod. The Handler must be lowercase, conform to the DNS Label (RFC 1123) requirements, and is immutable.
-       * @default
-       */
-      handler: string
-      /** @description Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds */
-      kind?: string
-      /**
-       * @description More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
-       * @default {}
-       */
-      metadata: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"]
-      /**
-       * @description overhead represents the resource overhead associated with running a pod for a given RuntimeClass. For more details, see
-       *      https://kubernetes.io/docs/concepts/scheduling-eviction/pod-overhead/
-       */
-      overhead?: components["schemas"]["io.k8s.api.node.v1.Overhead"]
-      /** @description scheduling holds the scheduling constraints to ensure that pods running with this RuntimeClass are scheduled to nodes that support it. If scheduling is nil, this RuntimeClass is assumed to be supported by all nodes. */
-      scheduling?: components["schemas"]["io.k8s.api.node.v1.Scheduling"]
-    }
-    /** @description RuntimeClassList is a list of RuntimeClass objects. */
-    "io.k8s.api.node.v1.RuntimeClassList": {
-      /** @description APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources */
-      apiVersion?: string
-      /** @description items is a list of schema objects. */
-      items: components["schemas"]["io.k8s.api.node.v1.RuntimeClass"][]
-      /** @description Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds */
-      kind?: string
-      /**
-       * @description Standard list metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
-       * @default {}
-       */
-      metadata: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"]
-    }
-    /** @description Scheduling specifies the scheduling constraints for nodes supporting a RuntimeClass. */
-    "io.k8s.api.node.v1.Scheduling": {
-      /** @description nodeSelector lists labels that must be present on nodes that support this RuntimeClass. Pods using this RuntimeClass can only be scheduled to a node matched by this selector. The RuntimeClass nodeSelector is merged with a pod's existing nodeSelector. Any conflicts will cause the pod to be rejected in admission. */
-      nodeSelector?: {
-        [key: string]: string
-      }
-      /** @description tolerations are appended (excluding duplicates) to pods running with this RuntimeClass during admission, effectively unioning the set of nodes tolerated by the pod and the RuntimeClass. */
-      tolerations?: components["schemas"]["io.k8s.api.core.v1.Toleration"][]
-    }
     /**
      * @description Quantity is a fixed-point representation of a number. It provides convenient marshaling/unmarshaling in JSON and YAML, in addition to String() and AsInt64() accessors.
      *
@@ -387,28 +370,8 @@ export interface components {
       /** @description resources contains the name of the resources and if they are namespaced. */
       resources: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.APIResource"][]
     }
-    /** @description DeleteOptions may be provided when deleting an API object. */
-    "io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions": {
-      /** @description APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources */
-      apiVersion?: string
-      /** @description When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed */
-      dryRun?: string[]
-      /**
-       * Format: int64
-       * @description The duration in seconds before the object should be deleted. Value must be non-negative integer. The value zero indicates delete immediately. If this value is nil, the default grace period for the specified type will be used. Defaults to a per object value if not specified. zero means delete immediately.
-       */
-      gracePeriodSeconds?: number
-      /** @description if set to true, it will trigger an unsafe deletion of the resource in case the normal deletion flow fails with a corrupt object error. A resource is considered corrupt if it can not be retrieved from the underlying storage successfully because of a) its data can not be transformed e.g. decryption failure, or b) it fails to decode into an object. NOTE: unsafe deletion ignores finalizer constraints, skips precondition checks, and removes the object from the storage. WARNING: This may potentially break the cluster if the workload associated with the resource being unsafe-deleted relies on normal deletion flow. Use only if you REALLY know what you are doing. The default value is false, and the user must opt in to enable it */
-      ignoreStoreReadErrorWithClusterBreakingPotential?: boolean
-      /** @description Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds */
-      kind?: string
-      /** @description Deprecated: please use the PropagationPolicy, this field will be deprecated in 1.7. Should the dependent objects be orphaned. If true/false, the "orphan" finalizer will be added to/removed from the object's finalizers list. Either this field or PropagationPolicy may be set, but not both. */
-      orphanDependents?: boolean
-      /** @description Must be fulfilled before a deletion is carried out. If not possible, a 409 Conflict status will be returned. */
-      preconditions?: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Preconditions"]
-      /** @description Whether and how garbage collection will be performed. Either this field or OrphanDependents may be set, but not both. The default policy is decided by the existing finalizer set in the metadata.finalizers and the resource-specific default policy. Acceptable values are: 'Orphan' - orphan the dependents; 'Background' - allow the garbage collector to delete the dependents in the background; 'Foreground' - a cascading policy that deletes all dependents in the foreground. */
-      propagationPolicy?: string
-    }
+    /** @description Duration is a wrapper around time.Duration which supports correct marshaling to YAML and JSON. In particular, it marshals into strings, which can be used as map keys in json. */
+    "io.k8s.apimachinery.pkg.apis.meta.v1.Duration": string
     /**
      * @description FieldsV1 stores a set of fields in a data structure like a Trie, in JSON format.
      *
@@ -458,8 +421,9 @@ export interface components {
        * @description CreationTimestamp is a timestamp representing the server time when this object was created. It is not guaranteed to be set in happens-before order across separate operations. Clients may not set this value. It is represented in RFC3339 form and is in UTC.
        *
        *     Populated by the system. Read-only. Null for lists. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+       * @default {}
        */
-      creationTimestamp?: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Time"]
+      creationTimestamp: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Time"]
       /**
        * Format: int64
        * @description Number of seconds allowed for this object to gracefully terminate before it will be removed from the system. Only set when deletionTimestamp is also set. May only be shortened. Read-only.
@@ -544,132 +508,95 @@ export interface components {
        */
       uid: string
     }
-    /** @description Patch is provided to give a concrete name and type to the Kubernetes PATCH request body. */
-    "io.k8s.apimachinery.pkg.apis.meta.v1.Patch": Record<string, never>
-    /** @description Preconditions must be fulfilled before an operation (update, delete, etc.) is carried out. */
-    "io.k8s.apimachinery.pkg.apis.meta.v1.Preconditions": {
-      /** @description Specifies the target ResourceVersion */
-      resourceVersion?: string
-      /** @description Specifies the target UID. */
-      uid?: string
-    }
-    /** @description Status is a return value for calls that don't return other objects. */
-    "io.k8s.apimachinery.pkg.apis.meta.v1.Status": {
-      /** @description APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources */
-      apiVersion?: string
-      /**
-       * Format: int32
-       * @description Suggested HTTP return code for this status, 0 if not set.
-       */
-      code?: number
-      /** @description Extended data associated with the reason.  Each reason may define its own extended details. This field is optional and the data returned is not guaranteed to conform to any schema except that defined by the reason type. */
-      details?: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.StatusDetails"]
-      /** @description Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds */
-      kind?: string
-      /** @description A human-readable description of the status of this operation. */
-      message?: string
-      /**
-       * @description Standard list metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-       * @default {}
-       */
-      metadata: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"]
-      /** @description A machine-readable description of why this operation is in the "Failure" status. If this value is empty there is no information available. A Reason clarifies an HTTP status code but does not override it. */
-      reason?: string
-      /** @description Status of the operation. One of: "Success" or "Failure". More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status */
-      status?: string
-    }
-    /** @description StatusCause provides more information about an api.Status failure, including cases when multiple errors are encountered. */
-    "io.k8s.apimachinery.pkg.apis.meta.v1.StatusCause": {
-      /**
-       * @description The field of the resource that has caused this error, as named by its JSON serialization. May include dot and postfix notation for nested attributes. Arrays are zero-indexed.  Fields may appear more than once in an array of causes due to fields having multiple errors. Optional.
-       *
-       *     Examples:
-       *       "name" - the field "name" on the current resource
-       *       "items[0].name" - the field "name" on the first array entry in "items"
-       */
-      field?: string
-      /** @description A human-readable description of the cause of the error.  This field may be presented as-is to a reader. */
-      message?: string
-      /** @description A machine-readable description of the cause of the error. If this value is empty there is no information available. */
-      reason?: string
-    }
-    /** @description StatusDetails is a set of additional properties that MAY be set by the server to provide additional information about a response. The Reason field of a Status object defines what attributes will be set. Clients must ignore fields that do not match the defined type of each attribute, and should assume that any attribute may be empty, invalid, or under defined. */
-    "io.k8s.apimachinery.pkg.apis.meta.v1.StatusDetails": {
-      /** @description The Causes array includes more details associated with the StatusReason failure. Not all StatusReasons may provide detailed causes. */
-      causes?: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.StatusCause"][]
-      /** @description The group attribute of the resource associated with the status StatusReason. */
-      group?: string
-      /** @description The kind attribute of the resource associated with the status StatusReason. On some operations may differ from the requested resource Kind. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds */
-      kind?: string
-      /** @description The name attribute of the resource associated with the status StatusReason (when there is a single name which can be described). */
-      name?: string
-      /**
-       * Format: int32
-       * @description If specified, the time in seconds before the operation should be retried. Some errors may indicate the client must take an alternate action - for those errors this field may indicate how long to wait before taking the alternate action.
-       */
-      retryAfterSeconds?: number
-      /** @description UID of the resource. (when there is a single resource which can be described). More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names#uids */
-      uid?: string
-    }
     /**
      * Format: date-time
      * @description Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.
      */
     "io.k8s.apimachinery.pkg.apis.meta.v1.Time": string
-    /** @description Event represents a single event to a watched resource. */
-    "io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent": {
+    /** @description ContainerMetrics sets resource usage metrics of a container. */
+    "io.k8s.metrics.pkg.apis.metrics.v1beta1.ContainerMetrics": {
       /**
-       * @description Object is:
-       *      * If Type is Added or Modified: the new state of the object.
-       *      * If Type is Deleted: the state of the object immediately before deletion.
-       *      * If Type is Error: *Status is recommended; other types may make sense
-       *        depending on context.
+       * @description Container name corresponding to the one from pod.spec.containers.
+       * @default
        */
-      object: components["schemas"]["io.k8s.apimachinery.pkg.runtime.RawExtension"]
-      /** @default  */
-      type: string
+      name: string
+      /** @description The memory usage is the memory working set. */
+      usage: {
+        [key: string]: components["schemas"]["io.k8s.apimachinery.pkg.api.resource.Quantity"]
+      }
     }
-    /**
-     * @description RawExtension is used to hold extensions in external versions.
-     *
-     *     To use this, make a field which has RawExtension as its type in your external, versioned struct, and Object in your internal struct. You also need to register your various plugin types.
-     *
-     *     // Internal package:
-     *
-     *     	type MyAPIObject struct {
-     *     		runtime.TypeMeta `json:",inline"`
-     *     		MyPlugin runtime.Object `json:"myPlugin"`
-     *     	}
-     *
-     *     	type PluginA struct {
-     *     		AOption string `json:"aOption"`
-     *     	}
-     *
-     *     // External package:
-     *
-     *     	type MyAPIObject struct {
-     *     		runtime.TypeMeta `json:",inline"`
-     *     		MyPlugin runtime.RawExtension `json:"myPlugin"`
-     *     	}
-     *
-     *     	type PluginA struct {
-     *     		AOption string `json:"aOption"`
-     *     	}
-     *
-     *     // On the wire, the JSON will look something like this:
-     *
-     *     	{
-     *     		"kind":"MyAPIObject",
-     *     		"apiVersion":"v1",
-     *     		"myPlugin": {
-     *     			"kind":"PluginA",
-     *     			"aOption":"foo",
-     *     		},
-     *     	}
-     *
-     *     So what happens? Decode first uses json or yaml to unmarshal the serialized data into your external MyAPIObject. That causes the raw JSON to be stored, but not unpacked. The next step is to copy (using pkg/conversion) into the internal struct. The runtime package's DefaultScheme has conversion functions installed which will unpack the JSON stored in RawExtension, turning it into the correct object type, and storing it in the Object. (TODO: In the case where the object is of an unknown type, a runtime.Unknown object will be created and stored.)
-     */
-    "io.k8s.apimachinery.pkg.runtime.RawExtension": Record<string, never>
+    /** @description NodeMetrics sets resource usage metrics of a node. */
+    "io.k8s.metrics.pkg.apis.metrics.v1beta1.NodeMetrics": {
+      /** @description APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources */
+      apiVersion?: string
+      /** @description Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds */
+      kind?: string
+      /**
+       * @description Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+       * @default {}
+       */
+      metadata: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"]
+      /**
+       * @description The following fields define time interval from which metrics were collected from the interval [Timestamp-Window, Timestamp].
+       * @default {}
+       */
+      timestamp: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Time"]
+      /** @description The memory usage is the memory working set. */
+      usage: {
+        [key: string]: components["schemas"]["io.k8s.apimachinery.pkg.api.resource.Quantity"]
+      }
+      /** @default 0 */
+      window: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Duration"]
+    }
+    /** @description NodeMetricsList is a list of NodeMetrics. */
+    "io.k8s.metrics.pkg.apis.metrics.v1beta1.NodeMetricsList": {
+      /** @description APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources */
+      apiVersion?: string
+      /** @description List of node metrics. */
+      items: components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.NodeMetrics"][]
+      /** @description Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds */
+      kind?: string
+      /**
+       * @description Standard list metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+       * @default {}
+       */
+      metadata: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"]
+    }
+    /** @description PodMetrics sets resource usage metrics of a pod. */
+    "io.k8s.metrics.pkg.apis.metrics.v1beta1.PodMetrics": {
+      /** @description APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources */
+      apiVersion?: string
+      /** @description Metrics for all containers are collected within the same time window. */
+      containers: components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.ContainerMetrics"][]
+      /** @description Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds */
+      kind?: string
+      /**
+       * @description Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+       * @default {}
+       */
+      metadata: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"]
+      /**
+       * @description The following fields define time interval from which metrics were collected from the interval [Timestamp-Window, Timestamp].
+       * @default {}
+       */
+      timestamp: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Time"]
+      /** @default 0 */
+      window: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Duration"]
+    }
+    /** @description PodMetricsList is a list of PodMetrics. */
+    "io.k8s.metrics.pkg.apis.metrics.v1beta1.PodMetricsList": {
+      /** @description APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources */
+      apiVersion?: string
+      /** @description List of pod metrics. */
+      items: components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.PodMetrics"][]
+      /** @description Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds */
+      kind?: string
+      /**
+       * @description Standard list metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+       * @default {}
+       */
+      metadata: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"]
+    }
   }
   responses: never
   parameters: never
@@ -679,7 +606,7 @@ export interface components {
 }
 export type $defs = Record<string, never>
 export interface operations {
-  getNodeV1APIResources: {
+  getMetricsV1beta1APIResources: {
     parameters: {
       query?: never
       header?: never
@@ -700,469 +627,9 @@ export interface operations {
           "application/yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.APIResourceList"]
         }
       }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
     }
   }
-  listNodeV1RuntimeClass: {
-    parameters: {
-      query?: {
-        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
-        pretty?: string
-        /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
-        allowWatchBookmarks?: boolean
-        /**
-         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
-         *
-         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
-         */
-        continue?: string
-        /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
-        fieldSelector?: string
-        /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
-        labelSelector?: string
-        /**
-         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
-         *
-         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
-         */
-        limit?: number
-        /**
-         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
-         *
-         *     Defaults to unset
-         */
-        resourceVersion?: string
-        /**
-         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
-         *
-         *     Defaults to unset
-         */
-        resourceVersionMatch?: string
-        /**
-         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
-         *
-         *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
-         *       is interpreted as "data at least as new as the provided `resourceVersion`"
-         *       and the bookmark event is send when the state is synced
-         *       to a `resourceVersion` at least as fresh as the one provided by the ListOptions.
-         *       If `resourceVersion` is unset, this is interpreted as "consistent read" and the
-         *       bookmark event is send when the state is synced at least to the moment
-         *       when request started being processed.
-         *     - `resourceVersionMatch` set to any other value or unset
-         *       Invalid error is returned.
-         *
-         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
-         */
-        sendInitialEvents?: boolean
-        /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
-        timeoutSeconds?: number
-        /** @description Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion. */
-        watch?: boolean
-      }
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          "application/json": components["schemas"]["io.k8s.api.node.v1.RuntimeClassList"]
-          "application/json;stream=watch": components["schemas"]["io.k8s.api.node.v1.RuntimeClassList"]
-          "application/vnd.kubernetes.protobuf": components["schemas"]["io.k8s.api.node.v1.RuntimeClassList"]
-          "application/vnd.kubernetes.protobuf;stream=watch":
-            components["schemas"]["io.k8s.api.node.v1.RuntimeClassList"]
-          "application/yaml": components["schemas"]["io.k8s.api.node.v1.RuntimeClassList"]
-        }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  createNodeV1RuntimeClass: {
-    parameters: {
-      query?: {
-        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
-        pretty?: string
-        /** @description When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed */
-        dryRun?: string
-        /** @description fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint. */
-        fieldManager?: string
-        /** @description fieldValidation instructs the server on how to handle objects in the request (POST/PUT/PATCH) containing unknown or duplicate fields. Valid values are: - Ignore: This will ignore any unknown fields that are silently dropped from the object, and will ignore all but the last duplicate field that the decoder encounters. This is the default behavior prior to v1.23. - Warn: This will send a warning via the standard warning response header for each unknown field that is dropped from the object, and for each duplicate field that is encountered. The request will still succeed if there are no other errors, and will only persist the last of any duplicate fields. This is the default in v1.23+ - Strict: This will fail the request with a BadRequest error if any unknown fields would be dropped from the object, or if any duplicate fields are present. The error returned from the server will contain all unknown and duplicate fields encountered. */
-        fieldValidation?: string
-      }
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody: {
-      content: {
-        "*/*": components["schemas"]["io.k8s.api.node.v1.RuntimeClass"]
-      }
-    }
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          "application/json": components["schemas"]["io.k8s.api.node.v1.RuntimeClass"]
-          "application/vnd.kubernetes.protobuf": components["schemas"]["io.k8s.api.node.v1.RuntimeClass"]
-          "application/yaml": components["schemas"]["io.k8s.api.node.v1.RuntimeClass"]
-        }
-      }
-      /** @description Created */
-      201: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          "application/json": components["schemas"]["io.k8s.api.node.v1.RuntimeClass"]
-          "application/vnd.kubernetes.protobuf": components["schemas"]["io.k8s.api.node.v1.RuntimeClass"]
-          "application/yaml": components["schemas"]["io.k8s.api.node.v1.RuntimeClass"]
-        }
-      }
-      /** @description Accepted */
-      202: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          "application/json": components["schemas"]["io.k8s.api.node.v1.RuntimeClass"]
-          "application/vnd.kubernetes.protobuf": components["schemas"]["io.k8s.api.node.v1.RuntimeClass"]
-          "application/yaml": components["schemas"]["io.k8s.api.node.v1.RuntimeClass"]
-        }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  deleteNodeV1CollectionRuntimeClass: {
-    parameters: {
-      query?: {
-        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
-        pretty?: string
-        /**
-         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
-         *
-         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
-         */
-        continue?: string
-        /** @description When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed */
-        dryRun?: string
-        /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
-        fieldSelector?: string
-        /** @description The duration in seconds before the object should be deleted. Value must be non-negative integer. The value zero indicates delete immediately. If this value is nil, the default grace period for the specified type will be used. Defaults to a per object value if not specified. zero means delete immediately. */
-        gracePeriodSeconds?: number
-        /** @description if set to true, it will trigger an unsafe deletion of the resource in case the normal deletion flow fails with a corrupt object error. A resource is considered corrupt if it can not be retrieved from the underlying storage successfully because of a) its data can not be transformed e.g. decryption failure, or b) it fails to decode into an object. NOTE: unsafe deletion ignores finalizer constraints, skips precondition checks, and removes the object from the storage. WARNING: This may potentially break the cluster if the workload associated with the resource being unsafe-deleted relies on normal deletion flow. Use only if you REALLY know what you are doing. The default value is false, and the user must opt in to enable it */
-        ignoreStoreReadErrorWithClusterBreakingPotential?: boolean
-        /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
-        labelSelector?: string
-        /**
-         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
-         *
-         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
-         */
-        limit?: number
-        /** @description Deprecated: please use the PropagationPolicy, this field will be deprecated in 1.7. Should the dependent objects be orphaned. If true/false, the "orphan" finalizer will be added to/removed from the object's finalizers list. Either this field or PropagationPolicy may be set, but not both. */
-        orphanDependents?: boolean
-        /** @description Whether and how garbage collection will be performed. Either this field or OrphanDependents may be set, but not both. The default policy is decided by the existing finalizer set in the metadata.finalizers and the resource-specific default policy. Acceptable values are: 'Orphan' - orphan the dependents; 'Background' - allow the garbage collector to delete the dependents in the background; 'Foreground' - a cascading policy that deletes all dependents in the foreground. */
-        propagationPolicy?: string
-        /**
-         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
-         *
-         *     Defaults to unset
-         */
-        resourceVersion?: string
-        /**
-         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
-         *
-         *     Defaults to unset
-         */
-        resourceVersionMatch?: string
-        /**
-         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
-         *
-         *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
-         *       is interpreted as "data at least as new as the provided `resourceVersion`"
-         *       and the bookmark event is send when the state is synced
-         *       to a `resourceVersion` at least as fresh as the one provided by the ListOptions.
-         *       If `resourceVersion` is unset, this is interpreted as "consistent read" and the
-         *       bookmark event is send when the state is synced at least to the moment
-         *       when request started being processed.
-         *     - `resourceVersionMatch` set to any other value or unset
-         *       Invalid error is returned.
-         *
-         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
-         */
-        sendInitialEvents?: boolean
-        /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
-        timeoutSeconds?: number
-      }
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: {
-      content: {
-        "*/*": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"]
-      }
-    }
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          "application/json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
-          "application/vnd.kubernetes.protobuf": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
-          "application/yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
-        }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  readNodeV1RuntimeClass: {
-    parameters: {
-      query?: {
-        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
-        pretty?: string
-      }
-      header?: never
-      path: {
-        /** @description name of the RuntimeClass */
-        name: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          "application/json": components["schemas"]["io.k8s.api.node.v1.RuntimeClass"]
-          "application/vnd.kubernetes.protobuf": components["schemas"]["io.k8s.api.node.v1.RuntimeClass"]
-          "application/yaml": components["schemas"]["io.k8s.api.node.v1.RuntimeClass"]
-        }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  replaceNodeV1RuntimeClass: {
-    parameters: {
-      query?: {
-        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
-        pretty?: string
-        /** @description When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed */
-        dryRun?: string
-        /** @description fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint. */
-        fieldManager?: string
-        /** @description fieldValidation instructs the server on how to handle objects in the request (POST/PUT/PATCH) containing unknown or duplicate fields. Valid values are: - Ignore: This will ignore any unknown fields that are silently dropped from the object, and will ignore all but the last duplicate field that the decoder encounters. This is the default behavior prior to v1.23. - Warn: This will send a warning via the standard warning response header for each unknown field that is dropped from the object, and for each duplicate field that is encountered. The request will still succeed if there are no other errors, and will only persist the last of any duplicate fields. This is the default in v1.23+ - Strict: This will fail the request with a BadRequest error if any unknown fields would be dropped from the object, or if any duplicate fields are present. The error returned from the server will contain all unknown and duplicate fields encountered. */
-        fieldValidation?: string
-      }
-      header?: never
-      path: {
-        /** @description name of the RuntimeClass */
-        name: string
-      }
-      cookie?: never
-    }
-    requestBody: {
-      content: {
-        "*/*": components["schemas"]["io.k8s.api.node.v1.RuntimeClass"]
-      }
-    }
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          "application/json": components["schemas"]["io.k8s.api.node.v1.RuntimeClass"]
-          "application/vnd.kubernetes.protobuf": components["schemas"]["io.k8s.api.node.v1.RuntimeClass"]
-          "application/yaml": components["schemas"]["io.k8s.api.node.v1.RuntimeClass"]
-        }
-      }
-      /** @description Created */
-      201: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          "application/json": components["schemas"]["io.k8s.api.node.v1.RuntimeClass"]
-          "application/vnd.kubernetes.protobuf": components["schemas"]["io.k8s.api.node.v1.RuntimeClass"]
-          "application/yaml": components["schemas"]["io.k8s.api.node.v1.RuntimeClass"]
-        }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  deleteNodeV1RuntimeClass: {
-    parameters: {
-      query?: {
-        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
-        pretty?: string
-        /** @description When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed */
-        dryRun?: string
-        /** @description The duration in seconds before the object should be deleted. Value must be non-negative integer. The value zero indicates delete immediately. If this value is nil, the default grace period for the specified type will be used. Defaults to a per object value if not specified. zero means delete immediately. */
-        gracePeriodSeconds?: number
-        /** @description if set to true, it will trigger an unsafe deletion of the resource in case the normal deletion flow fails with a corrupt object error. A resource is considered corrupt if it can not be retrieved from the underlying storage successfully because of a) its data can not be transformed e.g. decryption failure, or b) it fails to decode into an object. NOTE: unsafe deletion ignores finalizer constraints, skips precondition checks, and removes the object from the storage. WARNING: This may potentially break the cluster if the workload associated with the resource being unsafe-deleted relies on normal deletion flow. Use only if you REALLY know what you are doing. The default value is false, and the user must opt in to enable it */
-        ignoreStoreReadErrorWithClusterBreakingPotential?: boolean
-        /** @description Deprecated: please use the PropagationPolicy, this field will be deprecated in 1.7. Should the dependent objects be orphaned. If true/false, the "orphan" finalizer will be added to/removed from the object's finalizers list. Either this field or PropagationPolicy may be set, but not both. */
-        orphanDependents?: boolean
-        /** @description Whether and how garbage collection will be performed. Either this field or OrphanDependents may be set, but not both. The default policy is decided by the existing finalizer set in the metadata.finalizers and the resource-specific default policy. Acceptable values are: 'Orphan' - orphan the dependents; 'Background' - allow the garbage collector to delete the dependents in the background; 'Foreground' - a cascading policy that deletes all dependents in the foreground. */
-        propagationPolicy?: string
-      }
-      header?: never
-      path: {
-        /** @description name of the RuntimeClass */
-        name: string
-      }
-      cookie?: never
-    }
-    requestBody?: {
-      content: {
-        "*/*": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"]
-      }
-    }
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          "application/json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
-          "application/vnd.kubernetes.protobuf": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
-          "application/yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
-        }
-      }
-      /** @description Accepted */
-      202: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          "application/json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
-          "application/vnd.kubernetes.protobuf": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
-          "application/yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Status"]
-        }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  patchNodeV1RuntimeClass: {
-    parameters: {
-      query?: {
-        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
-        pretty?: string
-        /** @description When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed */
-        dryRun?: string
-        /** @description fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint. This field is required for apply requests (application/apply-patch) but optional for non-apply patch types (JsonPatch, MergePatch, StrategicMergePatch). */
-        fieldManager?: string
-        /** @description fieldValidation instructs the server on how to handle objects in the request (POST/PUT/PATCH) containing unknown or duplicate fields. Valid values are: - Ignore: This will ignore any unknown fields that are silently dropped from the object, and will ignore all but the last duplicate field that the decoder encounters. This is the default behavior prior to v1.23. - Warn: This will send a warning via the standard warning response header for each unknown field that is dropped from the object, and for each duplicate field that is encountered. The request will still succeed if there are no other errors, and will only persist the last of any duplicate fields. This is the default in v1.23+ - Strict: This will fail the request with a BadRequest error if any unknown fields would be dropped from the object, or if any duplicate fields are present. The error returned from the server will contain all unknown and duplicate fields encountered. */
-        fieldValidation?: string
-        /** @description Force is going to "force" Apply requests. It means user will re-acquire conflicting fields owned by other people. Force flag must be unset for non-apply patch requests. */
-        force?: boolean
-      }
-      header?: never
-      path: {
-        /** @description name of the RuntimeClass */
-        name: string
-      }
-      cookie?: never
-    }
-    requestBody: {
-      content: {
-        "application/apply-patch+yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Patch"]
-        "application/json-patch+json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Patch"]
-        "application/merge-patch+json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Patch"]
-        "application/strategic-merge-patch+json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Patch"]
-      }
-    }
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          "application/json": components["schemas"]["io.k8s.api.node.v1.RuntimeClass"]
-          "application/vnd.kubernetes.protobuf": components["schemas"]["io.k8s.api.node.v1.RuntimeClass"]
-          "application/yaml": components["schemas"]["io.k8s.api.node.v1.RuntimeClass"]
-        }
-      }
-      /** @description Created */
-      201: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          "application/json": components["schemas"]["io.k8s.api.node.v1.RuntimeClass"]
-          "application/vnd.kubernetes.protobuf": components["schemas"]["io.k8s.api.node.v1.RuntimeClass"]
-          "application/yaml": components["schemas"]["io.k8s.api.node.v1.RuntimeClass"]
-        }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  watchNodeV1RuntimeClassList: {
+  listMetricsV1beta1NamespacedPodMetrics: {
     parameters: {
       query?: {
         /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
@@ -1219,7 +686,10 @@ export interface operations {
         watch?: boolean
       }
       header?: never
-      path?: never
+      path: {
+        /** @description object name and auth scope, such as for teams and projects */
+        namespace: string
+      }
       cookie?: never
     }
     requestBody?: never
@@ -1230,25 +700,50 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          "application/json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"]
-          "application/json;stream=watch": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"]
+          "application/json": components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.PodMetricsList"]
+          "application/json;stream=watch":
+            components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.PodMetricsList"]
           "application/vnd.kubernetes.protobuf":
-            components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"]
+            components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.PodMetricsList"]
           "application/vnd.kubernetes.protobuf;stream=watch":
-            components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"]
-          "application/yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"]
+            components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.PodMetricsList"]
+          "application/yaml": components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.PodMetricsList"]
         }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
       }
     }
   }
-  watchNodeV1RuntimeClass: {
+  readMetricsV1beta1NamespacedPodMetrics: {
+    parameters: {
+      query?: {
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+      }
+      header?: never
+      path: {
+        /** @description name of the PodMetrics */
+        name: string
+        /** @description object name and auth scope, such as for teams and projects */
+        namespace: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.PodMetrics"]
+          "application/vnd.kubernetes.protobuf":
+            components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.PodMetrics"]
+          "application/yaml": components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.PodMetrics"]
+        }
+      }
+    }
+  }
+  listMetricsV1beta1NodeMetrics: {
     parameters: {
       query?: {
         /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
@@ -1305,8 +800,38 @@ export interface operations {
         watch?: boolean
       }
       header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.NodeMetricsList"]
+          "application/json;stream=watch":
+            components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.NodeMetricsList"]
+          "application/vnd.kubernetes.protobuf":
+            components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.NodeMetricsList"]
+          "application/vnd.kubernetes.protobuf;stream=watch":
+            components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.NodeMetricsList"]
+          "application/yaml": components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.NodeMetricsList"]
+        }
+      }
+    }
+  }
+  readMetricsV1beta1NodeMetrics: {
+    parameters: {
+      query?: {
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+      }
+      header?: never
       path: {
-        /** @description name of the RuntimeClass */
+        /** @description name of the NodeMetrics */
         name: string
       }
       cookie?: never
@@ -1319,33 +844,109 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          "application/json": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"]
-          "application/json;stream=watch": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"]
+          "application/json": components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.NodeMetrics"]
           "application/vnd.kubernetes.protobuf":
-            components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"]
-          "application/vnd.kubernetes.protobuf;stream=watch":
-            components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"]
-          "application/yaml": components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"]
+            components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.NodeMetrics"]
+          "application/yaml": components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.NodeMetrics"]
         }
       }
-      /** @description Unauthorized */
-      401: {
+    }
+  }
+  listMetricsV1beta1PodMetricsForAllNamespaces: {
+    parameters: {
+      query?: {
+        /** @description allowWatchBookmarks requests watch events with type "BOOKMARK". Servers that do not implement bookmarks may ignore this flag and bookmarks are sent at the server's discretion. Clients should not assume bookmarks are returned at any specific interval, nor may they assume the server will send any BOOKMARK event during a session. If this is not a watch, this field is ignored. */
+        allowWatchBookmarks?: boolean
+        /**
+         * @description The continue option should be set when retrieving more results from the server. Since this value is server defined, clients may only use the continue value from a previous query result with identical query parameters (except for the value of continue) and the server may reject a continue value it does not recognize. If the specified continue value is no longer valid whether due to expiration (generally five to fifteen minutes) or a configuration change on the server, the server will respond with a 410 ResourceExpired error together with a continue token. If the client needs a consistent list, it must restart their list without the continue field. Otherwise, the client may send another list request with the token received with the 410 error, the server will respond with a list starting from the next key, but from the latest snapshot, which is inconsistent from the previous list results - objects that are created, modified, or deleted after the first list request will be included in the response, as long as their keys are after the "next key".
+         *
+         *     This field is not supported when watch is true. Clients may start a watch from the last resourceVersion value returned by the server and not miss any modifications.
+         */
+        continue?: string
+        /** @description A selector to restrict the list of returned objects by their fields. Defaults to everything. */
+        fieldSelector?: string
+        /** @description A selector to restrict the list of returned objects by their labels. Defaults to everything. */
+        labelSelector?: string
+        /**
+         * @description limit is a maximum number of responses to return for a list call. If more items exist, the server will set the `continue` field on the list metadata to a value that can be used with the same initial query to retrieve the next set of results. Setting a limit may return fewer than the requested amount of items (up to zero items) in the event all requested objects are filtered out and clients should only use the presence of the continue field to determine whether more results are available. Servers may choose not to support the limit argument and will return all of the available results. If limit is specified and the continue field is empty, clients may assume that no more results are available. This field is not supported if watch is true.
+         *
+         *     The server guarantees that the objects returned when using continue will be identical to issuing a single list call without a limit - that is, no objects created, modified, or deleted after the first request is issued will be included in any subsequent continued requests. This is sometimes referred to as a consistent snapshot, and ensures that a client that is using limit to receive smaller chunks of a very large result can ensure they see all possible objects. If objects are updated during a chunked list the version of the object that was present at the time the first list result was calculated is returned.
+         */
+        limit?: number
+        /** @description If 'true', then the output is pretty printed. Defaults to 'false' unless the user-agent indicates a browser or command-line HTTP tool (curl and wget). */
+        pretty?: string
+        /**
+         * @description resourceVersion sets a constraint on what resource versions a request may be served from. See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+         *
+         *     Defaults to unset
+         */
+        resourceVersion?: string
+        /**
+         * @description resourceVersionMatch determines how resourceVersion is applied to list calls. It is highly recommended that resourceVersionMatch be set for list calls where resourceVersion is set See https://kubernetes.io/docs/reference/using-api/api-concepts/#resource-versions for details.
+         *
+         *     Defaults to unset
+         */
+        resourceVersionMatch?: string
+        /**
+         * @description `sendInitialEvents=true` may be set together with `watch=true`. In that case, the watch stream will begin with synthetic events to produce the current state of objects in the collection. Once all such events have been sent, a synthetic "Bookmark" event  will be sent. The bookmark will report the ResourceVersion (RV) corresponding to the set of objects, and be marked with `"k8s.io/initial-events-end": "true"` annotation. Afterwards, the watch stream will proceed as usual, sending watch events corresponding to changes (subsequent to the RV) to objects watched.
+         *
+         *     When `sendInitialEvents` option is set, we require `resourceVersionMatch` option to also be set. The semantic of the watch request is as following: - `resourceVersionMatch` = NotOlderThan
+         *       is interpreted as "data at least as new as the provided `resourceVersion`"
+         *       and the bookmark event is send when the state is synced
+         *       to a `resourceVersion` at least as fresh as the one provided by the ListOptions.
+         *       If `resourceVersion` is unset, this is interpreted as "consistent read" and the
+         *       bookmark event is send when the state is synced at least to the moment
+         *       when request started being processed.
+         *     - `resourceVersionMatch` set to any other value or unset
+         *       Invalid error is returned.
+         *
+         *     Defaults to true if `resourceVersion=""` or `resourceVersion="0"` (for backward compatibility reasons) and to false otherwise.
+         */
+        sendInitialEvents?: boolean
+        /** @description Timeout for the list/watch call. This limits the duration of the call, regardless of any activity or inactivity. */
+        timeoutSeconds?: number
+        /** @description Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion. */
+        watch?: boolean
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          "application/json": components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.PodMetricsList"]
+          "application/json;stream=watch":
+            components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.PodMetricsList"]
+          "application/vnd.kubernetes.protobuf":
+            components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.PodMetricsList"]
+          "application/vnd.kubernetes.protobuf;stream=watch":
+            components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.PodMetricsList"]
+          "application/yaml": components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.PodMetricsList"]
+        }
       }
     }
   }
 }
 
-type Resource<T, U> = Omit<T, "status"> & { apiVersion: "node.k8s.io/v1"; kind: U }
+type Resource<T, U> = Omit<T, "status"> & { apiVersion: "metrics.k8s.io/v1beta1"; kind: U }
 
 export interface api {
-  RuntimeClass: Resource<components["schemas"]["io.k8s.api.node.v1.RuntimeClass"], "RuntimeClass">
-  RuntimeClassList: Resource<components["schemas"]["io.k8s.api.node.v1.RuntimeClassList"], "RuntimeClassList">
-  DeleteOptions: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions"], "DeleteOptions">
-  WatchEvent: Resource<components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"], "WatchEvent">
+  NodeMetrics: Resource<components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.NodeMetrics"], "NodeMetrics">
+  NodeMetricsList: Resource<
+    components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.NodeMetricsList"],
+    "NodeMetricsList"
+  >
+  PodMetrics: Resource<components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.PodMetrics"], "PodMetrics">
+  PodMetricsList: Resource<
+    components["schemas"]["io.k8s.metrics.pkg.apis.metrics.v1beta1.PodMetricsList"],
+    "PodMetricsList"
+  >
 }
 
 export default api

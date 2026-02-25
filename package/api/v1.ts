@@ -6141,7 +6141,7 @@ export interface components {
       ports?: components["schemas"]["io.k8s.api.core.v1.ContainerPort"][]
       /** @description Periodic probe of container service readiness. Container will be removed from service endpoints if the probe fails. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes */
       readinessProbe?: components["schemas"]["io.k8s.api.core.v1.Probe"]
-      /** @description Resources resize policy for the container. */
+      /** @description Resources resize policy for the container. This field cannot be set on ephemeral containers. */
       resizePolicy?: components["schemas"]["io.k8s.api.core.v1.ContainerResizePolicy"][]
       /**
        * @description Compute Resources required by this container. Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
@@ -7834,6 +7834,8 @@ export interface components {
        * @default {}
        */
       daemonEndpoints: components["schemas"]["io.k8s.api.core.v1.NodeDaemonEndpoints"]
+      /** @description DeclaredFeatures represents the features related to feature gates that are declared by the node. */
+      declaredFeatures?: string[]
       /** @description Features describes the set of features implemented by the CRI implementation. */
       features?: components["schemas"]["io.k8s.api.core.v1.NodeFeatures"]
       /** @description List of container images on this node */
@@ -8047,7 +8049,7 @@ export interface components {
        */
       dataSourceRef?: components["schemas"]["io.k8s.api.core.v1.TypedObjectReference"]
       /**
-       * @description resources represents the minimum resources the volume should have. If RecoverVolumeExpansionFailure feature is enabled users are allowed to specify resource requirements that are lower than previous value but must still be higher than capacity recorded in the status field of the claim. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
+       * @description resources represents the minimum resources the volume should have. Users are allowed to specify resource requirements that are lower than previous value but must still be higher than capacity recorded in the status field of the claim. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
        * @default {}
        */
       resources: components["schemas"]["io.k8s.api.core.v1.VolumeResourceRequirements"]
@@ -8102,8 +8104,6 @@ export interface components {
        *     When this field is not set, it means that no resize operation is in progress for the given PVC.
        *
        *     A controller that receives PVC update with previously unknown resourceName or ClaimResourceStatus should ignore the update for the purpose it was designed. For example - a controller that only is responsible for resizing capacity of the volume, should ignore PVC updates that change other valid resources associated with PVC.
-       *
-       *     This is an alpha field and requires enabling RecoverVolumeExpansionFailure feature.
        */
       allocatedResourceStatuses?: {
         [key: string]:
@@ -8123,8 +8123,6 @@ export interface components {
        *     Capacity reported here may be larger than the actual capacity when a volume expansion operation is requested. For storage quota, the larger value from allocatedResources and PVC.spec.resources is used. If allocatedResources is not set, PVC.spec.resources alone is used for quota calculation. If a volume expansion capacity request is lowered, allocatedResources is only lowered if there are no expansion operations in progress and if the actual volume capacity is equal or lower than the requested capacity.
        *
        *     A controller that receives PVC update with previously unknown resourceName should ignore the update for the purpose it was designed. For example - a controller that only is responsible for resizing capacity of the volume, should ignore PVC updates that change other valid resources associated with PVC.
-       *
-       *     This is an alpha field and requires enabling RecoverVolumeExpansionFailure feature.
        */
       allocatedResources?: {
         [key: string]: components["schemas"]["io.k8s.apimachinery.pkg.api.resource.Quantity"]
@@ -8229,7 +8227,7 @@ export interface components {
       mountOptions?: string[]
       /** @description nfs represents an NFS mount on the host. Provisioned by an admin. More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs */
       nfs?: components["schemas"]["io.k8s.api.core.v1.NFSVolumeSource"]
-      /** @description nodeAffinity defines constraints that limit what nodes this volume can be accessed from. This field influences the scheduling of pods that use this volume. */
+      /** @description nodeAffinity defines constraints that limit what nodes this volume can be accessed from. This field influences the scheduling of pods that use this volume. This field is mutable if MutablePVNodeAffinity feature gate is enabled. */
       nodeAffinity?: components["schemas"]["io.k8s.api.core.v1.VolumeNodeAffinity"]
       /**
        * @description persistentVolumeReclaimPolicy defines what happens to a persistent volume when released from its claim. Valid options are Retain (default for manually created PersistentVolumes), Delete (default for dynamically provisioned PersistentVolumes), and Recycle (deprecated). Recycle must be supported by the volume plugin underlying this PersistentVolume. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#reclaiming
@@ -8399,6 +8397,18 @@ export interface components {
       maxExpirationSeconds?: number
       /** @description Kubelet's generated CSRs will be addressed to this signer. */
       signerName: string
+      /**
+       * @description userAnnotations allow pod authors to pass additional information to the signer implementation.  Kubernetes does not restrict or validate this metadata in any way.
+       *
+       *     These values are copied verbatim into the `spec.unverifiedUserAnnotations` field of the PodCertificateRequest objects that Kubelet creates.
+       *
+       *     Entries are subject to the same validation as object metadata annotations, with the addition that all keys must be domain-prefixed. No restrictions are placed on values, except an overall size limitation on the entire field.
+       *
+       *     Signers should document the keys and values they support. Signers should deny requests that contain keys they do not recognize.
+       */
+      userAnnotations?: {
+        [key: string]: string
+      }
     }
     /** @description PodCondition contains details for the current condition of this pod. */
     "io.k8s.api.core.v1.PodCondition": {
@@ -8410,7 +8420,7 @@ export interface components {
       message?: string
       /**
        * Format: int64
-       * @description If set, this represents the .metadata.generation that the pod condition was set based upon. This is an alpha field. Enable PodObservedGenerationTracking to be able to use this field.
+       * @description If set, this represents the .metadata.generation that the pod condition was set based upon. The PodObservedGenerationTracking feature gate must be enabled to use this field.
        */
       observedGeneration?: number
       /** @description Unique, one-word, CamelCase reason for the condition's last transition. */
@@ -8695,7 +8705,7 @@ export interface components {
       /**
        * @description ResourceClaims defines which ResourceClaims must be allocated and reserved before the Pod is allowed to start. The resources will be made available to those containers which consume them by name.
        *
-       *     This is an alpha field and requires enabling the DynamicResourceAllocation feature gate.
+       *     This is a stable field but requires that the DynamicResourceAllocation feature gate is enabled.
        *
        *     This field is immutable.
        */
@@ -8751,9 +8761,15 @@ export interface components {
       topologySpreadConstraints?: components["schemas"]["io.k8s.api.core.v1.TopologySpreadConstraint"][]
       /** @description List of volumes that can be mounted by containers belonging to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes */
       volumes?: components["schemas"]["io.k8s.api.core.v1.Volume"][]
+      /** @description WorkloadRef provides a reference to the Workload object that this Pod belongs to. This field is used by the scheduler to identify the PodGroup and apply the correct group scheduling policies. The Workload object referenced by this field may not exist at the time the Pod is created. This field is immutable, but a Workload object with the same name may be recreated with different policies. Doing this during pod scheduling may result in the placement not conforming to the expected policies. */
+      workloadRef?: components["schemas"]["io.k8s.api.core.v1.WorkloadReference"]
     }
     /** @description PodStatus represents information about the status of a pod. Status may trail the actual state of a system, especially if the node that hosts the pod cannot contact the control plane. */
     "io.k8s.api.core.v1.PodStatus": {
+      /** @description AllocatedResources is the total requests allocated for this pod by the node. If pod-level requests are not set, this will be the total requests aggregated across containers in the pod. */
+      allocatedResources?: {
+        [key: string]: components["schemas"]["io.k8s.apimachinery.pkg.api.resource.Quantity"]
+      }
       /** @description Current service state of pod. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#pod-conditions */
       conditions?: components["schemas"]["io.k8s.api.core.v1.PodCondition"][]
       /** @description Statuses of containers in this pod. Each container in the pod should have at most one status in this list, and all statuses should be for containers in the pod. However this is not enforced. If a status for a non-existent container is present in the list, or the list has duplicate names, the behavior of various Kubernetes components is not defined and those statuses might be ignored. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#pod-and-container-status */
@@ -8774,7 +8790,7 @@ export interface components {
       nominatedNodeName?: string
       /**
        * Format: int64
-       * @description If set, this represents the .metadata.generation that the pod status was set based upon. This is an alpha field. Enable PodObservedGenerationTracking to be able to use this field.
+       * @description If set, this represents the .metadata.generation that the pod status was set based upon. The PodObservedGenerationTracking feature gate must be enabled to use this field.
        */
       observedGeneration?: number
       /**
@@ -8813,6 +8829,8 @@ export interface components {
       resize?: string
       /** @description Status of resource claims. */
       resourceClaimStatuses?: components["schemas"]["io.k8s.api.core.v1.PodResourceClaimStatus"][]
+      /** @description Resources represents the compute resource requests and limits that have been applied at the pod level if pod-level requests or limits are set in PodSpec.Resources */
+      resources?: components["schemas"]["io.k8s.api.core.v1.ResourceRequirements"]
       /** @description RFC 3339 date and time at which the object was acknowledged by the Kubelet. This is before the Kubelet pulled the container image(s) for the pod. */
       startTime?: components["schemas"]["io.k8s.apimachinery.pkg.apis.meta.v1.Time"]
     }
@@ -9909,14 +9927,16 @@ export interface components {
       /** @description Key is the taint key that the toleration applies to. Empty means match all taint keys. If the key is empty, operator must be Exists; this combination means to match all values and all keys. */
       key?: string
       /**
-       * @description Operator represents a key's relationship to the value. Valid operators are Exists and Equal. Defaults to Equal. Exists is equivalent to wildcard for value, so that a pod can tolerate all taints of a particular category.
+       * @description Operator represents a key's relationship to the value. Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal. Exists is equivalent to wildcard for value, so that a pod can tolerate all taints of a particular category. Lt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).
        *
        *     Possible enum values:
        *      - `"Equal"`
        *      - `"Exists"`
+       *      - `"Gt"`
+       *      - `"Lt"`
        * @enum {string}
        */
-      operator?: "Equal" | "Exists"
+      operator?: "Equal" | "Exists" | "Gt" | "Lt"
       /**
        * Format: int64
        * @description TolerationSeconds represents the period of time the toleration (which must be of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default, it is not set, which means tolerate the taint forever (do not evict). Zero and negative values will be treated as 0 (evict immediately) by the system.
@@ -10272,6 +10292,21 @@ export interface components {
       hostProcess?: boolean
       /** @description The UserName in Windows to run the entrypoint of the container process. Defaults to the user specified in image metadata if unspecified. May also be set in PodSecurityContext. If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. */
       runAsUserName?: string
+    }
+    /** @description WorkloadReference identifies the Workload object and PodGroup membership that a Pod belongs to. The scheduler uses this information to apply workload-aware scheduling semantics. */
+    "io.k8s.api.core.v1.WorkloadReference": {
+      /**
+       * @description Name defines the name of the Workload object this Pod belongs to. Workload must be in the same namespace as the Pod. If it doesn't match any existing Workload, the Pod will remain unschedulable until a Workload object is created and observed by the kube-scheduler. It must be a DNS subdomain.
+       * @default
+       */
+      name: string
+      /**
+       * @description PodGroup is the name of the PodGroup within the Workload that this Pod belongs to. If it doesn't match any existing PodGroup within the Workload, the Pod will remain unschedulable until the Workload object is recreated and observed by the kube-scheduler. It must be a DNS label.
+       * @default
+       */
+      podGroup: string
+      /** @description PodGroupReplicaKey specifies the replica key of the PodGroup to which this Pod belongs. It is used to distinguish pods belonging to different replicas of the same pod group. The pod group policy is applied separately to each replica. When set, it must be a DNS label. */
+      podGroupReplicaKey?: string
     }
     /** @description Eviction evicts a pod from its node subject to certain policies and safety constraints. This is a subresource of Pod.  A request to cause such an eviction is created by POSTing to .../pods/<pod name>/evictions. */
     "io.k8s.api.policy.v1.Eviction": {
