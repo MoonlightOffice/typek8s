@@ -2,12 +2,12 @@
   "tasks": {
     "tidy": "deno fmt && deno check && deno lint",
     "synth": "deno run -A main.ts",
-    "typek8s-generate": "deno run -A typek8s-generate"
+    "generate": "deno run -A typek8s-generate generate"
   },
   "imports": {
     "~/": "./",
-    "typek8s": "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.6.2/package/mod.ts",
-    "typek8s-generate": "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.6.2/package/cmd/cmd.ts"
+    "typek8s": "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.6.3/package/mod.ts",
+    "typek8s-generate": "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.6.3/package/cmd/cmd.ts"
   },
   "fmt": {
     "semiColons": false,
