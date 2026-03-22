@@ -1,6 +1,7 @@
 {
   "tasks": {
-    "tidy": "deno fmt && deno check && deno lint"
+    "tidy": "deno fmt && deno check && deno lint",
+    "test": "deno test -E"
   },
   "fmt": {
     "semiColons": false,
