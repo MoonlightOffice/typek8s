@@ -1,0 +1,10 @@
+{
+  "tasks": {
+    "tidy": "deno fmt && deno check && deno lint"
+  },
+  "fmt": {
+    "semiColons": false,
+    "lineWidth": 120
+  },
+  "exclude": [".cache/"]
+}
