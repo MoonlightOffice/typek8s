@@ -1,3 +1,5 @@
+import { "ts-util" as tsUtil } from "./deps.ts"
+
 /** Credentials used by `helm login` when pulling charts from a private registry. */
 export interface HelmPortCredential {
   userName: string
@@ -12,7 +14,8 @@ export interface HelmPort {
    * @param params Parameters for pulling the chart.
    * @param params.path Path to the OCI Helm chart image.
    * @param params.credential Helm credentials for accessing a private registry.
-   * @returns Chart archive content as bytes.
+   * @returns Chart archive content as bytes. entity.ErrUnauthorized is returned if the credential
+   * is unauthorized. entity.ErrNotFound is returned if the path is invalid.
    */
-  pullChart(params: { path: string; credentai?: HelmPortCredential }): Promise<Uint8Array>
+  pullChart(params: { path: string; credentai?: HelmPortCredential }): tsUtil.Result<Promise<Uint8Array>>
 }
