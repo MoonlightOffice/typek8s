@@ -11,11 +11,10 @@ export interface HelmPort {
   /**
    * Pull an OCI Helm chart image.
    *
-   * @param params Parameters for pulling the chart.
    * @param params.path Path to the OCI Helm chart image.
    * @param params.credential Helm credentials for accessing a private registry.
-   * @returns Chart archive content as bytes. entity.ErrUnauthorized is returned if the credential
+   * @returns Chart archive content as File. entity.ErrUnauthorized is returned if the credential
    * is unauthorized. entity.ErrNotFound is returned if the path is invalid.
    */
-  pullChart(params: { path: string; credentai?: HelmPortCredential }): tsUtil.Result<Promise<Uint8Array>>
+  pullChart(params: { path: string; credentai?: HelmPortCredential }): tsUtil.Result<Promise<File>>
 }
