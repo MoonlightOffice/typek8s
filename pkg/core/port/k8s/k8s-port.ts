@@ -1,5 +1,11 @@
 import { "ts-util" as tsUtil } from "./deps.ts"
 
+/** OpenAPI document fetched from a Kubernetes cluster for one API version. */
+export interface getAllOpenApiResult {
+  apiVersion: string
+  openApi: string
+}
+
 /**
  * Port for Kubernetes-specific schema operations, including fetching OpenAPI
  * documents from a cluster and converting them into TypeScript types.
@@ -12,7 +18,7 @@ export interface K8sPort {
    * entity.ErrUnauthorized is returned if the credential is unauthorized.
    * entity.ErrInvalid is returned if the Kubernetes server URL in the kubeconfig file is invalid.
    */
-  getAllOpenApi(kubeconfigStr: string): tsUtil.Result<Promise<{ apiVersion: string; openApi: string }[]>>
+  getAllOpenApi(kubeconfigStr: string): tsUtil.Result<Promise<getAllOpenApiResult[]>>
 
   /**
    * Parse the provided Kubernetes OpenAPI JSON schema and generate TypeScript code.
