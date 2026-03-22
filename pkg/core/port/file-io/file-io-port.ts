@@ -1,11 +1,13 @@
+import { "ts-util" as tsUtil } from "./deps.ts"
+
 export interface FileIOPort {
   /**
    * Read content of the given path's file. The file is expected to be utf8-encoded.
    *
-   * @param path file path
-   * @returns content of the file
+   * @param path File path
+   * @returns Content of the file. entity.ErrNotFound is returned if the file does not exist.
    */
-  read(path: string): string
+  read(path: string): tsUtil.Result<string>
 
   /**
    * Create a file in the given name and directory. When the file already exists,

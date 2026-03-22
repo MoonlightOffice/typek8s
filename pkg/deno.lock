@@ -182,5 +182,12 @@
     "yargs-parser@21.1.1": {
       "integrity": "sha512-tVpsJW7DdjecAiFpbIB1e3qxIQsE6NoPc5/eTdrbbIC4h0LVsWhnoa3g+m2HclBIujHzsxZ4VJVA+GUuc2/LBw=="
     }
+  },
+  "remote": {
+    "https://raw.githubusercontent.com/MoonlightOffice/ts-util/v0.3.1/base64.ts": "bd5fca6a63591074ea581d69cb2ed4e4a484628807cbd656b6cb7e4551ce6921",
+    "https://raw.githubusercontent.com/MoonlightOffice/ts-util/v0.3.1/context.ts": "30601e7462437088f5840224a1153c3e791c3a77b059b829d6286f9ebdecedb8",
+    "https://raw.githubusercontent.com/MoonlightOffice/ts-util/v0.3.1/mod.ts": "5ef8a5555415711d4f0ef1713aaa7ac2875c1c48cb699fa65aac8e1a2d1945d3",
+    "https://raw.githubusercontent.com/MoonlightOffice/ts-util/v0.3.1/result.ts": "10c586c4bfe5171abcc516ac9ab12d0fb07c4c617a87c15a17ed124454ecc3b2",
+    "https://raw.githubusercontent.com/MoonlightOffice/ts-util/v0.3.1/sleep.ts": "eb7b9f04e9c16540b8536c99b8ce024001fb187c8c7d879a3a389f13fb0c9c64"
   }
 }

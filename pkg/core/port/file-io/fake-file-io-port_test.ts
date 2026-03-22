@@ -1,5 +1,5 @@
 import { FakeFileIOPort } from "./fake-file-io-port.ts"
-import { "@std/assert" as stdAssert } from "./deps.ts"
+import { "@std/assert" as stdAssert, "ts-util" as tsUtil, entity } from "./deps.ts"
 
 Deno.test("FakeFileIOPort.read", async (t) => {
   type In = {
@@ -9,8 +9,7 @@ Deno.test("FakeFileIOPort.read", async (t) => {
   }
 
   type Want = {
-    content: string
-    isError: boolean
+    res: tsUtil.Result<string>
   }
 
   const tests: Array<{
@@ -26,8 +25,7 @@ Deno.test("FakeFileIOPort.read", async (t) => {
         path: "example.txt",
       },
       want: {
-        content: "hello, world!",
-        isError: false,
+        res: tsUtil.result(true, "hello, world!"),
       },
     },
     {
@@ -38,8 +36,7 @@ Deno.test("FakeFileIOPort.read", async (t) => {
         path: "configs/app/settings.json",
       },
       want: {
-        content: '{"mode":"test"}',
-        isError: false,
+        res: tsUtil.result(true, '{"mode":"test"}'),
       },
     },
     {
@@ -50,8 +47,7 @@ Deno.test("FakeFileIOPort.read", async (t) => {
         path: "./fixtures/./example.txt",
       },
       want: {
-        content: "normalized",
-        isError: false,
+        res: tsUtil.result(true, "normalized"),
       },
     },
     {
@@ -62,8 +58,7 @@ Deno.test("FakeFileIOPort.read", async (t) => {
         path: ".\\fixtures\\example.txt",
       },
       want: {
-        content: "windows-path",
-        isError: false,
+        res: tsUtil.result(true, "windows-path"),
       },
     },
     {
@@ -74,8 +69,7 @@ Deno.test("FakeFileIOPort.read", async (t) => {
         path: "/tmp/example.txt",
       },
       want: {
-        content: "absolute-path",
-        isError: false,
+        res: tsUtil.result(true, "absolute-path"),
       },
     },
     {
@@ -86,8 +80,7 @@ Deno.test("FakeFileIOPort.read", async (t) => {
         path: "missing.txt",
       },
       want: {
-        content: "",
-        isError: true,
+        res: tsUtil.result(false, entity.ErrNotFound),
       },
     },
     {
@@ -98,8 +91,7 @@ Deno.test("FakeFileIOPort.read", async (t) => {
         path: "fixtures",
       },
       want: {
-        content: "",
-        isError: true,
+        res: tsUtil.result(false, entity.ErrNotFound),
       },
     },
   ]
@@ -107,11 +99,12 @@ Deno.test("FakeFileIOPort.read", async (t) => {
   for (const tt of tests) {
     await t.step(tt.name, () => {
       const port = new FakeFileIOPort(tt.in.initialFiles, tt.in.initialDirs)
-      if (tt.want.isError) {
-        stdAssert.assertThrows(() => port.read(tt.in.path))
-        return
+      const res = port.read(tt.in.path)
+      if (tt.want.res.err != null) {
+        res.err!.is(tt.want.res.err)
+      } else {
+        stdAssert.assertEquals(res, tt.want.res)
       }
-      stdAssert.assertEquals(port.read(tt.in.path), tt.want.content)
     })
   }
 })

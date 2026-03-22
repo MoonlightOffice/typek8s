@@ -1,4 +1,5 @@
 import type { FileIOPort } from "./file-io-port.ts"
+import { "ts-util" as tsUtil, entity } from "./deps.ts"
 
 function isDescendant(path: string, parent: string): boolean {
   if (parent === "." || parent === "/") {
@@ -105,14 +106,14 @@ export class FakeFileIOPort implements FileIOPort {
     }
   }
 
-  read(path: string): string {
+  read(path: string): tsUtil.Result<string> {
     const normalizedPath = normalizePath(path)
     const content = this.#files.get(normalizedPath)
     if (content === undefined) {
-      throw new Error(`file not found: ${normalizedPath}`)
+      return tsUtil.result(false, new tsUtil.Err(`file not found: ${normalizedPath}`).add(entity.ErrNotFound))
     }
 
-    return content
+    return tsUtil.result(true, content)
   }
 
   write(dir: string, fname: string, content: string): void {
