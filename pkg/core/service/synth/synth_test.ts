@@ -10,8 +10,8 @@ Deno.test("DefaultSynthService.synth", async (t) => {
   type In = {
     params: SynthParams
     fileIOPort: port.fileIo.FakeFileIOPort
-    helmPort: port.k8s.FakeHelmPort
-    synthPort: port.synth.FakeSynthPort
+    helmPort: port.k8s.StubHelmPort
+    synthPort: port.synth.StubSynthPort
   }
 
   type Want = {
@@ -52,8 +52,8 @@ Deno.test("DefaultSynthService.synth", async (t) => {
           ],
         },
         fileIOPort: new port.fileIo.FakeFileIOPort(),
-        helmPort: new port.k8s.FakeHelmPort(),
-        synthPort: new port.synth.FakeSynthPort({
+        helmPort: new port.k8s.StubHelmPort(),
+        synthPort: new port.synth.StubSynthPort({
           synthRules: [
             {
               params: {
@@ -105,8 +105,8 @@ Deno.test("DefaultSynthService.synth", async (t) => {
           outDir: "dist/charts",
         },
         fileIOPort: new port.fileIo.FakeFileIOPort(),
-        helmPort: new port.k8s.FakeHelmPort(),
-        synthPort: new port.synth.FakeSynthPort({
+        helmPort: new port.k8s.StubHelmPort(),
+        synthPort: new port.synth.StubSynthPort({
           synthRules: [
             {
               params: {
@@ -155,7 +155,7 @@ Deno.test("DefaultSynthService.synth", async (t) => {
           },
         },
         fileIOPort: new port.fileIo.FakeFileIOPort(),
-        helmPort: new port.k8s.FakeHelmPort({
+        helmPort: new port.k8s.StubHelmPort({
           pullChartRules: [
             {
               path: "oci://registry.example.com/charts/postgresql",
@@ -167,7 +167,7 @@ Deno.test("DefaultSynthService.synth", async (t) => {
             },
           ],
         }),
-        synthPort: new port.synth.FakeSynthPort(),
+        synthPort: new port.synth.StubSynthPort(),
       },
       want: {
         err: entity.ErrUnauthorized,
@@ -190,8 +190,8 @@ Deno.test("DefaultSynthService.synth", async (t) => {
           outDir: "generated",
         },
         fileIOPort: new port.fileIo.FakeFileIOPort(),
-        helmPort: new port.k8s.FakeHelmPort(),
-        synthPort: new port.synth.FakeSynthPort({
+        helmPort: new port.k8s.StubHelmPort(),
+        synthPort: new port.synth.StubSynthPort({
           synthRules: [
             {
               params: {

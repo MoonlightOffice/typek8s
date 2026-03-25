@@ -1,15 +1,15 @@
 import type { HelmPort, HelmPortCredential } from "./helm.ts"
 import { "ts-util" as tsUtil, entity } from "./deps.ts"
 
-export interface FakeHelmPortPullChartRule {
+export interface StubHelmPortPullChartRule {
   path: string
   credential?: HelmPortCredential
   result: tsUtil.Result<Promise<File>>
 }
 
-export interface FakeHelmPortParams {
-  /** Exact-match rules for `pullChart`; add one entry per `(path, credential)` combination you want the fake to recognize in a test. */
-  pullChartRules?: FakeHelmPortPullChartRule[]
+export interface StubHelmPortParams {
+  /** Exact-match rules for `pullChart`; add one entry per `(path, credential)` combination you want the stub to recognize in a test. */
+  pullChartRules?: StubHelmPortPullChartRule[]
 }
 
 function isSameCredential(
@@ -24,15 +24,15 @@ function isSameCredential(
 }
 
 /**
- * An input-mapped `HelmPort` fake for tests and example wiring.
+ * An input-mapped `HelmPort` stub for tests and example wiring.
  *
- * This fake treats chart paths and credentials as opaque inputs and returns
+ * This stub treats chart paths and credentials as opaque inputs and returns
  * the first exact-match rule. When no rule matches, `entity.ErrInvalid` is returned.
  */
-export class FakeHelmPort implements HelmPort {
-  #pullChartRules: FakeHelmPortPullChartRule[]
+export class StubHelmPort implements HelmPort {
+  #pullChartRules: StubHelmPortPullChartRule[]
 
-  constructor(params: FakeHelmPortParams = {}) {
+  constructor(params: StubHelmPortParams = {}) {
     this.#pullChartRules = params.pullChartRules ?? []
   }
 

@@ -1,5 +1,5 @@
-import { FakeSynthPort } from "./fake-synth-port.ts"
-import type { FakeSynthPortParams } from "./fake-synth-port.ts"
+import { StubSynthPort } from "./stub-synth-port.ts"
+import type { StubSynthPortParams } from "./stub-synth-port.ts"
 import type { SynthParams } from "./synth-port.ts"
 import { "@std/assert" as stdAssert, "ts-util" as tsUtil, entity } from "./deps.ts"
 
@@ -7,9 +7,9 @@ function createChartFile(name: string, text: string, type = "application/gzip"):
   return new File([text], name, { type })
 }
 
-Deno.test("FakeSynthPort.synth", async (t) => {
+Deno.test("StubSynthPort.synth", async (t) => {
   type In = {
-    params: FakeSynthPortParams
+    params: StubSynthPortParams
     synthParams: SynthParams
   }
 
@@ -247,7 +247,7 @@ Deno.test("FakeSynthPort.synth", async (t) => {
 
   for (const tt of tests) {
     await t.step(tt.name, async () => {
-      const port = new FakeSynthPort(tt.in.params)
+      const port = new StubSynthPort(tt.in.params)
       const res = await port.synth(tt.in.synthParams)
 
       if (tt.want.err != null) {

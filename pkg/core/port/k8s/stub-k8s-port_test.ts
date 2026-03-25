@@ -1,11 +1,11 @@
-import { FakeK8sPort } from "./fake-k8s-port.ts"
-import type { FakeK8sPortParams } from "./fake-k8s-port.ts"
+import { StubK8sPort } from "./stub-k8s-port.ts"
+import type { StubK8sPortParams } from "./stub-k8s-port.ts"
 import type { getAllOpenApiResult } from "./k8s-port.ts"
 import { "@std/assert" as stdAssert, "ts-util" as tsUtil, entity } from "./deps.ts"
 
-Deno.test("FakeK8sPort.getAllOpenApi", async (t) => {
+Deno.test("StubK8sPort.getAllOpenApi", async (t) => {
   type In = {
-    params: FakeK8sPortParams
+    params: StubK8sPortParams
     kubeconfigStr: string
   }
 
@@ -124,7 +124,7 @@ Deno.test("FakeK8sPort.getAllOpenApi", async (t) => {
 
   for (const tt of tests) {
     await t.step(tt.name, async () => {
-      const port = new FakeK8sPort(tt.in.params)
+      const port = new StubK8sPort(tt.in.params)
       const res = port.getAllOpenApi(tt.in.kubeconfigStr)
 
       if (tt.want.err != null) {
@@ -136,9 +136,9 @@ Deno.test("FakeK8sPort.getAllOpenApi", async (t) => {
   }
 })
 
-Deno.test("FakeK8sPort.openApiToTypes", async (t) => {
+Deno.test("StubK8sPort.openApiToTypes", async (t) => {
   type In = {
-    params: FakeK8sPortParams
+    params: StubK8sPortParams
     apiVersion: string
     openapiStr: string
   }
@@ -213,7 +213,7 @@ Deno.test("FakeK8sPort.openApiToTypes", async (t) => {
 
   for (const tt of tests) {
     await t.step(tt.name, async () => {
-      const port = new FakeK8sPort(tt.in.params)
+      const port = new StubK8sPort(tt.in.params)
       const res = await port.openApiToTypes(tt.in.apiVersion, tt.in.openapiStr)
 
       stdAssert.assertEquals(res, tt.want.res)

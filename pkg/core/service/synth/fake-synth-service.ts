@@ -1,52 +1,43 @@
 import type { SynthParams, SynthService } from "./synth.ts"
-import { "ts-util" as tsUtil, entity } from "./deps.ts"
-
-export interface FakeSynthServiceSynthRule {
-  params: SynthParams
-  result: tsUtil.Result<void>
-}
+import { "ts-util" as tsUtil } from "./deps.ts"
 
 export interface FakeSynthServiceParams {
-  /** Exact-match rules for `synth`; add one entry per `SynthParams` combination you want the fake to recognize in a test. */
-  synthRules?: FakeSynthServiceSynthRule[]
-}
-
-function isSameOptionalValue(left: unknown, right: unknown): boolean {
-  if (left == null || right == null) {
-    return left === right
-  }
-
-  return JSON.stringify(left) === JSON.stringify(right)
-}
-
-function isSameSynthParams(left: SynthParams, right: SynthParams): boolean {
-  return left.name === right.name &&
-    JSON.stringify(left.manifests) === JSON.stringify(right.manifests) &&
-    isSameOptionalValue(left.crds, right.crds) &&
-    isSameOptionalValue(left.depCharts, right.depCharts) &&
-    left.outDir === right.outDir &&
-    isSameOptionalValue(left.helmCredential, right.helmCredential)
+  /** Default result returned when no queued result or name-specific result applies. Defaults to success. */
+  defaultResult?: tsUtil.Result<void>
+  /** FIFO results returned one per `synth` call before other configuration is consulted. */
+  results?: tsUtil.Result<void>[]
+  /** Results keyed by chart name for upper-layer tests that only care about coarse scenarios. */
+  resultByName?: Record<string, tsUtil.Result<void>>
 }
 
 /**
- * An input-mapped `SynthService` fake for tests and example wiring.
+ * A scenario-driven `SynthService` fake for tests and example wiring.
  *
- * This fake treats synth inputs as opaque values and returns the first
- * exact-match rule. When no rule matches, `entity.ErrInvalid` is returned.
+ * This fake supports coarse blackbox scenarios only: queued results,
+ * name-specific results, and a default result. It intentionally does not
+ * match full input params; exact-match behavior belongs in lower-level stubs.
  */
 export class FakeSynthService implements SynthService {
-  #synthRules: FakeSynthServiceSynthRule[]
+  #defaultResult: tsUtil.Result<void>
+  #results: tsUtil.Result<void>[]
+  #resultByName: Record<string, tsUtil.Result<void>>
 
   constructor(params: FakeSynthServiceParams = {}) {
-    this.#synthRules = params.synthRules ?? []
+    this.#defaultResult = params.defaultResult ?? tsUtil.result(true, undefined)
+    this.#results = [...(params.results ?? [])]
+    this.#resultByName = params.resultByName ?? {}
   }
 
   synth(params: SynthParams): Promise<tsUtil.Result<void>> {
-    const rule = this.#synthRules.find((candidate) => isSameSynthParams(candidate.params, params))
-    if (rule == null) {
-      return Promise.resolve(tsUtil.result(false, entity.ErrInvalid))
+    const queuedResult = this.#results.shift()
+    if (queuedResult != null) {
+      return Promise.resolve(queuedResult)
     }
 
-    return Promise.resolve(rule.result)
+    if (Object.hasOwn(this.#resultByName, params.name)) {
+      return Promise.resolve(this.#resultByName[params.name]!)
+    }
+
+    return Promise.resolve(this.#defaultResult)
   }
 }

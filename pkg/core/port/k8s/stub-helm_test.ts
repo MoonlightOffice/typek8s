@@ -1,14 +1,14 @@
-import { FakeHelmPort } from "./fake-helm.ts"
-import type { FakeHelmPortParams } from "./fake-helm.ts"
+import { StubHelmPort } from "./stub-helm.ts"
+import type { StubHelmPortParams } from "./stub-helm.ts"
 import { "@std/assert" as stdAssert, "ts-util" as tsUtil, entity } from "./deps.ts"
 
 function createChartFile(name: string, text: string, type = "application/gzip"): File {
   return new File([text], name, { type })
 }
 
-Deno.test("FakeHelmPort.pullChart", async (t) => {
+Deno.test("StubHelmPort.pullChart", async (t) => {
   type In = {
-    params: FakeHelmPortParams
+    params: StubHelmPortParams
     pullChartParams: {
       path: string
       credential?: {
@@ -200,7 +200,7 @@ Deno.test("FakeHelmPort.pullChart", async (t) => {
 
   for (const tt of tests) {
     await t.step(tt.name, async () => {
-      const port = new FakeHelmPort(tt.in.params)
+      const port = new StubHelmPort(tt.in.params)
       const res = port.pullChart(tt.in.pullChartParams)
 
       if (tt.want.err != null) {

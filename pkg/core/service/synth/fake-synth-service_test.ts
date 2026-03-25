@@ -19,25 +19,9 @@ Deno.test("FakeSynthService.synth", async (t) => {
     want: Want
   }> = [
     {
-      name: "a matching minimal synth rule exists; success is returned",
+      name: "no fake params are provided; success is returned for blackbox upper-layer tests",
       in: {
-        fakeParams: {
-          synthRules: [
-            {
-              params: {
-                name: "platform",
-                manifests: [
-                  {
-                    apiVersion: "apps/v1",
-                    kind: "Deployment",
-                    metadata: { name: "platform-api" },
-                  },
-                ],
-              },
-              result: tsUtil.result(true, undefined),
-            },
-          ],
-        },
+        fakeParams: {},
         synthParams: {
           name: "platform",
           manifests: [
@@ -54,36 +38,57 @@ Deno.test("FakeSynthService.synth", async (t) => {
       },
     },
     {
-      name: "a matching rule with service-only params exists; the configured error is returned",
+      name: "defaultResult is provided; the default error is returned",
       in: {
         fakeParams: {
-          synthRules: [
+          defaultResult: tsUtil.result(false, entity.ErrUnauthorized),
+        },
+        synthParams: {
+          name: "platform",
+          manifests: [
             {
-              params: {
-                name: "jobs",
-                manifests: [
-                  {
-                    apiVersion: "batch/v1",
-                    kind: "CronJob",
-                    metadata: { name: "cleanup" },
-                  },
-                ],
-                outDir: "dist/charts",
-                helmCredential: {
-                  userName: "alice",
-                  password: "secret",
-                },
-                depCharts: [
-                  {
-                    name: "postgresql",
-                    chartURL: "oci://registry.example.com/charts/postgresql",
-                    values: {},
-                  },
-                ],
-              },
-              result: tsUtil.result(false, entity.ErrUnauthorized),
+              apiVersion: "apps/v1",
+              kind: "Deployment",
+              metadata: { name: "platform-api" },
             },
           ],
+        },
+      },
+      want: {
+        err: entity.ErrUnauthorized,
+      },
+    },
+    {
+      name: "results are queued; the first queued result is returned",
+      in: {
+        fakeParams: {
+          results: [
+            tsUtil.result(false, entity.ErrInvalid),
+            tsUtil.result(true, undefined),
+          ],
+        },
+        synthParams: {
+          name: "platform",
+          manifests: [
+            {
+              apiVersion: "apps/v1",
+              kind: "Deployment",
+              metadata: { name: "platform-api" },
+            },
+          ],
+        },
+      },
+      want: {
+        err: entity.ErrInvalid,
+      },
+    },
+    {
+      name: "a resultByName entry exists; the named result is returned without exact full-parameter matching",
+      in: {
+        fakeParams: {
+          resultByName: {
+            jobs: tsUtil.result(false, entity.ErrUnauthorized),
+          },
         },
         synthParams: {
           name: "jobs",
@@ -113,24 +118,12 @@ Deno.test("FakeSynthService.synth", async (t) => {
       },
     },
     {
-      name: "no synth rule matches the params; ErrInvalid is returned",
+      name: "no resultByName entry matches; the default success result is returned",
       in: {
         fakeParams: {
-          synthRules: [
-            {
-              params: {
-                name: "platform",
-                manifests: [
-                  {
-                    apiVersion: "apps/v1",
-                    kind: "Deployment",
-                    metadata: { name: "platform-api" },
-                  },
-                ],
-              },
-              result: tsUtil.result(true, undefined),
-            },
-          ],
+          resultByName: {
+            platform: tsUtil.result(false, entity.ErrInvalid),
+          },
         },
         synthParams: {
           name: "other",
@@ -144,7 +137,7 @@ Deno.test("FakeSynthService.synth", async (t) => {
         },
       },
       want: {
-        err: entity.ErrInvalid,
+        err: null,
       },
     },
   ]

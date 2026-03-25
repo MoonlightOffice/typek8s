@@ -1,14 +1,14 @@
 import type { SynthParams, SynthPort } from "./synth-port.ts"
 import { "ts-util" as tsUtil, entity } from "./deps.ts"
 
-export interface FakeSynthPortSynthRule {
+export interface StubSynthPortSynthRule {
   params: SynthParams
   result: tsUtil.Result<File | Promise<File>>
 }
 
-export interface FakeSynthPortParams {
-  /** Exact-match rules for `synth`; add one entry per `SynthParams` combination you want the fake to recognize in a test. */
-  synthRules?: FakeSynthPortSynthRule[]
+export interface StubSynthPortParams {
+  /** Exact-match rules for `synth`; add one entry per `SynthParams` combination you want the stub to recognize in a test. */
+  synthRules?: StubSynthPortSynthRule[]
 }
 
 function isSameOptionalValue(left: unknown, right: unknown): boolean {
@@ -27,15 +27,15 @@ function isSameSynthParams(left: SynthParams, right: SynthParams): boolean {
 }
 
 /**
- * An input-mapped `SynthPort` fake for tests and example wiring.
+ * An input-mapped `SynthPort` stub for tests and example wiring.
  *
- * This fake treats synth inputs as opaque values and returns the first
+ * This stub treats synth inputs as opaque values and returns the first
  * exact-match rule. When no rule matches, `entity.ErrInvalid` is returned.
  */
-export class FakeSynthPort implements SynthPort {
-  #synthRules: FakeSynthPortSynthRule[]
+export class StubSynthPort implements SynthPort {
+  #synthRules: StubSynthPortSynthRule[]
 
-  constructor(params: FakeSynthPortParams = {}) {
+  constructor(params: StubSynthPortParams = {}) {
     this.#synthRules = params.synthRules ?? []
   }
 

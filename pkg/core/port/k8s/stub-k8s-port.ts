@@ -1,35 +1,35 @@
 import type { getAllOpenApiResult, K8sPort } from "./k8s-port.ts"
 import { "ts-util" as tsUtil, entity } from "./deps.ts"
 
-export interface FakeK8sPortGetAllOpenApiRule {
+export interface StubK8sPortGetAllOpenApiRule {
   kubeconfigStr: string
   result: tsUtil.Result<Promise<getAllOpenApiResult[]>>
 }
 
-export interface FakeK8sPortOpenApiToTypesRule {
+export interface StubK8sPortOpenApiToTypesRule {
   apiVersion: string
   openapiStr: string
   result: string | Promise<string>
 }
 
-export interface FakeK8sPortParams {
-  /** Exact-match rules for `getAllOpenApi`; add one entry per kubeconfig string you want the fake to recognize in a test. */
-  getAllOpenApiRules?: FakeK8sPortGetAllOpenApiRule[]
-  /** Exact-match rules for `openApiToTypes`; add one entry per `(apiVersion, openapiStr)` combination you want the fake to recognize in a test. */
-  openApiToTypesRules?: FakeK8sPortOpenApiToTypesRule[]
+export interface StubK8sPortParams {
+  /** Exact-match rules for `getAllOpenApi`; add one entry per kubeconfig string you want the stub to recognize in a test. */
+  getAllOpenApiRules?: StubK8sPortGetAllOpenApiRule[]
+  /** Exact-match rules for `openApiToTypes`; add one entry per `(apiVersion, openapiStr)` combination you want the stub to recognize in a test. */
+  openApiToTypesRules?: StubK8sPortOpenApiToTypesRule[]
 }
 
 /**
- * An input-mapped `K8sPort` fake for tests and example wiring.
+ * An input-mapped `K8sPort` stub for tests and example wiring.
  *
- * This fake treats `kubeconfigStr` and OpenAPI payloads as opaque inputs and
+ * This stub treats `kubeconfigStr` and OpenAPI payloads as opaque inputs and
  * returns the first exact-match rule. When no rule matches, safe defaults are returned.
  */
-export class FakeK8sPort implements K8sPort {
-  #getAllOpenApiRules: FakeK8sPortGetAllOpenApiRule[]
-  #openApiToTypesRules: FakeK8sPortOpenApiToTypesRule[]
+export class StubK8sPort implements K8sPort {
+  #getAllOpenApiRules: StubK8sPortGetAllOpenApiRule[]
+  #openApiToTypesRules: StubK8sPortOpenApiToTypesRule[]
 
-  constructor(params: FakeK8sPortParams = {}) {
+  constructor(params: StubK8sPortParams = {}) {
     this.#getAllOpenApiRules = params.getAllOpenApiRules ?? []
     this.#openApiToTypesRules = params.openApiToTypesRules ?? []
   }
