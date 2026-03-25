@@ -20,10 +20,14 @@ Read only the files you need:
 
 ## Implementation Rules
 
-- Match the real port interface first. If the interface has an obvious typo or contract bug, fix the port and the fake together rather than baking the mistake into the fake.
-- Prefer input-mapped fakes over sequential stubs. Use exact-match rules keyed by the method inputs that matter for tests.
-- Keep the fake readable. Do not add call-recording, spy helpers, or debug accessors unless the task explicitly requires them.
-- Treat complex inputs as opaque values. Match them by exact string or exact object field equality unless the surrounding codebase already uses a richer matching rule.
+- Match the real port interface first. If the interface has an obvious typo or contract bug, fix the port and the fake
+  together rather than baking the mistake into the fake.
+- Prefer input-mapped fakes over sequential stubs. Use exact-match rules keyed by the method inputs that matter for
+  tests.
+- Keep the fake readable. Do not add call-recording, spy helpers, or debug accessors unless the task explicitly requires
+  them.
+- Treat complex inputs as opaque values. Match them by exact string or exact object field equality unless the
+  surrounding codebase already uses a richer matching rule.
 - Put rule configuration into `*Params` and `*Rule` types.
 - Add a short code comment on each rules field so users know how to seed the fake.
 - Keep unmatched behavior explicit and deterministic.
@@ -39,7 +43,8 @@ Read only the files you need:
 - Structure tests as `const tests = [...]` plus `for (const tt of tests) await t.step(tt.name, ...)`.
 - Write case names in `<condition or input>; <outcome or output>` format.
 - For `tsUtil.Result`, compare errors with `res.err!.is(expectedErr)` and compare success values directly.
-- For async success values like `Promise<File>`, await the resolved value and assert only stable fields such as text, name, and type.
+- For async success values like `Promise<File>`, await the resolved value and assert only stable fields such as text,
+  name, and type.
 - Cover both configured matches and unmatched fallback behavior.
 - Include error cases for the domain errors documented by the port.
 
