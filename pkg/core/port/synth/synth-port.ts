@@ -1,4 +1,5 @@
 import { entity } from "./deps.ts"
+import { "ts-util" as tsUtil } from "./deps.ts"
 
 export interface SynthParams {
   /** The name of the output chart. */
@@ -16,7 +17,7 @@ export interface SynthPort {
    * Synthesizes the provided Kubernetes manifests, CRDs, and dependency charts
    * into a chart with the given name.
    * @param params Parameters for synthesis.
-   * @return A Helm chart archive tarball (`.tgz`).
+   * @return A result containing the synthesized Helm chart archive tarball (`.tgz`).
    */
-  synth(params: SynthParams): Promise<File>
+  synth(params: SynthParams): Promise<tsUtil.Result<File>>
 }

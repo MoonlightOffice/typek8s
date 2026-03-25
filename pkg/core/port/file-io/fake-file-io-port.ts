@@ -118,7 +118,7 @@ export class FakeFileIOPort implements FileIOPort {
 
   write(dir: string, fname: string, content: string): void {
     const normalizedDir = normalizePath(dir)
-    const path = joinPath(normalizedDir, fname)
+    const path = normalizePath(joinPath(normalizedDir, fname))
 
     for (const parent of parentDirs(path)) {
       this.#dirs.add(parent)
