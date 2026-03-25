@@ -42,11 +42,18 @@ Read only the files you need:
 - Use local `In` and `Want` types.
 - Structure tests as `const tests = [...]` plus `for (const tt of tests) await t.step(tt.name, ...)`.
 - Write case names in `<condition or input>; <outcome or output>` format.
+- Keep tests blackbox at the level they are written. Do not assert internal temporary paths, generated IDs, rewritten
+  downstream params, or cleanup details from a service test unless that behavior is part of the user-visible contract.
 - For `tsUtil.Result`, compare errors with `res.err!.is(expectedErr)` and compare success values directly.
 - For async success values like `Promise<File>`, await the resolved value and assert only stable fields such as text,
   name, and type.
 - Cover both configured matches and unmatched fallback behavior.
 - Include error cases for the domain errors documented by the port.
+- Do not add ad hoc recording doubles, spy fields, or test-only inspection hooks just to observe internal calls when an
+  existing fake can express the case cleanly. If the only way to assert a case is to inspect internals, the case likely
+  belongs at a different test seam.
+- Do not thread implementation details such as `randomUUID`, temp file names, or internal directory layouts through test
+  input just to make exact-match assertions possible.
 
 ## Workflow
 
@@ -63,3 +70,5 @@ Read only the files you need:
 - Optimize for service-layer testability, not adapter realism.
 - Default to ASCII.
 - Keep comments short and only where they reduce ambiguity.
+- Exact-match fakes are for stable contract inputs, not for exposing hidden implementation details to higher-level
+  tests.
