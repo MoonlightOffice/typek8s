@@ -1,4 +1,4 @@
-import { SynthService } from "./synth.ts"
+import { DefaultSynthService } from "./synth.ts"
 import type { SynthParams } from "./synth.ts"
 import { "@std/assert" as stdAssert, "ts-util" as tsUtil, entity, port } from "./deps.ts"
 
@@ -6,7 +6,7 @@ function createChartFile(name: string, text: string, type = "application/gzip"):
   return new File([text], name, { type })
 }
 
-Deno.test("SynthService.synth", async (t) => {
+Deno.test("DefaultSynthService.synth", async (t) => {
   type In = {
     params: SynthParams
     fileIOPort: port.fileIo.FakeFileIOPort
@@ -219,7 +219,7 @@ Deno.test("SynthService.synth", async (t) => {
 
   for (const tt of tests) {
     await t.step(tt.name, async () => {
-      const service = new SynthService(tt.in.fileIOPort, tt.in.helmPort, tt.in.synthPort)
+      const service = new DefaultSynthService(tt.in.fileIOPort, tt.in.helmPort, tt.in.synthPort)
       const res = await service.synth(tt.in.params)
 
       if (tt.want.err != null) {
