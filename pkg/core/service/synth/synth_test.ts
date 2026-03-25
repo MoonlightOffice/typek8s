@@ -26,7 +26,8 @@ Deno.test("SynthService.synth", async (t) => {
     want: Want
   }> = [
     {
-      name: "outDir is omitted; the synthesized chart archive is written to the default output directory with the requested chart name",
+      name:
+        "outDir is omitted; the synthesized chart archive is written to the default output directory with the requested chart name",
       in: {
         params: {
           name: "platform",
@@ -89,7 +90,8 @@ Deno.test("SynthService.synth", async (t) => {
       },
     },
     {
-      name: "outDir is provided; the synthesized chart archive is written to the requested directory with the requested chart name",
+      name:
+        "outDir is provided; the synthesized chart archive is written to the requested directory with the requested chart name",
       in: {
         params: {
           name: "jobs",
@@ -218,7 +220,6 @@ Deno.test("SynthService.synth", async (t) => {
   for (const tt of tests) {
     await t.step(tt.name, async () => {
       const service = new SynthService(tt.in.fileIOPort, tt.in.helmPort, tt.in.synthPort)
-
       const res = await service.synth(tt.in.params)
 
       if (tt.want.err != null) {
