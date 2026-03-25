@@ -1,1 +1,1 @@
-export * from "../../../deps.ts"
+export * from "../deps.ts"
