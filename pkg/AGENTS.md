@@ -32,10 +32,25 @@ The reverse direction is not allowed.
 
 ## Ports, Services, and Fakes
 
-- When adding a new `port`, add a fake for it so tests and example wiring can depend on a stable in-memory
-  implementation.
+- When adding a new `port`, add the appropriate test double for it so tests and example wiring can depend on a stable
+  in-memory implementation or a predictable stub.
 - When adding a new `service`, add the supporting fakes needed to test it cleanly through its port dependencies.
-- Keep fake APIs predictable and test-oriented, following the existing exact-match rule style used under `core/port/**`.
+- Choose the test double style based on the seam and the shape of the interface.
+- Prefer blackbox-friendly, stateful or scenario-driven fakes when the dependency exposes a meaningful world to model,
+  such as files, directories, stored documents, or other durable domain state.
+- Service fakes should stay coarse and scenario-driven. Prefer queued results, name-specific results, and default
+  results over exact full-parameter matching.
+- Use exact-match rule doubles for function-like, query-like, or translation-style dependencies whose APIs are mostly
+  request-to-result transforms over opaque inputs. Existing classes may still be named `Fake...`, but semantically these
+  behave like stubs.
+- Keep upper-layer tests blackbox at the level they are written. A `ui` test should usually fake a `service`, and a
+  `service` test should usually stub a function-like `port` or fake a stateful one.
+- Do not force upper-layer tests to encode internal request shaping, temporary paths, generated IDs, or other
+  implementation details unless that interaction is itself the contract being tested.
+- Prefer coarse scenario configuration for service fakes, such as default success or failure and small domain-specific
+  selectors, over exact full-parameter matching.
+- Avoid ad hoc call-recording or spy helpers unless the task explicitly requires them and the interaction itself is the
+  behavior under test.
 
 ## Import and Export Conventions
 
