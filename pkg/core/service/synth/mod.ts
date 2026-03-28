@@ -1,2 +1,2 @@
 export * from "./synth.ts"
-export * from "./fake-synth-service.ts"
+export * from "./stub-synth-service.ts"

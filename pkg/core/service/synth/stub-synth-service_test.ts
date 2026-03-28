@@ -1,11 +1,11 @@
-import { FakeSynthService } from "./fake-synth-service.ts"
-import type { FakeSynthServiceParams } from "./fake-synth-service.ts"
+import { StubSynthService } from "./stub-synth-service.ts"
+import type { StubSynthServiceParams } from "./stub-synth-service.ts"
 import type { SynthParams } from "./synth.ts"
 import { "@std/assert" as stdAssert, "ts-util" as tsUtil, entity } from "./deps.ts"
 
-Deno.test("FakeSynthService.synth", async (t) => {
+Deno.test("StubSynthService.synth", async (t) => {
   type In = {
-    fakeParams: FakeSynthServiceParams
+    stubParams: StubSynthServiceParams
     synthParams: SynthParams
   }
 
@@ -19,9 +19,9 @@ Deno.test("FakeSynthService.synth", async (t) => {
     want: Want
   }> = [
     {
-      name: "no fake params are provided; success is returned for blackbox upper-layer tests",
+      name: "no stub params are provided; success is returned for blackbox upper-layer tests",
       in: {
-        fakeParams: {},
+        stubParams: {},
         synthParams: {
           name: "platform",
           manifests: [
@@ -40,7 +40,7 @@ Deno.test("FakeSynthService.synth", async (t) => {
     {
       name: "defaultResult is provided; the default error is returned",
       in: {
-        fakeParams: {
+        stubParams: {
           defaultResult: tsUtil.result(false, entity.ErrUnauthorized),
         },
         synthParams: {
@@ -61,7 +61,7 @@ Deno.test("FakeSynthService.synth", async (t) => {
     {
       name: "results are queued; the first queued result is returned",
       in: {
-        fakeParams: {
+        stubParams: {
           results: [
             tsUtil.result(false, entity.ErrInvalid),
             tsUtil.result(true, undefined),
@@ -85,7 +85,7 @@ Deno.test("FakeSynthService.synth", async (t) => {
     {
       name: "a resultByName entry exists; the named result is returned without exact full-parameter matching",
       in: {
-        fakeParams: {
+        stubParams: {
           resultByName: {
             jobs: tsUtil.result(false, entity.ErrUnauthorized),
           },
@@ -120,7 +120,7 @@ Deno.test("FakeSynthService.synth", async (t) => {
     {
       name: "no resultByName entry matches; the default success result is returned",
       in: {
-        fakeParams: {
+        stubParams: {
           resultByName: {
             platform: tsUtil.result(false, entity.ErrInvalid),
           },
@@ -144,7 +144,7 @@ Deno.test("FakeSynthService.synth", async (t) => {
 
   for (const tt of tests) {
     await t.step(tt.name, async () => {
-      const service = new FakeSynthService(tt.in.fakeParams)
+      const service = new StubSynthService(tt.in.stubParams)
       const res = await service.synth(tt.in.synthParams)
 
       if (tt.want.err != null) {

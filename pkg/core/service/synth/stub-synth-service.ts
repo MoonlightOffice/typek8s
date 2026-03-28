@@ -1,7 +1,7 @@
 import type { SynthParams, SynthService } from "./synth.ts"
 import { "ts-util" as tsUtil } from "./deps.ts"
 
-export interface FakeSynthServiceParams {
+export interface StubSynthServiceParams {
   /** Default result returned when no queued result or name-specific result applies. Defaults to success. */
   defaultResult?: tsUtil.Result<void>
   /** FIFO results returned one per `synth` call before other configuration is consulted. */
@@ -11,18 +11,18 @@ export interface FakeSynthServiceParams {
 }
 
 /**
- * A scenario-driven `SynthService` fake for tests and example wiring.
+ * A scenario-driven `SynthService` stub for tests and example wiring.
  *
- * This fake supports coarse blackbox scenarios only: queued results,
+ * This stub supports coarse blackbox scenarios only: queued results,
  * name-specific results, and a default result. It intentionally does not
- * match full input params; exact-match behavior belongs in lower-level stubs.
+ * model durable state or match full input params.
  */
-export class FakeSynthService implements SynthService {
+export class StubSynthService implements SynthService {
   #defaultResult: tsUtil.Result<void>
   #results: tsUtil.Result<void>[]
   #resultByName: Record<string, tsUtil.Result<void>>
 
-  constructor(params: FakeSynthServiceParams = {}) {
+  constructor(params: StubSynthServiceParams = {}) {
     this.#defaultResult = params.defaultResult ?? tsUtil.result(true, undefined)
     this.#results = [...(params.results ?? [])]
     this.#resultByName = params.resultByName ?? {}

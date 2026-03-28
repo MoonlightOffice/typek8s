@@ -22,13 +22,14 @@ Read only the files you need:
 
 - Match the real port interface first. If the interface has an obvious typo or contract bug, fix the port and the fake
   together rather than baking the mistake into the fake.
-- First decide whether the dependency should be modeled as a true fake or as a stub-like rule double.
+- First decide whether the dependency should be modeled as a true fake or as some form of stub.
+- If both are equally implementable for the intended test seam, prefer the fake.
 - Prefer true fakes when the dependency exposes meaningful durable state that upper layers should observe indirectly,
   such as files, directories, stored resources, or other domain state.
-- For service fakes, prefer coarse scenario controls such as queued results, small domain-specific selectors, and a
-  default result. Do not add exact full-parameter matching to a service fake.
+- For service stubs, prefer coarse scenario controls such as queued results, small domain-specific selectors, and a
+  default result. Do not add exact full-parameter matching to a service stub.
 - Prefer input-mapped exact-match rule doubles when the port is mostly a request-to-result transform over opaque inputs.
-  Existing classes may still be named `Fake...`, but semantically these act like stubs.
+  These are stubs, even when they use scenario-driven rather than exact-match configuration.
 - Keep upper-layer tests blackbox at their own seam. Do not choose an exact-match rule shape that forces callers to
   encode hidden implementation details from a lower layer.
 - Keep the double readable. Do not add call-recording, spy helpers, or debug accessors unless the task explicitly
@@ -38,7 +39,7 @@ Read only the files you need:
 - Put rule configuration into `*Params` and `*Rule` types.
 - Add a short code comment on each configuration field so users know how to seed the double.
 - Keep unmatched behavior explicit and deterministic.
-- Follow the nearest existing fake for fallback behavior:
+- Follow the nearest existing double for fallback behavior:
   - return `entity.ErrInvalid` when an unconfigured call should be considered invalid input
   - return an empty value only when that behavior is already established for the same style of port fake
 - Export new doubles from the nearest `mod.ts`.
@@ -52,15 +53,15 @@ Read only the files you need:
 - Keep tests blackbox at the level they are written. Do not assert internal temporary paths, generated IDs, rewritten
   downstream params, or cleanup details from a service test unless that behavior is part of the user-visible contract.
 - If a case only becomes expressible by matching rewritten downstream params or inspecting internal calls, move the case
-  to a lower seam instead of widening the higher-level fake.
+  to a lower seam instead of widening the higher-level stub.
 - For `tsUtil.Result`, compare errors with `res.err!.is(expectedErr)` and compare success values directly.
 - For async success values like `Promise<File>`, await the resolved value and assert only stable fields such as text,
   name, and type.
 - Cover both configured matches and unmatched fallback behavior.
 - Include error cases for the domain errors documented by the port.
 - Do not add ad hoc recording doubles, spy fields, or test-only inspection hooks just to observe internal calls when an
-  existing fake can express the case cleanly. If the only way to assert a case is to inspect internals, the case likely
-  belongs at a different test seam.
+  existing fake or stub can express the case cleanly. If the only way to assert a case is to inspect internals, the case
+  likely belongs at a different test seam.
 - Do not thread implementation details such as `randomUUID`, temp file names, or internal directory layouts through test
   input just to make exact-match assertions possible.
 
@@ -74,7 +75,7 @@ Read only the files you need:
 6. Add or update the export barrel.
 7. Write table tests covering success, documented errors, and unmatched fallback.
 8. Run `deno fmt` on touched files.
-9. Run focused `deno test --allow-env ...` for the new fake test file.
+9. Run focused `deno test --allow-env ...` for the new double test file.
 
 ## Notes
 
