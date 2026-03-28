@@ -3,7 +3,7 @@ import { "ts-util" as tsUtil, entity } from "./deps.ts"
 
 export interface StubK8sPortGetAllOpenApiRule {
   kubeconfigStr: string
-  result: tsUtil.Result<Promise<getAllOpenApiResult[]>>
+  result: tsUtil.Result<getAllOpenApiResult[]> | Promise<tsUtil.Result<getAllOpenApiResult[]>>
 }
 
 export interface StubK8sPortOpenApiToTypesRule {
@@ -34,13 +34,13 @@ export class StubK8sPort implements K8sPort {
     this.#openApiToTypesRules = params.openApiToTypesRules ?? []
   }
 
-  getAllOpenApi(kubeconfigStr: string): tsUtil.Result<Promise<getAllOpenApiResult[]>> {
+  async getAllOpenApi(kubeconfigStr: string): Promise<tsUtil.Result<getAllOpenApiResult[]>> {
     const rule = this.#getAllOpenApiRules.find((candidate) => candidate.kubeconfigStr === kubeconfigStr)
     if (rule == null) {
       return tsUtil.result(false, entity.ErrInvalid)
     }
 
-    return rule.result
+    return await rule.result
   }
 
   // deno-lint-ignore require-await

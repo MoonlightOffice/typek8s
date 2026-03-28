@@ -26,19 +26,16 @@ Deno.test("StubK8sPort.getAllOpenApi", async (t) => {
           getAllOpenApiRules: [
             {
               kubeconfigStr: "cluster-alpha",
-              result: tsUtil.result(
-                true,
-                Promise.resolve([
-                  {
-                    apiVersion: "apps/v1",
-                    openApi: '{"components":{"schemas":{"Deployment":{}}}}',
-                  },
-                  {
-                    apiVersion: "batch/v1",
-                    openApi: '{"components":{"schemas":{"Job":{}}}}',
-                  },
-                ]),
-              ),
+              result: tsUtil.result(true, [
+                {
+                  apiVersion: "apps/v1",
+                  openApi: '{"components":{"schemas":{"Deployment":{}}}}',
+                },
+                {
+                  apiVersion: "batch/v1",
+                  openApi: '{"components":{"schemas":{"Job":{}}}}',
+                },
+              ]),
             },
           ],
         },
@@ -54,6 +51,34 @@ Deno.test("StubK8sPort.getAllOpenApi", async (t) => {
           {
             apiVersion: "batch/v1",
             openApi: '{"components":{"schemas":{"Job":{}}}}',
+          },
+        ],
+      },
+    },
+    {
+      name: "a matching getAllOpenApi rule returns a promise; the resolved documents are returned",
+      in: {
+        params: {
+          getAllOpenApiRules: [
+            {
+              kubeconfigStr: "cluster-async",
+              result: Promise.resolve(tsUtil.result(true, [
+                {
+                  apiVersion: "networking.k8s.io/v1",
+                  openApi: '{"components":{"schemas":{"Ingress":{}}}}',
+                },
+              ])),
+            },
+          ],
+        },
+        kubeconfigStr: "cluster-async",
+      },
+      want: {
+        err: null,
+        docs: [
+          {
+            apiVersion: "networking.k8s.io/v1",
+            openApi: '{"components":{"schemas":{"Ingress":{}}}}',
           },
         ],
       },
@@ -95,21 +120,18 @@ Deno.test("StubK8sPort.getAllOpenApi", async (t) => {
       },
     },
     {
-      name: "no getAllOpenApi rule matches the kubeconfig string; an empty list is returned",
+      name: "no getAllOpenApi rule matches the kubeconfig string; ErrInvalid is returned",
       in: {
         params: {
           getAllOpenApiRules: [
             {
               kubeconfigStr: "cluster-alpha",
-              result: tsUtil.result(
-                true,
-                Promise.resolve([
-                  {
-                    apiVersion: "apps/v1",
-                    openApi: '{"components":{"schemas":{"Deployment":{}}}}',
-                  },
-                ]),
-              ),
+              result: tsUtil.result(true, [
+                {
+                  apiVersion: "apps/v1",
+                  openApi: '{"components":{"schemas":{"Deployment":{}}}}',
+                },
+              ]),
             },
           ],
         },
@@ -125,12 +147,12 @@ Deno.test("StubK8sPort.getAllOpenApi", async (t) => {
   for (const tt of tests) {
     await t.step(tt.name, async () => {
       const port = new StubK8sPort(tt.in.params)
-      const res = port.getAllOpenApi(tt.in.kubeconfigStr)
+      const res = await port.getAllOpenApi(tt.in.kubeconfigStr)
 
       if (tt.want.err != null) {
         stdAssert.assertEquals(res.err!.is(tt.want.err), true)
       } else {
-        stdAssert.assertEquals(await res.val, tt.want.docs)
+        stdAssert.assertEquals(res.val, tt.want.docs)
       }
     })
   }

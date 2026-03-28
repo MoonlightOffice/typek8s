@@ -18,7 +18,7 @@ export interface K8sPort {
    * entity.ErrUnauthorized is returned if the credential is unauthorized.
    * entity.ErrInvalid is returned if the Kubernetes server URL in the kubeconfig file is invalid.
    */
-  getAllOpenApi(kubeconfigStr: string): tsUtil.Result<Promise<getAllOpenApiResult[]>>
+  getAllOpenApi(kubeconfigStr: string): Promise<tsUtil.Result<getAllOpenApiResult[]>>
 
   /**
    * Parse the provided Kubernetes OpenAPI JSON schema and generate TypeScript code.

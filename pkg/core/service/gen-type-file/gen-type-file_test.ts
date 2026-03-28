@@ -30,23 +30,20 @@ Deno.test("DefaultGenTypeFileService.generate", async (t) => {
           getAllOpenApiRules: [
             {
               kubeconfigStr: "cluster-alpha",
-              result: tsUtil.result(
-                true,
-                Promise.resolve([
-                  {
-                    apiVersion: "v1",
-                    openApi: '{"components":{"schemas":{"ConfigMap":{}}}}',
-                  },
-                  {
-                    apiVersion: "apps/v1",
-                    openApi: '{"components":{"schemas":{"Deployment":{}}}}',
-                  },
-                  {
-                    apiVersion: "batch/v1",
-                    openApi: '{"components":{"schemas":{"Job":{}}}}',
-                  },
-                ]),
-              ),
+              result: tsUtil.result(true, [
+                {
+                  apiVersion: "v1",
+                  openApi: '{"components":{"schemas":{"ConfigMap":{}}}}',
+                },
+                {
+                  apiVersion: "apps/v1",
+                  openApi: '{"components":{"schemas":{"Deployment":{}}}}',
+                },
+                {
+                  apiVersion: "batch/v1",
+                  openApi: '{"components":{"schemas":{"Job":{}}}}',
+                },
+              ]),
             },
           ],
           openApiToTypesRules: [
@@ -126,15 +123,12 @@ Deno.test("DefaultGenTypeFileService.generate", async (t) => {
           getAllOpenApiRules: [
             {
               kubeconfigStr: "cluster-delta",
-              result: tsUtil.result(
-                true,
-                Promise.resolve([
-                  {
-                    apiVersion: "networking.k8s.io/v1",
-                    openApi: '{"components":{"schemas":{"Ingress":{}}}}',
-                  },
-                ]),
-              ),
+              result: tsUtil.result(true, [
+                {
+                  apiVersion: "networking.k8s.io/v1",
+                  openApi: '{"components":{"schemas":{"Ingress":{}}}}',
+                },
+              ]),
             },
           ],
           openApiToTypesRules: [
