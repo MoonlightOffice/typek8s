@@ -1,6 +1,10 @@
 import { "@std/assert" as stdAssert, "ts-util" as tsUtil, entity, port } from "./deps.ts"
 import { DefaultGenTypeFileService } from "./gen-type-file.ts"
 
+function createFile(name: string, text: string, type = "text/typescript"): File {
+  return new File([text], name, { type })
+}
+
 Deno.test("DefaultGenTypeFileService.generate", async (t) => {
   type In = {
     kubeconfigStr: string
@@ -63,6 +67,15 @@ Deno.test("DefaultGenTypeFileService.generate", async (t) => {
               result: "",
             },
           ],
+          typeFilesToModFileRules: [
+            {
+              fileNames: ["v1.ts", "apps.v1.ts"],
+              result: createFile(
+                "mod.ts",
+                'export type { api as v1 } from "./v1.ts"\nexport type { api as appsV1 } from "./apps.v1.ts"\n',
+              ),
+            },
+          ],
         }),
       },
       want: {
@@ -70,6 +83,8 @@ Deno.test("DefaultGenTypeFileService.generate", async (t) => {
         files: {
           "generated/types/v1.ts": "export interface ConfigMap {}",
           "generated/types/apps.v1.ts": "export interface Deployment {}",
+          "generated/types/mod.ts":
+            'export type { api as v1 } from "./v1.ts"\nexport type { api as appsV1 } from "./apps.v1.ts"\n',
         },
       },
     },
@@ -138,11 +153,19 @@ Deno.test("DefaultGenTypeFileService.generate", async (t) => {
               result: "",
             },
           ],
+          typeFilesToModFileRules: [
+            {
+              fileNames: [],
+              result: createFile("mod.ts", ""),
+            },
+          ],
         }),
       },
       want: {
         err: null,
-        files: {},
+        files: {
+          "generated/types/mod.ts": "",
+        },
       },
     },
   ]

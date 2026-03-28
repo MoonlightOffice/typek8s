@@ -28,4 +28,13 @@ export interface K8sPort {
    * @returns Kubernetes API resource schemas as TypeScript types. If there are no valid schemas, this returns an empty string.
    */
   openApiToTypes(apiVersion: string, openapiStr: string): Promise<string>
+
+  /**
+   * Create a `mod.ts` file that re-exports generated type objects from the provided file names.
+   *
+   * @param fileNames Generated TypeScript file names such as `storage.k8s.io.v1.ts`.
+   * Input order is preserved in the generated `mod.ts`.
+   * @returns A file named `mod.ts` whose content re-exports the generated types.
+   */
+  typeFilesToModFile(fileNames: string[]): Promise<File>
 }

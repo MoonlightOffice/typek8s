@@ -27,18 +27,26 @@ export class DefaultGenTypeFileService implements GenTypeFileService {
       return tsUtil.result(false, openApiRes.err)
     }
 
-    const typeFiles = await Promise.all(openApiRes.val.map(async ({ apiVersion, openApi }) => ({
-      apiVersion,
-      types: await this.k8sPort.openApiToTypes(apiVersion, openApi),
-    })))
+    const typeFiles = await Promise.all(openApiRes.val.map(async ({ apiVersion, openApi }) => {
+      const fileName = `${apiVersion.replaceAll("/", ".")}.ts`
+      return {
+        fileName,
+        types: await this.k8sPort.openApiToTypes(apiVersion, openApi),
+      }
+    }))
 
     this.fileIOPort.mkdir(outDir)
-    for (const { apiVersion, types } of typeFiles) {
+    const writtenFileNames: string[] = []
+    for (const { fileName, types } of typeFiles) {
       if (types.length === 0) {
         continue
       }
-      this.fileIOPort.write(outDir, `${apiVersion.replaceAll("/", ".")}.ts`, types)
+      this.fileIOPort.write(outDir, fileName, types)
+      writtenFileNames.push(fileName)
     }
+
+    const modFile = await this.k8sPort.typeFilesToModFile(writtenFileNames)
+    this.fileIOPort.write(outDir, modFile.name, await modFile.text())
 
     return tsUtil.result(true, undefined)
   }

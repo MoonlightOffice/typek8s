@@ -3,6 +3,10 @@ import type { StubK8sPortParams } from "./stub-k8s-port.ts"
 import type { getAllOpenApiResult } from "./k8s-port.ts"
 import { "@std/assert" as stdAssert, "ts-util" as tsUtil, entity } from "./deps.ts"
 
+function createFile(name: string, text: string, type = "text/typescript"): File {
+  return new File([text], name, { type })
+}
+
 Deno.test("StubK8sPort.getAllOpenApi", async (t) => {
   type In = {
     params: StubK8sPortParams
@@ -62,12 +66,10 @@ Deno.test("StubK8sPort.getAllOpenApi", async (t) => {
           getAllOpenApiRules: [
             {
               kubeconfigStr: "cluster-async",
-              result: Promise.resolve(tsUtil.result(true, [
-                {
-                  apiVersion: "networking.k8s.io/v1",
-                  openApi: '{"components":{"schemas":{"Ingress":{}}}}',
-                },
-              ])),
+              result: tsUtil.result(true, [{
+                apiVersion: "networking.k8s.io/v1",
+                openApi: '{"components":{"schemas":{"Ingress":{}}}}',
+              }]),
             },
           ],
         },
@@ -158,6 +160,110 @@ Deno.test("StubK8sPort.getAllOpenApi", async (t) => {
   }
 })
 
+Deno.test("StubK8sPort.typeFilesToModFile", async (t) => {
+  type In = {
+    params: StubK8sPortParams
+    fileNames: string[]
+  }
+
+  type Want = {
+    name: string
+    text: string
+  }
+
+  const tests: Array<{
+    name: string
+    in: In
+    want: Want
+  }> = [
+    {
+      name: "a matching typeFilesToModFile rule exists; the configured mod.ts file is returned",
+      in: {
+        params: {
+          typeFilesToModFileRules: [
+            {
+              fileNames: ["apps.v1.ts", "v1.ts"],
+              result: createFile(
+                "mod.ts",
+                'export type { api as appsV1 } from "./apps.v1.ts"\nexport type { api as v1 } from "./v1.ts"\n',
+              ),
+            },
+          ],
+        },
+        fileNames: ["apps.v1.ts", "v1.ts"],
+      },
+      want: {
+        name: "mod.ts",
+        text: 'export type { api as appsV1 } from "./apps.v1.ts"\nexport type { api as v1 } from "./v1.ts"\n',
+      },
+    },
+    {
+      name: "a matching typeFilesToModFile rule returns a promise; the resolved mod.ts file is returned",
+      in: {
+        params: {
+          typeFilesToModFileRules: [
+            {
+              fileNames: ["storage.k8s.io.v1.ts"],
+              result: createFile("mod.ts", 'export type { api as storageK8sIoV1 } from "./storage.k8s.io.v1.ts"\n'),
+            },
+          ],
+        },
+        fileNames: ["storage.k8s.io.v1.ts"],
+      },
+      want: {
+        name: "mod.ts",
+        text: 'export type { api as storageK8sIoV1 } from "./storage.k8s.io.v1.ts"\n',
+      },
+    },
+    {
+      name: "the same file names are provided in a different order; the default empty mod.ts file is returned",
+      in: {
+        params: {
+          typeFilesToModFileRules: [
+            {
+              fileNames: ["apps.v1.ts", "v1.ts"],
+              result: createFile("mod.ts", 'export type { api as appsV1 } from "./apps.v1.ts"\n'),
+            },
+          ],
+        },
+        fileNames: ["v1.ts", "apps.v1.ts"],
+      },
+      want: {
+        name: "mod.ts",
+        text: "",
+      },
+    },
+    {
+      name: "no typeFilesToModFile rule matches the input; the default empty mod.ts file is returned",
+      in: {
+        params: {
+          typeFilesToModFileRules: [
+            {
+              fileNames: ["apps.v1.ts"],
+              result: createFile("mod.ts", 'export type { api as appsV1 } from "./apps.v1.ts"\n'),
+            },
+          ],
+        },
+        fileNames: [],
+      },
+      want: {
+        name: "mod.ts",
+        text: "",
+      },
+    },
+  ]
+
+  for (const tt of tests) {
+    await t.step(tt.name, async () => {
+      const port = new StubK8sPort(tt.in.params)
+      const res = await port.typeFilesToModFile(tt.in.fileNames)
+
+      stdAssert.assertEquals(res.name, tt.want.name)
+      stdAssert.assertEquals(await res.text(), tt.want.text)
+    })
+  }
+})
+
 Deno.test("StubK8sPort.openApiToTypes", async (t) => {
   type In = {
     params: StubK8sPortParams
@@ -201,7 +307,7 @@ Deno.test("StubK8sPort.openApiToTypes", async (t) => {
             {
               apiVersion: "batch/v1",
               openapiStr: '{"components":{"schemas":{"Job":{}}}}',
-              result: Promise.resolve("export interface Job {}"),
+              result: "export interface Job {}",
             },
           ],
         },
