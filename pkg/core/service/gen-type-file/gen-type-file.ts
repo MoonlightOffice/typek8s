@@ -21,8 +21,25 @@ export class DefaultGenTypeFileService implements GenTypeFileService {
     private readonly k8sPort: port.k8s.K8sPort,
   ) {}
 
-  generate(_kubeconfigStr: string, _outDir: string): Promise<tsUtil.Result<void>> {
-    // TODO: implement
-    return new Promise((resolve) => resolve(tsUtil.result(true, undefined)))
+  async generate(kubeconfigStr: string, outDir: string): Promise<tsUtil.Result<void>> {
+    const openApiRes = await this.k8sPort.getAllOpenApi(kubeconfigStr)
+    if (openApiRes.err != null) {
+      return tsUtil.result(false, openApiRes.err)
+    }
+
+    const typeFiles = await Promise.all(openApiRes.val.map(async ({ apiVersion, openApi }) => ({
+      apiVersion,
+      types: await this.k8sPort.openApiToTypes(apiVersion, openApi),
+    })))
+
+    this.fileIOPort.mkdir(outDir)
+    for (const { apiVersion, types } of typeFiles) {
+      if (types.length === 0) {
+        continue
+      }
+      this.fileIOPort.write(outDir, `${apiVersion.replaceAll("/", ".")}.ts`, types)
+    }
+
+    return tsUtil.result(true, undefined)
   }
 }
