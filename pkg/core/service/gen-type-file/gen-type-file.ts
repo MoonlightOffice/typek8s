@@ -1,6 +1,14 @@
 import { "ts-util" as tsUtil, port } from "./deps.ts"
 
-export interface GenTypeFileService {
+/**
+ * Service for generating TypeScript files from Kubernetes OpenAPI documents.
+ */
+export class GenTypeFileService {
+  constructor(
+    private readonly fileIOPort: port.fileIo.FileIOPort,
+    private readonly k8sPort: port.k8s.K8sPort,
+  ) {}
+
   /**
    * Connect to the Kubernetes cluster described by the given kubeconfig, fetch all API
    * resources, and save them as TypeScript files in the specified directory.
@@ -12,15 +20,6 @@ export interface GenTypeFileService {
    * @param kubeconfigStr Kubeconfig file string.
    * @param outDir Output directory.
    */
-  generate(kubeconfigStr: string, outDir: string): Promise<tsUtil.Result<void>>
-}
-
-export class DefaultGenTypeFileService implements GenTypeFileService {
-  constructor(
-    private readonly fileIOPort: port.fileIo.FileIOPort,
-    private readonly k8sPort: port.k8s.K8sPort,
-  ) {}
-
   async generate(kubeconfigStr: string, outDir: string): Promise<tsUtil.Result<void>> {
     const openApiRes = await this.k8sPort.getAllOpenApi(kubeconfigStr)
     if (openApiRes.err != null) {

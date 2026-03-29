@@ -20,19 +20,10 @@ export interface SynthParams extends port.synth.SynthParams {
   helmCredential?: port.k8s.HelmPortCredential
 }
 
-export interface SynthService {
-  /**
-   * Synthesizes the requested chart and writes the resulting chart archive to
-   * the output directory.
-   *
-   * @param params Synthesis inputs plus optional output-directory and Helm
-   * credential settings.
-   * @returns `tsUtil.result(true)` when synthesis succeeds, or an error when it fails.
-   */
-  synth(params: SynthParams): Promise<tsUtil.Result<void>>
-}
-
-export class DefaultSynthService implements SynthService {
+/**
+ * Service for synthesizing chart archives from manifests and dependency charts.
+ */
+export class SynthService {
   constructor(
     private readonly fileIOPort: port.fileIo.FileIOPort,
     private readonly helmPort: port.k8s.HelmPort,
@@ -45,6 +36,14 @@ export class DefaultSynthService implements SynthService {
     return `${index}-${baseName}`
   }
 
+  /**
+   * Synthesizes the requested chart and writes the resulting chart archive to
+   * the output directory.
+   *
+   * @param params Synthesis inputs plus optional output-directory and Helm
+   * credential settings.
+   * @returns `tsUtil.result(true)` when synthesis succeeds, or an error when it fails.
+   */
   async synth(params: SynthParams): Promise<tsUtil.Result<void>> {
     const outDir = params.outDir ?? "out"
     using stack = new DisposableStack()

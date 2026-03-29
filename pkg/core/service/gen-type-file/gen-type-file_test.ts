@@ -1,11 +1,11 @@
 import { "@std/assert" as stdAssert, "ts-util" as tsUtil, entity, port } from "./deps.ts"
-import { DefaultGenTypeFileService } from "./gen-type-file.ts"
+import { GenTypeFileService } from "./gen-type-file.ts"
 
 function createFile(name: string, text: string, type = "text/typescript"): File {
   return new File([text], name, { type })
 }
 
-Deno.test("DefaultGenTypeFileService.generate", async (t) => {
+Deno.test("GenTypeFileService.generate", async (t) => {
   type In = {
     kubeconfigStr: string
     outDir: string
@@ -172,7 +172,7 @@ Deno.test("DefaultGenTypeFileService.generate", async (t) => {
 
   for (const tt of tests) {
     await t.step(tt.name, async () => {
-      const service = new DefaultGenTypeFileService(tt.in.fileIOPort, tt.in.k8sPort)
+      const service = new GenTypeFileService(tt.in.fileIOPort, tt.in.k8sPort)
 
       const res = await service.generate(tt.in.kubeconfigStr, tt.in.outDir)
 
@@ -189,8 +189,6 @@ Deno.test("DefaultGenTypeFileService.generate", async (t) => {
         stdAssert.assertEquals(fileRes.val, content)
       }
 
-      // Derive the expected direct children of `outDir` from the asserted output files
-      // so the test also fails when the service writes extra files.
       const expectedFileNames = Object.keys(tt.want.files)
         .filter((path) => path.startsWith(`${tt.in.outDir}/`))
         .map((path) => path.slice(tt.in.outDir.length + 1))

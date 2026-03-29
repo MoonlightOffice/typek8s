@@ -1,9 +1,5 @@
 import { "@std/cli" as stdCli, port, service } from "./deps.ts"
 
-export interface Typek8sCli {
-  run(args?: string[]): Promise<number>
-}
-
 export interface Typek8sCliOutput {
   stdout(message: string): void
   stderr(message: string): void
@@ -18,8 +14,8 @@ type ParsedArgs = {
   [key: string]: unknown
 }
 
-export class DefaultTypek8sCli implements Typek8sCli {
-  HELP_TEXT: string = `Usage:
+export class Typek8sCli {
+  static readonly HELP_TEXT: string = `Usage:
   typek8s -h
   typek8s --help
   typek8s generate --kubeconfig <path> [--out <dir>]
@@ -29,7 +25,7 @@ Options:
   --kubeconfig <path>    Path to the kubeconfig file.
   --out <dir>            Output directory. Defaults to ./out/.`
 
-  DEFAULT_OUT_DIR: string = "./out/"
+  static readonly DEFAULT_OUT_DIR: string = "./out/"
 
   constructor(
     private readonly genTypeFileService: service.genTypeFile.GenTypeFileService,
@@ -85,18 +81,18 @@ Options:
         help: ["h"],
       },
       default: {
-        out: this.DEFAULT_OUT_DIR,
+        out: Typek8sCli.DEFAULT_OUT_DIR,
       },
     }) as ParsedArgs
 
     const parseError = this.validateParsedArgs(parsedArgs)
     if (parseError != null) {
-      this.output.stderr(`${parseError}\n\n${this.HELP_TEXT}`)
+      this.output.stderr(`${parseError}\n\n${Typek8sCli.HELP_TEXT}`)
       return 1
     }
 
     if (parsedArgs.help) {
-      this.output.stdout(this.HELP_TEXT)
+      this.output.stdout(Typek8sCli.HELP_TEXT)
       return 0
     }
 
