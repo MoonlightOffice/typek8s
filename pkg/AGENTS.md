@@ -19,7 +19,7 @@ Allowed dependency direction:
 
 Inside `core`:
 
-- `service -> port -> entity`
+- `cli -> service -> port -> entity`
 
 The reverse direction is not allowed.
 
@@ -27,6 +27,8 @@ The reverse direction is not allowed.
 
 - `adapter` mainly implements the interfaces defined in `port`.
 - `di` is responsible for dependency injection and wiring.
+- `cli` handles command-line transport concerns such as argument parsing, help text, stdout/stderr output, and exit
+  codes, then delegates business behavior to `service`.
 - `service` uses `entity` and `port` to implement business logic.
 - `entity` contains the domain types and errors used by upper layers.
 
@@ -44,9 +46,11 @@ The reverse direction is not allowed.
   full-parameter matching.
 - Use exact-match rule stubs for function-like, query-like, or translation-style dependencies whose APIs are mostly
   request-to-result transforms over opaque inputs.
-- Keep upper-layer tests blackbox at the level they are written. A `ui` test should usually stub or fake a `service`
-  based on whether it models state, and a `service` test should usually stub a function-like `port` or fake a stateful
-  one.
+- Keep upper-layer tests blackbox at the level they are written. A `cli` or `ui` test should usually stub or fake a
+  `service` based on whether it models state, and a `service` test should usually stub a function-like `port` or fake a
+  stateful one.
+- When a `cli` test needs to verify path-to-content translation or other stateful filesystem behavior before calling a
+  service, prefer a `FileIOPort` fake plus a small recording service double over expanding a coarse service stub.
 - Do not force upper-layer tests to encode internal request shaping, temporary paths, generated IDs, or other
   implementation details unless that interaction is itself the contract being tested.
 - Prefer coarse scenario configuration for service stubs, such as default success or failure and small domain-specific
