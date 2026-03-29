@@ -18,6 +18,7 @@ Deno.test("SynthService.synth", async (t) => {
     err: tsUtil.Err | null
     outputPath: string
     outputText: string | null
+    missingPaths?: string[]
   }
 
   const tests: Array<{
@@ -131,6 +132,51 @@ Deno.test("SynthService.synth", async (t) => {
       },
     },
     {
+      name: "an existing output directory is removed before writing the synthesized chart archive",
+      in: {
+        params: {
+          name: "jobs",
+          manifests: [
+            {
+              apiVersion: "batch/v1",
+              kind: "CronJob",
+              metadata: { name: "cleanup" },
+            },
+          ],
+          outDir: "dist/charts",
+        },
+        fileIOPort: new port.fileIo.FakeFileIOPort({
+          "dist/charts/jobs.tgz": "stale-chart",
+          "dist/charts/old.txt": "stale-file",
+          "dist/keep.txt": "keep",
+        }),
+        helmPort: new port.k8s.StubHelmPort(),
+        synthPort: new port.synth.StubSynthPort({
+          synthRules: [
+            {
+              params: {
+                name: "jobs",
+                manifests: [
+                  {
+                    apiVersion: "batch/v1",
+                    kind: "CronJob",
+                    metadata: { name: "cleanup" },
+                  },
+                ],
+              },
+              result: tsUtil.result(true, createChartFile("different-name.tgz", "fresh-chart")),
+            },
+          ],
+        }),
+      },
+      want: {
+        err: null,
+        outputPath: "dist/charts/jobs.tgz",
+        outputText: "fresh-chart",
+        missingPaths: ["dist/charts/old.txt"],
+      },
+    },
+    {
       name: "pulling an OCI dependency chart fails; the pull error is returned and no output archive is written",
       in: {
         params: {
@@ -176,7 +222,7 @@ Deno.test("SynthService.synth", async (t) => {
       },
     },
     {
-      name: "synth fails; the error is returned and no output archive is written",
+      name: "synth fails; the error is returned and the existing output directory is removed",
       in: {
         params: {
           name: "jobs",
@@ -189,7 +235,10 @@ Deno.test("SynthService.synth", async (t) => {
           ],
           outDir: "generated",
         },
-        fileIOPort: new port.fileIo.FakeFileIOPort(),
+        fileIOPort: new port.fileIo.FakeFileIOPort({
+          "generated/jobs.tgz": "stale-chart",
+          "generated/old.txt": "stale-file",
+        }),
         helmPort: new port.k8s.StubHelmPort(),
         synthPort: new port.synth.StubSynthPort({
           synthRules: [
@@ -213,6 +262,7 @@ Deno.test("SynthService.synth", async (t) => {
         err: entity.ErrInvalid,
         outputPath: "generated/jobs.tgz",
         outputText: null,
+        missingPaths: ["generated/old.txt"],
       },
     },
   ]
@@ -234,6 +284,11 @@ Deno.test("SynthService.synth", async (t) => {
       } else {
         stdAssert.assertEquals(fileRes.err, null)
         stdAssert.assertEquals(fileRes.val, tt.want.outputText)
+      }
+
+      for (const missingPath of tt.want.missingPaths ?? []) {
+        const missingFileRes = tt.in.fileIOPort.read(missingPath)
+        stdAssert.assertEquals(missingFileRes.err!.is(entity.ErrNotFound), true)
       }
     })
   }

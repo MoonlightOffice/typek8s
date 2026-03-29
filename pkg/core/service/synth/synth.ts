@@ -47,6 +47,7 @@ export class SynthService {
   async synth(params: SynthParams): Promise<tsUtil.Result<void>> {
     const outDir = params.outDir ?? "out"
     using stack = new DisposableStack()
+    this.fileIOPort.remove(outDir)
     const depCharts = params.depCharts
     const hasOCIChart = depCharts?.some((depChart) => depChart.chartURL.startsWith("oci://")) ?? false
     const tempDirPath = hasOCIChart ? stdPath.join(".tmp", `typek8s-synth-${crypto.randomUUID()}`) : null
