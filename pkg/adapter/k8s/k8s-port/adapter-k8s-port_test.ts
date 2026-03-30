@@ -1,4 +1,3 @@
-import type { getAllOpenApiResult } from "../../core/port/k8s/k8s-port.ts"
 import { "@std/assert" as stdAssert, "ts-util" as tsUtil, entity, port } from "./deps.ts"
 import { AdapterK8sPort } from "./adapter-k8s-port.ts"
 
@@ -13,7 +12,7 @@ Deno.test("AdapterK8sPort.getAllOpenApi", { ignore: true }, async (t) => {
 
   type Want = {
     err: tsUtil.Err | null
-    docs: getAllOpenApiResult[]
+    docs: port.k8s.getAllOpenApiResult[]
   }
 
   const tests: Array<{
