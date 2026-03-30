@@ -10,7 +10,7 @@ function withTempDir(run: (dir: string) => void): void {
   run(dir)
 }
 
-Deno.test("AdapterFileIOPort.read", { ignore: Deno.env.get("TESTMODE") !== "LONGTEST" }, async (t) => {
+Deno.test("AdapterFileIOPort.read", { ignore: Deno.env.get("TESTMODE") !== "LONG" }, async (t) => {
   type In = {
     seed?: (dir: string) => void
     path: (dir: string) => string
@@ -81,7 +81,7 @@ Deno.test("AdapterFileIOPort.read", { ignore: Deno.env.get("TESTMODE") !== "LONG
   }
 })
 
-Deno.test("AdapterFileIOPort.write", { ignore: Deno.env.get("TESTMODE") !== "LONGTEST" }, async (t) => {
+Deno.test("AdapterFileIOPort.write", { ignore: Deno.env.get("TESTMODE") !== "LONG" }, async (t) => {
   type In = {
     seed?: (dir: string) => void
     dir: (root: string) => string
@@ -165,7 +165,7 @@ Deno.test("AdapterFileIOPort.write", { ignore: Deno.env.get("TESTMODE") !== "LON
   }
 })
 
-Deno.test("AdapterFileIOPort.listFiles", { ignore: Deno.env.get("TESTMODE") !== "LONGTEST" }, async (t) => {
+Deno.test("AdapterFileIOPort.listFiles", { ignore: Deno.env.get("TESTMODE") !== "LONG" }, async (t) => {
   type In = {
     seed?: (dir: string) => void
     path: (dir: string) => string
@@ -247,7 +247,7 @@ Deno.test("AdapterFileIOPort.listFiles", { ignore: Deno.env.get("TESTMODE") !== 
   }
 })
 
-Deno.test("AdapterFileIOPort.mkdir", { ignore: Deno.env.get("TESTMODE") !== "LONGTEST" }, async (t) => {
+Deno.test("AdapterFileIOPort.mkdir", { ignore: Deno.env.get("TESTMODE") !== "LONG" }, async (t) => {
   type In = {
     seed?: (dir: string) => void
     path: (dir: string) => string
@@ -317,7 +317,7 @@ Deno.test("AdapterFileIOPort.mkdir", { ignore: Deno.env.get("TESTMODE") !== "LON
   }
 })
 
-Deno.test("AdapterFileIOPort.remove", { ignore: Deno.env.get("TESTMODE") !== "LONGTEST" }, async (t) => {
+Deno.test("AdapterFileIOPort.remove", { ignore: Deno.env.get("TESTMODE") !== "LONG" }, async (t) => {
   type In = {
     seed?: (dir: string) => void
     path: (dir: string) => string
