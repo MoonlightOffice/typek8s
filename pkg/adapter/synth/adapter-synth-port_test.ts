@@ -52,13 +52,13 @@ Deno.test("AdapterSynthPort.synth", { ignore: true }, async (t) => {
             },
           ],
           crds: [
-            "file://crds/widgets.yaml",
+            "crds/widgets.yaml",
           ],
           depCharts: [
             {
               name: "postgresql",
               version: "15.5.31",
-              chartURL: "file://charts/postgresql-15.5.31.tgz",
+              chartURL: "charts/postgresql-15.5.31.tgz",
               values: {
                 primary: {
                   persistence: {

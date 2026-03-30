@@ -43,7 +43,7 @@ Deno.test("SynthService.synth", async (t) => {
             {
               name: "redis",
               version: "20.1.7",
-              chartURL: "file://charts/redis-20.1.7.tgz",
+              chartURL: "charts/redis-20.1.7.tgz",
               values: {
                 architecture: {
                   standalone: true,
@@ -70,7 +70,7 @@ Deno.test("SynthService.synth", async (t) => {
                   {
                     name: "redis",
                     version: "20.1.7",
-                    chartURL: "file://charts/redis-20.1.7.tgz",
+                    chartURL: "charts/redis-20.1.7.tgz",
                     values: {
                       architecture: {
                         standalone: true,

@@ -48,7 +48,7 @@ Deno.test("StubSynthPort.synth", async (t) => {
                   },
                 ],
                 crds: [
-                  "file://crds/widgets.yaml",
+                  "crds/widgets.yaml",
                 ],
                 depCharts: [
                   {
@@ -84,7 +84,7 @@ Deno.test("StubSynthPort.synth", async (t) => {
             },
           ],
           crds: [
-            "file://crds/widgets.yaml",
+            "crds/widgets.yaml",
           ],
           depCharts: [
             {
@@ -203,7 +203,7 @@ Deno.test("StubSynthPort.synth", async (t) => {
                   },
                 ],
                 crds: [
-                  "file://crds/widgets.yaml",
+                  "crds/widgets.yaml",
                 ],
                 depCharts: [
                   {
@@ -227,7 +227,7 @@ Deno.test("StubSynthPort.synth", async (t) => {
             },
           ],
           crds: [
-            "file://crds/widgets.yaml",
+            "crds/widgets.yaml",
           ],
           depCharts: [
             {
