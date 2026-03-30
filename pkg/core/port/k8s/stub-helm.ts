@@ -4,7 +4,7 @@ import { "ts-util" as tsUtil, entity } from "./deps.ts"
 export interface StubHelmPortPullChartRule {
   path: string
   credential?: HelmPortCredential
-  result: tsUtil.Result<Promise<File>>
+  result: tsUtil.Result<File>
 }
 
 export interface StubHelmPortParams {
@@ -36,14 +36,14 @@ export class StubHelmPort implements HelmPort {
     this.#pullChartRules = params.pullChartRules ?? []
   }
 
-  pullChart(params: { path: string; credential?: HelmPortCredential }): tsUtil.Result<Promise<File>> {
+  pullChart(params: { path: string; credential?: HelmPortCredential }): Promise<tsUtil.Result<File>> {
     const rule = this.#pullChartRules.find((candidate) =>
       candidate.path === params.path && isSameCredential(candidate.credential, params.credential)
     )
     if (rule == null) {
-      return tsUtil.result(false, entity.ErrInvalid)
+      return Promise.resolve(tsUtil.result(false, entity.ErrInvalid))
     }
 
-    return rule.result
+    return Promise.resolve(rule.result)
   }
 }

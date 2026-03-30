@@ -7,7 +7,7 @@ export class AdapterHelmPort implements port.k8s.HelmPort {
   pullChart(params: {
     path: string
     credential?: port.k8s.HelmPortCredential
-  }): tsUtil.Result<Promise<File>> {
+  }): Promise<tsUtil.Result<File>> {
     void params
 
     // TODO: Implement Helm OCI chart pulling with optional registry authentication.

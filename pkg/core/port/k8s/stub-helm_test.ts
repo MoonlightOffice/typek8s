@@ -41,7 +41,7 @@ Deno.test("StubHelmPort.pullChart", async (t) => {
               path: "oci://ghcr.io/example/chart",
               result: tsUtil.result(
                 true,
-                Promise.resolve(createChartFile("chart-1.2.3.tgz", "chart-content")),
+                createChartFile("chart-1.2.3.tgz", "chart-content"),
               ),
             },
           ],
@@ -72,7 +72,7 @@ Deno.test("StubHelmPort.pullChart", async (t) => {
               },
               result: tsUtil.result(
                 true,
-                Promise.resolve(createChartFile("private-chart-0.1.0.tgz", "private-chart")),
+                createChartFile("private-chart-0.1.0.tgz", "private-chart"),
               ),
             },
           ],
@@ -151,7 +151,7 @@ Deno.test("StubHelmPort.pullChart", async (t) => {
               path: "oci://ghcr.io/example/chart",
               result: tsUtil.result(
                 true,
-                Promise.resolve(createChartFile("chart-1.2.3.tgz", "chart-content")),
+                createChartFile("chart-1.2.3.tgz", "chart-content"),
               ),
             },
           ],
@@ -178,7 +178,7 @@ Deno.test("StubHelmPort.pullChart", async (t) => {
               },
               result: tsUtil.result(
                 true,
-                Promise.resolve(createChartFile("private-chart-0.1.0.tgz", "private-chart")),
+                createChartFile("private-chart-0.1.0.tgz", "private-chart"),
               ),
             },
           ],
@@ -201,12 +201,12 @@ Deno.test("StubHelmPort.pullChart", async (t) => {
   for (const tt of tests) {
     await t.step(tt.name, async () => {
       const port = new StubHelmPort(tt.in.params)
-      const res = port.pullChart(tt.in.pullChartParams)
+      const res = await port.pullChart(tt.in.pullChartParams)
 
       if (tt.want.err != null) {
         stdAssert.assertEquals(res.err!.is(tt.want.err), true)
       } else {
-        const file = await res.val
+        const file = res.val
         stdAssert.assertEquals(file.name, tt.want.file!.name)
         stdAssert.assertEquals(file.type, tt.want.file!.type)
         stdAssert.assertEquals(await file.text(), tt.want.file!.text)

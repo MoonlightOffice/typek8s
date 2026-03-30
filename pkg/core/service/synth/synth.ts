@@ -64,7 +64,7 @@ export class SynthService {
         }
 
         // Pull OCI charts concurrently, but materialize each one to a unique temp archive path.
-        const pullRes = this.helmPort.pullChart({
+        const pullRes = await this.helmPort.pullChart({
           path: depChart.chartURL,
           credential: params.helmCredential,
         })
@@ -72,7 +72,7 @@ export class SynthService {
           return tsUtil.result(false, pullRes.err)
         }
 
-        const pulledChart = await pullRes.val
+        const pulledChart = pullRes.val
         const tempFileName = this.buildTempChartFileName(depChart.name, pulledChart.name, index)
         const tempFilePath = stdPath.join(tempDirPath!, tempFileName)
 

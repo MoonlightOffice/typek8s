@@ -16,5 +16,5 @@ export interface HelmPort {
    * @returns Chart archive content as File. entity.ErrUnauthorized is returned if the credential
    * is unauthorized. entity.ErrNotFound is returned if the path is invalid.
    */
-  pullChart(params: { path: string; credential?: HelmPortCredential }): tsUtil.Result<Promise<File>>
+  pullChart(params: { path: string; credential?: HelmPortCredential }): Promise<tsUtil.Result<File>>
 }
