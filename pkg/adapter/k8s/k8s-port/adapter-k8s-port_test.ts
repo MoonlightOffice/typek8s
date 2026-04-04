@@ -100,3 +100,59 @@ Deno.test("AdapterK8sPort.getAllOpenApi", { ignore: Deno.env.get("TESTMODE") !==
     })
   }
 })
+
+Deno.test("AdapterK8sPort.openApiToTypes", async (t) => {
+  type In = {
+    apiVersion: string
+    openapiStr: string
+  }
+
+  type Want = {
+    valid: boolean
+  }
+
+  const tests: Array<{
+    name: string
+    in: In
+    want: Want
+  }> = [
+    {
+      name: "v1 OpenAPI json is provided; a TypeScript types with export statement is returned",
+      in: {
+        apiVersion: "v1",
+        openapiStr: ((): string => {
+          return Deno.readTextFileSync("./testutil/v1.json")
+        })(),
+      },
+      want: {
+        valid: true,
+      },
+    },
+    {
+      name: "an invalid OpenAPI is provided; an empty string is returned",
+      in: {
+        apiVersion: "v1",
+        openapiStr: ((): string => {
+          return "invalid openapi string"
+        })(),
+      },
+      want: {
+        valid: false,
+      },
+    },
+  ]
+
+  for (const tt of tests) {
+    await t.step(tt.name, async () => {
+      const adapter: port.k8s.K8sPort = new AdapterK8sPort()
+
+      const output = await adapter.openApiToTypes(tt.in.apiVersion, tt.in.openapiStr)
+      if (tt.want.valid) {
+        stdAssert.assert(output.includes("export default api"))
+        stdAssert.assert(output.includes("export interface api"))
+      } else {
+        stdAssert.assertEquals(output, "")
+      }
+    })
+  }
+})
