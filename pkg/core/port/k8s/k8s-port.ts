@@ -15,8 +15,6 @@ export interface K8sPort {
    * Calls the Kubernetes OpenAPI endpoint and fetchs all API schemas available from the server in JSON format.
    * @param kubeconfig Kubeconfig YAML string, available by running the command: `kubectl config view --minify --raw`.
    * @returns All API schemas available from the server in JSON format.
-   * entity.ErrUnauthorized is returned if the credential is unauthorized.
-   * entity.ErrInvalid is returned if the Kubernetes server URL in the kubeconfig file is invalid.
    */
   getAllOpenApi(kubeconfigStr: string): Promise<tsUtil.Result<getAllOpenApiResult[]>>
 
