@@ -250,9 +250,19 @@ export default api
    * Build a mod.ts file that re-exports generated type modules in input order.
    */
   typeFilesToModFile(fileNames: string[]): Promise<File> {
-    void fileNames
+    const lines = fileNames
+      .filter((fileName) => fileName !== "mod.ts")
+      .map((fileName) => {
+        const baseName = fileName.endsWith(".ts") ? fileName.slice(0, -3) : fileName
+        const parts = baseName.split(".")
+        const alias = parts[0] +
+          parts.slice(1).map((part) => `${part[0]?.toUpperCase() ?? ""}${part.slice(1)}`).join("")
 
-    // TODO: Implement mod.ts generation for generated Kubernetes type files.
-    return Promise.reject(new Error("TODO: AdapterK8sPort.typeFilesToModFile is not implemented"))
+        return `export type { api as ${alias} } from "./${fileName}"`
+      })
+
+    const content = lines.length === 0 ? "" : `${lines.join("\n")}\n`
+
+    return Promise.resolve(new File([content], "mod.ts", { type: "text/typescript" }))
   }
 }
