@@ -156,3 +156,76 @@ Deno.test("AdapterK8sPort.openApiToTypes", async (t) => {
     })
   }
 })
+
+Deno.test("AdapterK8sPort.typeFilesToModFile", async (t) => {
+  type In = {
+    fileNames: string[]
+  }
+
+  type Want = {
+    name: string
+    text: string
+  }
+
+  const tests: Array<{
+    name: string
+    in: In
+    want: Want
+  }> = [
+    {
+      name: "representative generated type files are provided; mod.ts re-exports each api type with the expected alias",
+      in: {
+        fileNames: [
+          "apps.v1.ts",
+          "gateway.networking.k8s.io.v1beta1.ts",
+          "storage.k8s.io.v1.ts",
+          "v1.ts",
+        ],
+      },
+      want: {
+        name: "mod.ts",
+        text: 'export type { api as appsV1 } from "./apps.v1.ts"\n' +
+          'export type { api as gatewayNetworkingK8sIoV1beta1 } from "./gateway.networking.k8s.io.v1beta1.ts"\n' +
+          'export type { api as storageK8sIoV1 } from "./storage.k8s.io.v1.ts"\n' +
+          'export type { api as v1 } from "./v1.ts"\n',
+      },
+    },
+    {
+      name: "the same files are provided in a different order; mod.ts preserves input order",
+      in: {
+        fileNames: [
+          "v1.ts",
+          "apps.v1.ts",
+          "storage.k8s.io.v1.ts",
+        ],
+      },
+      want: {
+        name: "mod.ts",
+        text: 'export type { api as v1 } from "./v1.ts"\n' +
+          'export type { api as appsV1 } from "./apps.v1.ts"\n' +
+          'export type { api as storageK8sIoV1 } from "./storage.k8s.io.v1.ts"\n',
+      },
+    },
+    {
+      name: "no generated type files are provided; an empty mod.ts file is returned",
+      in: {
+        fileNames: [],
+      },
+      want: {
+        name: "mod.ts",
+        text: "",
+      },
+    },
+  ]
+
+  for (const tt of tests) {
+    await t.step(tt.name, async () => {
+      const adapter: port.k8s.K8sPort = new AdapterK8sPort()
+
+      const output = await adapter.typeFilesToModFile(tt.in.fileNames)
+
+      stdAssert.assertEquals(output.name, tt.want.name)
+      stdAssert.assertEquals(await output.text(), tt.want.text)
+    })
+  }
+})
