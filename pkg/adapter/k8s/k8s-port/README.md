@@ -11,3 +11,9 @@ Place the kubeconfig file in this directory. Then run the long test for `Adapter
 ```shell
 TEST_KUBECONFIG_PATH=./kubeconfig.yaml TESTMODE=LONG deno test -A --filter=AdapterK8sPort.getAllOpenApi
 ```
+
+For `AdapterK8sPort.getAllOpenApi`, run the command below:
+
+```shell
+TESTMODE=LONG deno test -ER --filter=AdapterK8sPort.openApiToTypes
+```

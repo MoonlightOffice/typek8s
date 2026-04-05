@@ -101,7 +101,7 @@ Deno.test("AdapterK8sPort.getAllOpenApi", { ignore: Deno.env.get("TESTMODE") !==
   }
 })
 
-Deno.test("AdapterK8sPort.openApiToTypes", async (t) => {
+Deno.test("AdapterK8sPort.openApiToTypes", { ignore: Deno.env.get("TESTMODE") !== "LONG" }, async (t) => {
   type In = {
     apiVersion: string
     openapiStr: string
