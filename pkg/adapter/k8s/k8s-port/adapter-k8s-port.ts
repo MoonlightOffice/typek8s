@@ -1,4 +1,4 @@
-import { "@std/yaml" as stdYaml, "ts-util" as tsUtil, port } from "./deps.ts"
+import { "@std/yaml" as stdYaml, "openapi-typescript" as openapiTypescript, "ts-util" as tsUtil, port } from "./deps.ts"
 
 interface KubeConfig {
   clusters: {
@@ -33,6 +33,12 @@ interface parseKubeconfigResult {
   caCert: string
   cert: string
   key: string
+}
+
+interface XK8sGroupVersionKind {
+  group: string
+  version: string
+  kind: string
 }
 
 function parseKubeconfig(kubeconfigStr: string): tsUtil.Result<parseKubeconfigResult> {
@@ -144,14 +150,100 @@ export class AdapterK8sPort implements port.k8s.K8sPort {
   }
 
   /**
+   * Retrieve supported schema names.
+   *
+   * @param apiVersion apiVersion you're interested in
+   * @param openapi Kubernetes OpenAPI in JSON format
+   * @returns schema and resource names supported by given apiVersion
+   */
+  private getSupportedSchemaNames(
+    apiVersion: string,
+    openapi: string,
+  ): Array<{ resourceName: string; schemaName: string }> {
+    const schemas = JSON.parse(openapi)?.components?.schemas
+    if (schemas === undefined || typeof schemas !== "object" || schemas === null) {
+      return []
+    }
+
+    const output = new Map<string, { resourceName: string; schemaName: string }>()
+
+    for (const schemaName of Object.keys(schemas)) {
+      const schema = schemas[schemaName]
+      if (schema === undefined || typeof schema !== "object" || schema === null) {
+        continue
+      }
+      if (!Object.hasOwn(schema, "x-kubernetes-group-version-kind")) {
+        continue
+      }
+
+      const xK8sGroupVersionKinds = schema["x-kubernetes-group-version-kind"]
+      if (!Array.isArray(xK8sGroupVersionKinds)) {
+        continue
+      }
+
+      for (const xK8sGroupVersionKind of xK8sGroupVersionKinds as XK8sGroupVersionKind[]) {
+        const xApiVersion = xK8sGroupVersionKind.group === ""
+          ? xK8sGroupVersionKind.version
+          : `${xK8sGroupVersionKind.group}/${xK8sGroupVersionKind.version}`
+
+        if (xApiVersion !== apiVersion) {
+          continue
+        }
+
+        output.set(`${xK8sGroupVersionKind.kind}\0${schemaName}`, {
+          schemaName,
+          resourceName: xK8sGroupVersionKind.kind,
+        })
+      }
+    }
+
+    return Array.from(output.values())
+  }
+
+  /**
    * Convert a Kubernetes OpenAPI document into TypeScript type declarations.
    */
-  openApiToTypes(apiVersion: string, openapiStr: string): Promise<string> {
-    void apiVersion
-    void openapiStr
+  async openApiToTypes(apiVersion: string, openapiStr: string): Promise<string> {
+    let openapiJson: Parameters<typeof openapiTypescript.default>[0]
+    try {
+      openapiJson = JSON.parse(openapiStr) as Parameters<typeof openapiTypescript.default>[0]
+    } catch {
+      return ""
+    }
 
-    // TODO: Implement Kubernetes OpenAPI to TypeScript generation.
-    return Promise.reject(new Error("TODO: AdapterK8sPort.openApiToTypes is not implemented"))
+    let schemaAndResourceNames: Array<{ resourceName: string; schemaName: string }>
+    try {
+      schemaAndResourceNames = this.getSupportedSchemaNames(apiVersion, openapiStr)
+    } catch {
+      return ""
+    }
+    if (schemaAndResourceNames.length === 0) {
+      return ""
+    }
+
+    try {
+      const ts = openapiTypescript.astToString(await openapiTypescript.default(openapiJson))
+
+      const template = `
+type Resource<T, U> = Omit<T, "status"> & { apiVersion: "${apiVersion}"; kind: U }
+
+export interface api {
+  ${
+        schemaAndResourceNames
+          .map((schemaAndResourceName) =>
+            `${schemaAndResourceName.resourceName}: Resource<components["schemas"]["${schemaAndResourceName.schemaName}"], "${schemaAndResourceName.resourceName}">`
+          )
+          .join("\n  ")
+      }
+}
+
+export default api
+`
+
+      return `${ts}${template}`
+    } catch {
+      return ""
+    }
   }
 
   /**
