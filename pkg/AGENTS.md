@@ -15,13 +15,16 @@ and the required verification steps.
 
 Allowed dependency direction for production code:
 
-- `di -> adapter -> core`
+- `di -> adapter -> core -> util`
 
 Inside `core`:
 
 - `cli -> service -> port -> entity`
 
 The reverse direction is not allowed.
+
+`util` is a shared lowest-level layer. `core`, `adapter`, `di`, and `double` may depend on it, but `util` must not
+depend on those layers.
 
 Test support and test files may additionally use:
 
@@ -38,6 +41,8 @@ Test support and test files may additionally use:
   codes, then delegates business behavior to `service`.
 - `service` uses `entity` and `port` to implement business logic.
 - `entity` contains the domain types and errors used by upper layers.
+- `util` contains generic cross-layer helpers with no domain or business logic. It must not import from `core`,
+  `adapter`, `di`, or `double`.
 
 ## Ports, Services, and Test Doubles
 

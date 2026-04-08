@@ -12,3 +12,4 @@ export * as "ts-util" from "https://raw.githubusercontent.com/MoonlightOffice/ts
 export * from "./core/mod.ts"
 export * from "./adapter/mod.ts"
 export * as double from "./double/mod.ts"
+export * as util from "./util/mod.ts"

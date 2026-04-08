@@ -1,12 +1,10 @@
-import { "@std/path" as stdPath, "ts-util" as tsUtil, entity, port } from "./deps.ts"
+import { "@std/path" as stdPath, "ts-util" as tsUtil, entity, port, util } from "./deps.ts"
 
 export class AdapterFileIOPort implements port.fileIo.FileIOPort {
-  readonly #textDecoder = new TextDecoder()
-
   read(path: string): tsUtil.Result<string> {
     try {
       const bytes = Deno.readFileSync(path)
-      return tsUtil.result(true, this.#textDecoder.decode(bytes))
+      return tsUtil.result(true, util.bytesToString(bytes))
     } catch (err) {
       if (err instanceof Deno.errors.NotFound || err instanceof Deno.errors.IsADirectory) {
         return tsUtil.result(false, new tsUtil.Err(`file not found: ${path}`).add(entity.ErrNotFound))
@@ -18,7 +16,7 @@ export class AdapterFileIOPort implements port.fileIo.FileIOPort {
 
   write(dir: string, fname: string, content: string): void {
     Deno.mkdirSync(dir, { recursive: true })
-    Deno.writeTextFileSync(stdPath.join(dir, fname), content)
+    Deno.writeFileSync(stdPath.join(dir, fname), util.stringToBytes(content))
   }
 
   listFiles(dir: string): string[] {
