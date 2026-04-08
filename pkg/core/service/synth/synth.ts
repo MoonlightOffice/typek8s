@@ -36,11 +36,11 @@ export class SynthService {
     const outDir = params.outDir ?? "out"
     this.fileIOPort.remove(outDir)
 
-    const invalidDepChart = params.depCharts?.find((depChart) => !this.isLocalChartPath(depChart.chartURL))
+    const invalidDepChart = params.depCharts?.find((depChart) => !this.isLocalChartPath(depChart.chartPath))
     if (invalidDepChart != null) {
       return tsUtil.result(
         false,
-        new tsUtil.Err(`dependency chart must use a local path: ${invalidDepChart.chartURL}`).add(
+        new tsUtil.Err(`dependency chart must use a local path: ${invalidDepChart.chartPath}`).add(
           entity.ErrInvalid,
         ),
       )
@@ -49,7 +49,7 @@ export class SynthService {
     const synthRes = await this.helmPort.synth({
       name: params.name,
       manifests: params.manifests,
-      crds: params.crds,
+      crdPaths: params.crdPaths,
       depCharts: params.depCharts?.length === 0 ? undefined : params.depCharts,
     })
     if (synthRes.err != null) {

@@ -88,7 +88,7 @@ Deno.test("StubHelmPort.synth", async (t) => {
                 depCharts: [
                   {
                     name: "redis",
-                    chartURL: "charts/redis.tgz",
+                    chartPath: "charts/redis.tgz",
                     values: {},
                   },
                 ],
@@ -112,7 +112,7 @@ Deno.test("StubHelmPort.synth", async (t) => {
           depCharts: [
             {
               name: "redis",
-              chartURL: "charts/redis.tgz",
+              chartPath: "charts/redis.tgz",
               values: {},
             },
           ],

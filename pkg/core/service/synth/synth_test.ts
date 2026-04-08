@@ -45,7 +45,7 @@ Deno.test("SynthService.synth", async (t) => {
             {
               name: "redis",
               version: "20.1.7",
-              chartURL: "charts/redis-20.1.7.tgz",
+              chartPath: "charts/redis-20.1.7.tgz",
               values: {
                 architecture: {
                   standalone: true,
@@ -71,7 +71,7 @@ Deno.test("SynthService.synth", async (t) => {
                   {
                     name: "redis",
                     version: "20.1.7",
-                    chartURL: "charts/redis-20.1.7.tgz",
+                    chartPath: "charts/redis-20.1.7.tgz",
                     values: {
                       architecture: {
                         standalone: true,
@@ -190,7 +190,7 @@ Deno.test("SynthService.synth", async (t) => {
           depCharts: [
             {
               name: "postgresql",
-              chartURL: "oci://registry.example.com/charts/postgresql",
+              chartPath: "oci://registry.example.com/charts/postgresql",
               values: {},
             },
           ],
@@ -219,7 +219,7 @@ Deno.test("SynthService.synth", async (t) => {
           depCharts: [
             {
               name: "postgresql",
-              chartURL: absoluteChartPath,
+              chartPath: absoluteChartPath,
               values: {},
             },
           ],
@@ -240,7 +240,7 @@ Deno.test("SynthService.synth", async (t) => {
                 depCharts: [
                   {
                     name: "postgresql",
-                    chartURL: absoluteChartPath,
+                    chartPath: absoluteChartPath,
                     values: {},
                   },
                 ],

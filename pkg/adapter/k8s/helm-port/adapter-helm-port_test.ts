@@ -51,14 +51,14 @@ Deno.test("AdapterHelmPort.synth", { ignore: true }, async (t) => {
               metadata: { name: "platform-api", namespace: "default" },
             },
           ],
-          crds: [
+          crdPaths: [
             "crds/widgets.yaml",
           ],
           depCharts: [
             {
               name: "postgresql",
               version: "15.5.31",
-              chartURL: "charts/postgresql-15.5.31.tgz",
+              chartPath: "charts/postgresql-15.5.31.tgz",
               values: {
                 primary: {
                   persistence: {

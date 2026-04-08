@@ -24,7 +24,7 @@ function isSameOptionalValue(left: unknown, right: unknown): boolean {
 function isSameSynthParams(left: SynthParams, right: SynthParams): boolean {
   return left.name === right.name &&
     JSON.stringify(left.manifests) === JSON.stringify(right.manifests) &&
-    isSameOptionalValue(left.crds, right.crds) &&
+    isSameOptionalValue(left.crdPaths, right.crdPaths) &&
     isSameOptionalValue(left.depCharts, right.depCharts)
 }
 

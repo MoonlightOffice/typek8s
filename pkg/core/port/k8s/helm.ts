@@ -7,7 +7,7 @@ export interface SynthParams {
   /** Kubernetes manifests to include in the chart. */
   manifests: entity.Manifest[]
   /** Local YAML file paths for custom resource definitions to apply to the cluster. */
-  crds?: entity.CRDPath[]
+  crdPaths?: string[]
   /** Helm charts to include as dependencies. */
   depCharts?: entity.Chart[]
 }
