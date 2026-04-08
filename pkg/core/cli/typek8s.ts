@@ -1,4 +1,4 @@
-import { "@std/cli" as stdCli, port, service } from "./deps.ts"
+import { "@std/cli" as stdCli, port, service, util } from "./deps.ts"
 
 export interface Typek8sCliOutput {
   stdout(message: string): void
@@ -103,7 +103,7 @@ Options:
       return 1
     }
 
-    const generateRes = await this.genTypeFileService.generate(kubeconfigRes.val, parsedArgs.out!)
+    const generateRes = await this.genTypeFileService.generate(util.bytesToString(kubeconfigRes.val), parsedArgs.out!)
     if (generateRes.err != null) {
       this.output.stderr(`failed to generate types: ${String(generateRes.err)}`)
       return 1

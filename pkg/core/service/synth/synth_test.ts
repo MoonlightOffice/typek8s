@@ -1,7 +1,7 @@
 import { "@std/path" as stdPath } from "./deps.ts"
 import { SynthService } from "./synth.ts"
 import type { SynthParams } from "./synth.ts"
-import { "@std/assert" as stdAssert, "ts-util" as tsUtil, double, entity } from "./deps.ts"
+import { "@std/assert" as stdAssert, "ts-util" as tsUtil, double, entity, util } from "./deps.ts"
 
 function createChartFile(name: string, text: string, type = "application/gzip"): File {
   return new File([text], name, { type })
@@ -146,9 +146,9 @@ Deno.test("SynthService.synth", async (t) => {
           outDir: "dist/charts",
         },
         fileIOPort: new double.fileIo.FakeFileIOPort({
-          "dist/charts/jobs.tgz": "stale-chart",
-          "dist/charts/old.txt": "stale-file",
-          "dist/keep.txt": "keep",
+          "dist/charts/jobs.tgz": util.stringToBytes("stale-chart"),
+          "dist/charts/old.txt": util.stringToBytes("stale-file"),
+          "dist/keep.txt": util.stringToBytes("keep"),
         }),
         helmPort: new double.k8s.StubHelmPort({
           synthRules: [
@@ -271,8 +271,8 @@ Deno.test("SynthService.synth", async (t) => {
           outDir: "generated",
         },
         fileIOPort: new double.fileIo.FakeFileIOPort({
-          "generated/jobs.tgz": "stale-chart",
-          "generated/old.txt": "stale-file",
+          "generated/jobs.tgz": util.stringToBytes("stale-chart"),
+          "generated/old.txt": util.stringToBytes("stale-file"),
         }),
         helmPort: new double.k8s.StubHelmPort({
           synthRules: [
@@ -317,7 +317,7 @@ Deno.test("SynthService.synth", async (t) => {
         stdAssert.assertEquals(fileRes.err!.is(entity.ErrNotFound), true)
       } else {
         stdAssert.assertEquals(fileRes.err, null)
-        stdAssert.assertEquals(fileRes.val, tt.want.outputText)
+        stdAssert.assertEquals(fileRes.val, util.stringToBytes(tt.want.outputText))
       }
 
       for (const missingPath of tt.want.missingPaths ?? []) {

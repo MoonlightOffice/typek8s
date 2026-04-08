@@ -57,7 +57,7 @@ export class SynthService {
     }
 
     this.fileIOPort.mkdir(outDir)
-    this.fileIOPort.write(outDir, `${params.name}.tgz`, await synthRes.val.text())
+    this.fileIOPort.write(outDir, `${params.name}.tgz`, new Uint8Array(await synthRes.val.arrayBuffer()))
 
     return tsUtil.result(true, undefined)
   }

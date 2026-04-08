@@ -83,7 +83,7 @@ function parentDirs(path: string): string[] {
 
 /** An in-memory `FileIOPort` fake for tests and example wiring.  */
 export class FakeFileIOPort implements FileIOPort {
-  #files = new Map<string, string>()
+  #files = new Map<string, Uint8Array<ArrayBuffer>>()
   #dirs = new Set<string>([".", "/"])
 
   /**
@@ -91,7 +91,7 @@ export class FakeFileIOPort implements FileIOPort {
    * @param initialFiles Map of file paths to file contents.
    * @param initialDirs Directory paths to pre-create.
    */
-  constructor(initialFiles: Record<string, string> = {}, initialDirs: string[] = []) {
+  constructor(initialFiles: Record<string, Uint8Array<ArrayBuffer>> = {}, initialDirs: string[] = []) {
     for (const dir of initialDirs) {
       this.mkdir(dir)
     }
@@ -102,28 +102,28 @@ export class FakeFileIOPort implements FileIOPort {
       for (const parent of parentDirs(normalizedPath)) {
         this.#dirs.add(parent)
       }
-      this.#files.set(normalizedPath, content)
+      this.#files.set(normalizedPath, content.slice())
     }
   }
 
-  read(path: string): tsUtil.Result<string> {
+  read(path: string): tsUtil.Result<Uint8Array<ArrayBuffer>> {
     const normalizedPath = normalizePath(path)
     const content = this.#files.get(normalizedPath)
     if (content === undefined) {
       return tsUtil.result(false, new tsUtil.Err(`file not found: ${normalizedPath}`).add(entity.ErrNotFound))
     }
 
-    return tsUtil.result(true, content)
+    return tsUtil.result(true, content.slice())
   }
 
-  write(dir: string, fname: string, content: string): void {
+  write(dir: string, fname: string, content: Uint8Array<ArrayBuffer>): void {
     const normalizedDir = normalizePath(dir)
     const path = normalizePath(joinPath(normalizedDir, fname))
 
     for (const parent of parentDirs(path)) {
       this.#dirs.add(parent)
     }
-    this.#files.set(path, content)
+    this.#files.set(path, content.slice())
   }
 
   listFiles(dir: string): string[] {

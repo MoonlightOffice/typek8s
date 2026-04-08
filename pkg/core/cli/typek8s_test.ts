@@ -1,8 +1,12 @@
-import { "@std/assert" as stdAssert, "ts-util" as tsUtil, double, entity, service } from "./deps.ts"
+import { "@std/assert" as stdAssert, "ts-util" as tsUtil, double, entity, service, util } from "./deps.ts"
 import { Typek8sCli } from "./typek8s.ts"
 
 function createFile(name: string, text: string, type = "text/typescript"): File {
   return new File([text], name, { type })
+}
+
+function textBytes(text: string): Uint8Array<ArrayBuffer> {
+  return util.stringToBytes(text)
 }
 
 Deno.test("Typek8sCli.run", async (t) => {
@@ -76,7 +80,7 @@ Deno.test("Typek8sCli.run", async (t) => {
       in: {
         args: ["generate", "--kubeconfig", "config/dev.yaml", "--out", "generated/types"],
         fileIOPort: new double.fileIo.FakeFileIOPort({
-          "config/dev.yaml": "cluster-bravo",
+          "config/dev.yaml": textBytes("cluster-bravo"),
         }),
         k8sPort: new double.k8s.StubK8sPort({
           getAllOpenApiRules: [
@@ -101,7 +105,7 @@ Deno.test("Typek8sCli.run", async (t) => {
       in: {
         args: ["generate", "--kubeconfig", "config/dev.yaml"],
         fileIOPort: new double.fileIo.FakeFileIOPort({
-          "config/dev.yaml": "cluster-alpha",
+          "config/dev.yaml": textBytes("cluster-alpha"),
         }),
         k8sPort: new double.k8s.StubK8sPort({
           getAllOpenApiRules: [
@@ -184,7 +188,7 @@ Deno.test("Typek8sCli.run", async (t) => {
       for (const [path, content] of Object.entries(tt.want.files)) {
         const fileRes = tt.in.fileIOPort.read(path)
         stdAssert.assertEquals(fileRes.err, null)
-        stdAssert.assertEquals(fileRes.val, content)
+        stdAssert.assertEquals(util.bytesToString(fileRes.val), content)
       }
 
       if (tt.want.outDir != null) {

@@ -2,12 +2,12 @@ import { "ts-util" as tsUtil } from "./deps.ts"
 
 export interface FileIOPort {
   /**
-   * Read content of the given path's file. The file is expected to be utf8-encoded.
+   * Read raw bytes from the given path's file.
    *
    * @param path File path
-   * @returns Content of the file. entity.ErrNotFound is returned if the file does not exist.
+   * @returns File content bytes. entity.ErrNotFound is returned if the file does not exist.
    */
-  read(path: string): tsUtil.Result<string>
+  read(path: string): tsUtil.Result<Uint8Array<ArrayBuffer>>
 
   /**
    * Create a file in the given name and directory. When the file already exists,
@@ -17,7 +17,7 @@ export interface FileIOPort {
    * @param fname Name for output file
    * @param content File content
    */
-  write(dir: string, fname: string, content: string): void
+  write(dir: string, fname: string, content: Uint8Array<ArrayBuffer>): void
 
   /**
    * List all files in a directory.

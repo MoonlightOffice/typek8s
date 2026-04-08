@@ -1,4 +1,4 @@
-import { "@std/assert" as stdAssert, "@std/path" as stdPath, "ts-util" as tsUtil, entity, port } from "./deps.ts"
+import { "@std/assert" as stdAssert, "@std/path" as stdPath, "ts-util" as tsUtil, entity, port, util } from "./deps.ts"
 import { AdapterFileIOPort } from "./adapter-file-io-port.ts"
 
 function withTempDir(run: (dir: string) => void): void {
@@ -17,7 +17,7 @@ Deno.test("AdapterFileIOPort.read", { ignore: Deno.env.get("TESTMODE") !== "LONG
   }
 
   type Want = {
-    res?: tsUtil.Result<string>
+    res?: tsUtil.Result<Uint8Array<ArrayBuffer>>
     err?: tsUtil.Err
   }
 
@@ -30,12 +30,24 @@ Deno.test("AdapterFileIOPort.read", { ignore: Deno.env.get("TESTMODE") !== "LONG
       name: "a utf8 file exists; its contents are returned",
       in: {
         seed: (dir) => {
-          Deno.writeTextFileSync(stdPath.join(dir, "example.txt"), "hello, world!")
+          Deno.writeFileSync(stdPath.join(dir, "example.txt"), util.stringToBytes("hello, world!"))
         },
         path: (dir) => stdPath.join(dir, "example.txt"),
       },
       want: {
-        res: tsUtil.result(true, "hello, world!"),
+        res: tsUtil.result(true, util.stringToBytes("hello, world!")),
+      },
+    },
+    {
+      name: "a binary file exists; its raw bytes are returned",
+      in: {
+        seed: (dir) => {
+          Deno.writeFileSync(stdPath.join(dir, "archive.tgz"), new Uint8Array([0, 255, 1, 2]))
+        },
+        path: (dir) => stdPath.join(dir, "archive.tgz"),
+      },
+      want: {
+        res: tsUtil.result(true, new Uint8Array([0, 255, 1, 2])),
       },
     },
     {
@@ -86,13 +98,13 @@ Deno.test("AdapterFileIOPort.write", { ignore: Deno.env.get("TESTMODE") !== "LON
     seed?: (dir: string) => void
     dir: (root: string) => string
     fname: string
-    content: string
+    content: Uint8Array<ArrayBuffer>
     readPath: (root: string) => string
     listDir: (root: string) => string
   }
 
   type Want = {
-    res: tsUtil.Result<string>
+    res: tsUtil.Result<Uint8Array<ArrayBuffer>>
     fileNames: string[]
   }
 
@@ -106,12 +118,12 @@ Deno.test("AdapterFileIOPort.write", { ignore: Deno.env.get("TESTMODE") !== "LON
       in: {
         dir: (root) => stdPath.join(root, "fixtures"),
         fname: "example.txt",
-        content: "hello, world!",
+        content: util.stringToBytes("hello, world!"),
         readPath: (root) => stdPath.join(root, "fixtures", "example.txt"),
         listDir: (root) => stdPath.join(root, "fixtures"),
       },
       want: {
-        res: tsUtil.result(true, "hello, world!"),
+        res: tsUtil.result(true, util.stringToBytes("hello, world!")),
         fileNames: ["example.txt"],
       },
     },
@@ -121,16 +133,16 @@ Deno.test("AdapterFileIOPort.write", { ignore: Deno.env.get("TESTMODE") !== "LON
         seed: (dir) => {
           const fixturesDir = stdPath.join(dir, "fixtures")
           Deno.mkdirSync(fixturesDir, { recursive: true })
-          Deno.writeTextFileSync(stdPath.join(fixturesDir, "example.txt"), "before")
+          Deno.writeFileSync(stdPath.join(fixturesDir, "example.txt"), util.stringToBytes("before"))
         },
         dir: (root) => stdPath.join(root, "fixtures"),
         fname: "example.txt",
-        content: "after",
+        content: util.stringToBytes("after"),
         readPath: (root) => stdPath.join(root, "fixtures", "example.txt"),
         listDir: (root) => stdPath.join(root, "fixtures"),
       },
       want: {
-        res: tsUtil.result(true, "after"),
+        res: tsUtil.result(true, util.stringToBytes("after")),
         fileNames: ["example.txt"],
       },
     },
@@ -139,13 +151,27 @@ Deno.test("AdapterFileIOPort.write", { ignore: Deno.env.get("TESTMODE") !== "LON
       in: {
         dir: (root) => stdPath.join(root, "nested", "deeper"),
         fname: "app.json",
-        content: '{"mode":"test"}',
+        content: util.stringToBytes('{"mode":"test"}'),
         readPath: (root) => stdPath.join(root, "nested", "deeper", "app.json"),
         listDir: (root) => stdPath.join(root, "nested", "deeper"),
       },
       want: {
-        res: tsUtil.result(true, '{"mode":"test"}'),
+        res: tsUtil.result(true, util.stringToBytes('{"mode":"test"}')),
         fileNames: ["app.json"],
+      },
+    },
+    {
+      name: "binary bytes are written; the same bytes are readable",
+      in: {
+        dir: (root) => stdPath.join(root, "fixtures"),
+        fname: "archive.tgz",
+        content: new Uint8Array([0, 255, 1, 2]),
+        readPath: (root) => stdPath.join(root, "fixtures", "archive.tgz"),
+        listDir: (root) => stdPath.join(root, "fixtures"),
+      },
+      want: {
+        res: tsUtil.result(true, new Uint8Array([0, 255, 1, 2])),
+        fileNames: ["archive.tgz"],
       },
     },
   ]
@@ -254,13 +280,13 @@ Deno.test("AdapterFileIOPort.mkdir", { ignore: Deno.env.get("TESTMODE") !== "LON
     probeDir: (dir: string) => string
     probeFile?: {
       path: (dir: string) => string
-      content: string
+      content: Uint8Array<ArrayBuffer>
     }
   }
 
   type Want = {
     fileNames: string[]
-    probeRead?: tsUtil.Result<string>
+    probeRead?: tsUtil.Result<Uint8Array<ArrayBuffer>>
   }
 
   const tests: Array<{
@@ -284,18 +310,18 @@ Deno.test("AdapterFileIOPort.mkdir", { ignore: Deno.env.get("TESTMODE") !== "LON
         seed: (dir) => {
           const fixturesDir = stdPath.join(dir, "fixtures")
           Deno.mkdirSync(fixturesDir, { recursive: true })
-          Deno.writeTextFileSync(stdPath.join(fixturesDir, "example.txt"), "hello")
+          Deno.writeFileSync(stdPath.join(fixturesDir, "example.txt"), util.stringToBytes("hello"))
         },
         path: (dir) => stdPath.join(dir, "fixtures"),
         probeDir: (dir) => stdPath.join(dir, "fixtures"),
         probeFile: {
           path: (dir) => stdPath.join(dir, "fixtures", "example.txt"),
-          content: "hello",
+          content: util.stringToBytes("hello"),
         },
       },
       want: {
         fileNames: ["example.txt"],
-        probeRead: tsUtil.result(true, "hello"),
+        probeRead: tsUtil.result(true, util.stringToBytes("hello")),
       },
     },
   ]
@@ -327,7 +353,7 @@ Deno.test("AdapterFileIOPort.remove", { ignore: Deno.env.get("TESTMODE") !== "LO
 
   type Want = {
     err?: tsUtil.Err
-    res?: tsUtil.Result<string>
+    res?: tsUtil.Result<Uint8Array<ArrayBuffer>>
     fileNames: string[]
   }
 
@@ -342,8 +368,8 @@ Deno.test("AdapterFileIOPort.remove", { ignore: Deno.env.get("TESTMODE") !== "LO
         seed: (dir) => {
           const fixturesDir = stdPath.join(dir, "fixtures")
           Deno.mkdirSync(fixturesDir, { recursive: true })
-          Deno.writeTextFileSync(stdPath.join(fixturesDir, "remove.txt"), "remove")
-          Deno.writeTextFileSync(stdPath.join(fixturesDir, "keep.txt"), "keep")
+          Deno.writeFileSync(stdPath.join(fixturesDir, "remove.txt"), util.stringToBytes("remove"))
+          Deno.writeFileSync(stdPath.join(fixturesDir, "keep.txt"), util.stringToBytes("keep"))
         },
         path: (dir) => stdPath.join(dir, "fixtures", "remove.txt"),
         readPath: (dir) => stdPath.join(dir, "fixtures", "remove.txt"),
@@ -360,9 +386,9 @@ Deno.test("AdapterFileIOPort.remove", { ignore: Deno.env.get("TESTMODE") !== "LO
         seed: (dir) => {
           const nestedDir = stdPath.join(dir, "fixtures", "nested", "deeper")
           Deno.mkdirSync(nestedDir, { recursive: true })
-          Deno.writeTextFileSync(stdPath.join(dir, "fixtures", "nested", "remove.txt"), "remove")
-          Deno.writeTextFileSync(stdPath.join(nestedDir, "leaf.txt"), "leaf")
-          Deno.writeTextFileSync(stdPath.join(dir, "fixtures", "keep.txt"), "keep")
+          Deno.writeFileSync(stdPath.join(dir, "fixtures", "nested", "remove.txt"), util.stringToBytes("remove"))
+          Deno.writeFileSync(stdPath.join(nestedDir, "leaf.txt"), util.stringToBytes("leaf"))
+          Deno.writeFileSync(stdPath.join(dir, "fixtures", "keep.txt"), util.stringToBytes("keep"))
         },
         path: (dir) => stdPath.join(dir, "fixtures", "nested"),
         readPath: (dir) => stdPath.join(dir, "fixtures", "nested", "remove.txt"),
@@ -379,14 +405,14 @@ Deno.test("AdapterFileIOPort.remove", { ignore: Deno.env.get("TESTMODE") !== "LO
         seed: (dir) => {
           const fixturesDir = stdPath.join(dir, "fixtures")
           Deno.mkdirSync(fixturesDir, { recursive: true })
-          Deno.writeTextFileSync(stdPath.join(fixturesDir, "example.txt"), "hello")
+          Deno.writeFileSync(stdPath.join(fixturesDir, "example.txt"), util.stringToBytes("hello"))
         },
         path: (dir) => stdPath.join(dir, "fixtures", "missing"),
         readPath: (dir) => stdPath.join(dir, "fixtures", "example.txt"),
         siblingDir: (dir) => stdPath.join(dir, "fixtures"),
       },
       want: {
-        res: tsUtil.result(true, "hello"),
+        res: tsUtil.result(true, util.stringToBytes("hello")),
         fileNames: ["example.txt"],
       },
     },

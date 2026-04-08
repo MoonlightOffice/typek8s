@@ -1,4 +1,4 @@
-import { "ts-util" as tsUtil, port } from "./deps.ts"
+import { "ts-util" as tsUtil, port, util } from "./deps.ts"
 
 /**
  * Service for generating TypeScript files from Kubernetes OpenAPI documents.
@@ -40,12 +40,12 @@ export class GenTypeFileService {
       if (types.length === 0) {
         continue
       }
-      this.fileIOPort.write(outDir, fileName, types)
+      this.fileIOPort.write(outDir, fileName, util.stringToBytes(types))
       writtenFileNames.push(fileName)
     }
 
     const modFile = await this.k8sPort.typeFilesToModFile(writtenFileNames)
-    this.fileIOPort.write(outDir, modFile.name, await modFile.text())
+    this.fileIOPort.write(outDir, modFile.name, util.stringToBytes(await modFile.text()))
 
     return tsUtil.result(true, undefined)
   }

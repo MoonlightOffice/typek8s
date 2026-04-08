@@ -1,4 +1,4 @@
-import { "@std/assert" as stdAssert, "ts-util" as tsUtil, double, entity } from "./deps.ts"
+import { "@std/assert" as stdAssert, "ts-util" as tsUtil, double, entity, util } from "./deps.ts"
 import { GenTypeFileService } from "./gen-type-file.ts"
 
 function createFile(name: string, text: string, type = "text/typescript"): File {
@@ -186,7 +186,7 @@ Deno.test("GenTypeFileService.generate", async (t) => {
       for (const [path, content] of Object.entries(tt.want.files)) {
         const fileRes = tt.in.fileIOPort.read(path)
         stdAssert.assertEquals(fileRes.err, null)
-        stdAssert.assertEquals(fileRes.val, content)
+        stdAssert.assertEquals(util.bytesToString(fileRes.val), content)
       }
 
       const expectedFileNames = Object.keys(tt.want.files)
