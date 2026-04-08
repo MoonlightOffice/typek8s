@@ -6,6 +6,6 @@ export interface Chart {
   chartPath: string
   /** Override the Helm chart values for this dependency here. */
   values: {
-    [key: string]: object
+    [key: string]: unknown
   }
 }
