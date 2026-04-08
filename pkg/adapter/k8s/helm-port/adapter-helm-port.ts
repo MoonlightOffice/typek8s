@@ -1,6 +1,10 @@
 import { "ts-util" as tsUtil, port } from "./deps.ts"
 
 export class AdapterHelmPort implements port.k8s.HelmPort {
+  constructor(
+    private readonly fileIOPort: port.fileIo.FileIOPort,
+  ) {}
+
   /**
    * Synthesize manifests, CRDs, and dependency charts into a Helm chart archive.
    */

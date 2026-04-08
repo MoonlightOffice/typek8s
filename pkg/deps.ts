@@ -6,6 +6,7 @@ export * as "@std/cli" from "jsr:@std/cli@^1.0.20/parse-args"
 export * as "openapi-typescript" from "npm:openapi-typescript"
 export * as "@std/assert" from "jsr:@std/assert@1"
 export * as "ts-util" from "https://raw.githubusercontent.com/MoonlightOffice/ts-util/v0.3.1/mod.ts"
+export * as "@std/tar" from "jsr:@std/tar"
 
 // Internal packages
 
