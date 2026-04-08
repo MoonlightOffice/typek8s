@@ -1,3 +1,4 @@
+import { "@std/path" as stdPath } from "./deps.ts"
 import { SynthService } from "./synth.ts"
 import type { SynthParams } from "./synth.ts"
 import { "@std/assert" as stdAssert, "ts-util" as tsUtil, double, entity } from "./deps.ts"
@@ -6,12 +7,13 @@ function createChartFile(name: string, text: string, type = "application/gzip"):
   return new File([text], name, { type })
 }
 
+const absoluteChartPath = stdPath.resolve("charts/postgresql.tgz")
+
 Deno.test("SynthService.synth", async (t) => {
   type In = {
     params: SynthParams
     fileIOPort: double.fileIo.FakeFileIOPort
     helmPort: double.k8s.StubHelmPort
-    synthPort: double.synth.StubSynthPort
   }
 
   type Want = {
@@ -53,8 +55,7 @@ Deno.test("SynthService.synth", async (t) => {
           ],
         },
         fileIOPort: new double.fileIo.FakeFileIOPort(),
-        helmPort: new double.k8s.StubHelmPort(),
-        synthPort: new double.synth.StubSynthPort({
+        helmPort: new double.k8s.StubHelmPort({
           synthRules: [
             {
               params: {
@@ -106,8 +107,7 @@ Deno.test("SynthService.synth", async (t) => {
           outDir: "dist/charts",
         },
         fileIOPort: new double.fileIo.FakeFileIOPort(),
-        helmPort: new double.k8s.StubHelmPort(),
-        synthPort: new double.synth.StubSynthPort({
+        helmPort: new double.k8s.StubHelmPort({
           synthRules: [
             {
               params: {
@@ -150,8 +150,7 @@ Deno.test("SynthService.synth", async (t) => {
           "dist/charts/old.txt": "stale-file",
           "dist/keep.txt": "keep",
         }),
-        helmPort: new double.k8s.StubHelmPort(),
-        synthPort: new double.synth.StubSynthPort({
+        helmPort: new double.k8s.StubHelmPort({
           synthRules: [
             {
               params: {
@@ -177,7 +176,7 @@ Deno.test("SynthService.synth", async (t) => {
       },
     },
     {
-      name: "pulling an OCI dependency chart fails; the pull error is returned and no output archive is written",
+      name: "a dependency chart uses an OCI URL; ErrInvalid is returned and no output archive is written",
       in: {
         params: {
           name: "platform",
@@ -195,30 +194,66 @@ Deno.test("SynthService.synth", async (t) => {
               values: {},
             },
           ],
-          helmCredential: {
-            userName: "alice",
-            password: "wrong-password",
-          },
+        },
+        fileIOPort: new double.fileIo.FakeFileIOPort(),
+        helmPort: new double.k8s.StubHelmPort(),
+      },
+      want: {
+        err: entity.ErrInvalid,
+        outputPath: "out/platform.tgz",
+        outputText: null,
+      },
+    },
+    {
+      name: "a dependency chart uses an absolute path; the synthesized chart archive is written",
+      in: {
+        params: {
+          name: "platform",
+          manifests: [
+            {
+              apiVersion: "apps/v1",
+              kind: "Deployment",
+              metadata: { name: "platform-api" },
+            },
+          ],
+          depCharts: [
+            {
+              name: "postgresql",
+              chartURL: absoluteChartPath,
+              values: {},
+            },
+          ],
         },
         fileIOPort: new double.fileIo.FakeFileIOPort(),
         helmPort: new double.k8s.StubHelmPort({
-          pullChartRules: [
+          synthRules: [
             {
-              path: "oci://registry.example.com/charts/postgresql",
-              credential: {
-                userName: "alice",
-                password: "wrong-password",
+              params: {
+                name: "platform",
+                manifests: [
+                  {
+                    apiVersion: "apps/v1",
+                    kind: "Deployment",
+                    metadata: { name: "platform-api" },
+                  },
+                ],
+                depCharts: [
+                  {
+                    name: "postgresql",
+                    chartURL: absoluteChartPath,
+                    values: {},
+                  },
+                ],
               },
-              result: tsUtil.result(false, entity.ErrUnauthorized),
+              result: tsUtil.result(true, createChartFile("platform.tgz", "platform-chart-absolute-dep")),
             },
           ],
         }),
-        synthPort: new double.synth.StubSynthPort(),
       },
       want: {
-        err: entity.ErrUnauthorized,
+        err: null,
         outputPath: "out/platform.tgz",
-        outputText: null,
+        outputText: "platform-chart-absolute-dep",
       },
     },
     {
@@ -239,8 +274,7 @@ Deno.test("SynthService.synth", async (t) => {
           "generated/jobs.tgz": "stale-chart",
           "generated/old.txt": "stale-file",
         }),
-        helmPort: new double.k8s.StubHelmPort(),
-        synthPort: new double.synth.StubSynthPort({
+        helmPort: new double.k8s.StubHelmPort({
           synthRules: [
             {
               params: {
@@ -269,7 +303,7 @@ Deno.test("SynthService.synth", async (t) => {
 
   for (const tt of tests) {
     await t.step(tt.name, async () => {
-      const service = new SynthService(tt.in.fileIOPort, tt.in.helmPort, tt.in.synthPort)
+      const service = new SynthService(tt.in.fileIOPort, tt.in.helmPort)
       const res = await service.synth(tt.in.params)
 
       if (tt.want.err != null) {

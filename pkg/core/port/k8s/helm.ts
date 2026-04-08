@@ -1,19 +1,24 @@
+import { entity } from "./deps.ts"
 import { "ts-util" as tsUtil } from "./deps.ts"
 
-/** Credentials used by `helm login` when pulling charts from a private registry. */
-export interface HelmPortCredential {
-  userName: string
-  password: string
+export interface SynthParams {
+  /** The name of the output chart. */
+  name: string
+  /** Kubernetes manifests to include in the chart. */
+  manifests: entity.Manifest[]
+  /** Local YAML file paths for custom resource definitions to apply to the cluster. */
+  crds?: entity.CRDPath[]
+  /** Helm charts to include as dependencies. */
+  depCharts?: entity.Chart[]
 }
 
 /** Port for Helm operations. */
 export interface HelmPort {
   /**
-   * Pull an OCI Helm chart image.
-   *
-   * @param params.path Path to the OCI Helm chart image.
-   * @param params.credential Helm credentials for accessing a private registry.
-   * @returns Chart archive content as File.
+   * Synthesizes the provided Kubernetes manifests, CRDs, and dependency charts
+   * into a chart with the given name.
+   * @param params Parameters for synthesis.
+   * @return A result containing the synthesized Helm chart archive tarball (`.tgz`).
    */
-  pullChart(params: { path: string; credential?: HelmPortCredential }): Promise<tsUtil.Result<File>>
+  synth(params: SynthParams): Promise<tsUtil.Result<File>>
 }

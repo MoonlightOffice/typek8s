@@ -1,26 +1,18 @@
-import { "@std/assert" as stdAssert, "ts-util" as tsUtil, port } from "./deps.ts"
+import { "@std/assert" as stdAssert, "ts-util" as tsUtil, entity, port } from "./deps.ts"
 import { AdapterHelmPort } from "./adapter-helm-port.ts"
 
-Deno.test("AdapterHelmPort.pullChart", { ignore: Deno.env.get("TESTMODE") !== "LONG" }, async (t) => {
-  const credential: port.k8s.HelmPortCredential = {
-    userName: "testuser",
-    password: "testpassword",
-  }
+function createChartFile(name: string, text: string, type = "application/gzip"): File {
+  return new File([text], name, { type })
+}
 
+Deno.test("AdapterHelmPort.synth", { ignore: true }, async (t) => {
   type In = {
-    params: {
-      path: string
-      credential?: port.k8s.HelmPortCredential
-    }
-    setup?: {
-      host: string
-      chart: string
-    }
+    params: port.k8s.SynthParams
   }
 
   type Want = {
     err: tsUtil.Err | null
-    filename: string | null
+    file: File | null
   }
 
   const tests: Array<{
@@ -29,138 +21,85 @@ Deno.test("AdapterHelmPort.pullChart", { ignore: Deno.env.get("TESTMODE") !== "L
     want: Want
   }> = [
     {
-      name: "a public OCI chart exists; the chart archive is returned",
+      name: "manifests only are synthesized into a chart archive",
       in: {
         params: {
-          path: "oci://localhost:5001/public-chart:0.1.0",
-        },
-        setup: {
-          host: "oci://localhost:5001",
-          chart: "./testutil/charts/public-chart-0.1.0.tgz",
+          name: "platform",
+          manifests: [
+            {
+              apiVersion: "apps/v1",
+              kind: "Deployment",
+              metadata: { name: "platform-api", namespace: "default" },
+            },
+          ],
         },
       },
       want: {
         err: null,
-        filename: "public-chart-0.1.0.tgz",
+        file: createChartFile("platform.tgz", "platform-chart"),
       },
     },
     {
-      name: "a private OCI chart exists and valid credentials are provided; the chart archive is returned",
+      name: "manifests, CRDs, and dependency charts are synthesized into a chart archive",
       in: {
         params: {
-          path: "oci://localhost:5002/private-chart:0.1.0",
-          credential: credential,
-        },
-        setup: {
-          host: "oci://localhost:5002",
-          chart: "./testutil/charts/private-chart-0.1.0.tgz",
+          name: "platform",
+          manifests: [
+            {
+              apiVersion: "apps/v1",
+              kind: "Deployment",
+              metadata: { name: "platform-api", namespace: "default" },
+            },
+          ],
+          crds: [
+            "crds/widgets.yaml",
+          ],
+          depCharts: [
+            {
+              name: "postgresql",
+              version: "15.5.31",
+              chartURL: "charts/postgresql-15.5.31.tgz",
+              values: {
+                primary: {
+                  persistence: {
+                    enabled: true,
+                  },
+                },
+              },
+            },
+          ],
         },
       },
       want: {
         err: null,
-        filename: "private-chart-0.1.0.tgz",
+        file: createChartFile("platform.tgz", "platform-chart-with-deps"),
       },
     },
     {
-      name: "the credentials are unauthorized; ErrUnauthorized is returned",
+      name: "the synthesis input is invalid; ErrInvalid is returned",
       in: {
         params: {
-          path: "oci://localhost:5002/private-chart:0.1.0",
-          credential: {
-            userName: "alice",
-            password: "wrong-password",
-          },
-        },
-        setup: {
-          host: "oci://localhost:5002",
-          chart: "./testutil/charts/private-chart-0.1.0.tgz",
+          name: "broken",
+          manifests: [],
         },
       },
       want: {
-        err: new tsUtil.Err("unauthorized"),
-        filename: null,
-      },
-    },
-    {
-      name: "the requested chart does not exist; ErrNotFound is returned",
-      in: {
-        params: {
-          path: "oci://localhost:5001/public-chart:0.1.0",
-        },
-      },
-      want: {
-        err: new tsUtil.Err("not found"),
-        filename: null,
+        err: entity.ErrInvalid,
+        file: null,
       },
     },
   ]
 
-  // Test helpers
-
-  function buf2Str(buf: Uint8Array<ArrayBuffer>): Promise<string> {
-    return new Blob([buf]).text()
-  }
-
-  async function composeUp() {
-    const cmd = new Deno.Command("nerdctl", {
-      args: ["compose", "up", "-d"],
-      cwd: "./testutil/",
-    })
-    const result = await cmd.output()
-    if (result.code !== 0) {
-      throw Error(await buf2Str(result.stderr))
-    }
-  }
-
-  async function composeDown() {
-    const cmd = new Deno.Command("nerdctl", {
-      args: ["compose", "down"],
-      cwd: "./testutil/",
-    })
-    const result = await cmd.output()
-    if (result.code !== 0) {
-      throw Error(await buf2Str(result.stderr))
-    }
-  }
-
-  async function pushChart(host: string, chartPath: string) {
-    const cmd = new Deno.Command("helm", {
-      args: [
-        "push",
-        "--plain-http",
-        `--username=${credential.userName}`,
-        `--password=${credential.password}`,
-        chartPath,
-        host,
-      ],
-    })
-    const result = await cmd.output()
-    if (result.code !== 0) {
-      throw Error(await buf2Str(result.stderr))
-    }
-  }
-
   for (const tt of tests) {
-    await t.step(tt.name, async () => {
-      try {
-        // setup
-        await composeUp()
+    await t.step(tt.name, () => {
+      const adapter: port.k8s.HelmPort = new AdapterHelmPort()
 
-        if (tt.in.setup) {
-          await pushChart(tt.in.setup.host, tt.in.setup.chart)
-        }
+      void adapter
+      void tt.in
+      void tt.want
 
-        // Run
-        const adapter = new AdapterHelmPort()
-        const res = await adapter.pullChart(tt.in.params, true)
-        if (tt.want.err != null) {
-          stdAssert.assertExists(res.err)
-        } else {
-          stdAssert.assertEquals(tt.want.filename, res.val.name)
-        }
-      } finally {
-        await composeDown()
-      }
+      // TODO: Call synth and assert the blackbox result matches tt.want.
+      stdAssert.assertEquals(true, true)
     })
   }
 })

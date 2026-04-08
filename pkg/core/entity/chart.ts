@@ -2,7 +2,7 @@
 export interface Chart {
   name: string
   version?: string
-  /** Supports `oci://` registry URLs and local chart archive paths. */
+  /** Local path to a dependency chart archive, either relative or absolute. */
   chartURL: string
   /** Override the Helm chart values for this dependency here. */
   values: {

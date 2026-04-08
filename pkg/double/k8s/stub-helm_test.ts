@@ -1,21 +1,16 @@
 import { StubHelmPort } from "./stub-helm.ts"
 import type { StubHelmPortParams } from "./stub-helm.ts"
+import type { SynthParams } from "../../core/port/k8s/mod.ts"
 import { "@std/assert" as stdAssert, "ts-util" as tsUtil, entity } from "./deps.ts"
 
 function createChartFile(name: string, text: string, type = "application/gzip"): File {
   return new File([text], name, { type })
 }
 
-Deno.test("StubHelmPort.pullChart", async (t) => {
+Deno.test("StubHelmPort.synth", async (t) => {
   type In = {
     params: StubHelmPortParams
-    pullChartParams: {
-      path: string
-      credential?: {
-        userName: string
-        password: string
-      }
-    }
+    synthParams: SynthParams
   }
 
   type Want = {
@@ -33,131 +28,122 @@ Deno.test("StubHelmPort.pullChart", async (t) => {
     want: Want
   }> = [
     {
-      name: "a matching path-only rule exists; the matching chart file is returned",
+      name: "a matching synth rule exists; the matching chart file is returned",
       in: {
         params: {
-          pullChartRules: [
+          synthRules: [
             {
-              path: "oci://ghcr.io/example/chart",
+              params: {
+                name: "platform",
+                manifests: [
+                  {
+                    apiVersion: "apps/v1",
+                    kind: "Deployment",
+                    metadata: { name: "platform-api" },
+                  },
+                ],
+              },
               result: tsUtil.result(
                 true,
-                createChartFile("chart-1.2.3.tgz", "chart-content"),
+                createChartFile("platform-1.2.3.tgz", "chart-content"),
               ),
             },
           ],
         },
-        pullChartParams: {
-          path: "oci://ghcr.io/example/chart",
+        synthParams: {
+          name: "platform",
+          manifests: [
+            {
+              apiVersion: "apps/v1",
+              kind: "Deployment",
+              metadata: { name: "platform-api" },
+            },
+          ],
         },
       },
       want: {
         err: null,
         file: {
-          name: "chart-1.2.3.tgz",
+          name: "platform-1.2.3.tgz",
           type: "application/gzip",
           text: "chart-content",
         },
       },
     },
     {
-      name: "a matching path and credential rule exists; the matching chart file is returned",
+      name: "a matching synth rule returns a promise; the resolved chart file is returned",
       in: {
         params: {
-          pullChartRules: [
+          synthRules: [
             {
-              path: "oci://ghcr.io/example/private-chart",
-              credential: {
-                userName: "alice",
-                password: "secret",
+              params: {
+                name: "jobs",
+                manifests: [
+                  {
+                    apiVersion: "batch/v1",
+                    kind: "CronJob",
+                    metadata: { name: "cleanup" },
+                  },
+                ],
+                depCharts: [
+                  {
+                    name: "redis",
+                    chartURL: "charts/redis.tgz",
+                    values: {},
+                  },
+                ],
               },
               result: tsUtil.result(
                 true,
-                createChartFile("private-chart-0.1.0.tgz", "private-chart"),
+                Promise.resolve(createChartFile("jobs-0.1.0.tgz", "jobs-chart")),
               ),
             },
           ],
         },
-        pullChartParams: {
-          path: "oci://ghcr.io/example/private-chart",
-          credential: {
-            userName: "alice",
-            password: "secret",
-          },
+        synthParams: {
+          name: "jobs",
+          manifests: [
+            {
+              apiVersion: "batch/v1",
+              kind: "CronJob",
+              metadata: { name: "cleanup" },
+            },
+          ],
+          depCharts: [
+            {
+              name: "redis",
+              chartURL: "charts/redis.tgz",
+              values: {},
+            },
+          ],
         },
       },
       want: {
         err: null,
         file: {
-          name: "private-chart-0.1.0.tgz",
+          name: "jobs-0.1.0.tgz",
           type: "application/gzip",
-          text: "private-chart",
+          text: "jobs-chart",
         },
       },
     },
     {
-      name: "a matching rule returns ErrUnauthorized; the same error is returned",
+      name: "a matching synth rule returns ErrInvalid; the same error is returned",
       in: {
         params: {
-          pullChartRules: [
+          synthRules: [
             {
-              path: "oci://ghcr.io/example/private-chart",
-              credential: {
-                userName: "alice",
-                password: "wrong-password",
+              params: {
+                name: "broken",
+                manifests: [],
               },
-              result: tsUtil.result(false, entity.ErrUnauthorized),
+              result: tsUtil.result(false, entity.ErrInvalid),
             },
           ],
         },
-        pullChartParams: {
-          path: "oci://ghcr.io/example/private-chart",
-          credential: {
-            userName: "alice",
-            password: "wrong-password",
-          },
-        },
-      },
-      want: {
-        err: entity.ErrUnauthorized,
-        file: null,
-      },
-    },
-    {
-      name: "a matching rule returns ErrNotFound; the same error is returned",
-      in: {
-        params: {
-          pullChartRules: [
-            {
-              path: "oci://ghcr.io/example/missing-chart",
-              result: tsUtil.result(false, entity.ErrNotFound),
-            },
-          ],
-        },
-        pullChartParams: {
-          path: "oci://ghcr.io/example/missing-chart",
-        },
-      },
-      want: {
-        err: entity.ErrNotFound,
-        file: null,
-      },
-    },
-    {
-      name: "no pullChart rule matches the path; ErrInvalid is returned",
-      in: {
-        params: {
-          pullChartRules: [
-            {
-              path: "oci://ghcr.io/example/chart",
-              result: tsUtil.result(
-                true,
-                createChartFile("chart-1.2.3.tgz", "chart-content"),
-              ),
-            },
-          ],
-        },
-        pullChartParams: {
-          path: "oci://ghcr.io/example/other-chart",
+        synthParams: {
+          name: "broken",
+          manifests: [],
         },
       },
       want: {
@@ -166,29 +152,37 @@ Deno.test("StubHelmPort.pullChart", async (t) => {
       },
     },
     {
-      name: "the path matches but the credential differs; ErrInvalid is returned",
+      name: "no synth rule matches the synth params; ErrInvalid is returned",
       in: {
         params: {
-          pullChartRules: [
+          synthRules: [
             {
-              path: "oci://ghcr.io/example/private-chart",
-              credential: {
-                userName: "alice",
-                password: "secret",
+              params: {
+                name: "platform",
+                manifests: [
+                  {
+                    apiVersion: "apps/v1",
+                    kind: "Deployment",
+                    metadata: { name: "platform-api" },
+                  },
+                ],
               },
               result: tsUtil.result(
                 true,
-                createChartFile("private-chart-0.1.0.tgz", "private-chart"),
+                createChartFile("platform-1.2.3.tgz", "chart-content"),
               ),
             },
           ],
         },
-        pullChartParams: {
-          path: "oci://ghcr.io/example/private-chart",
-          credential: {
-            userName: "alice",
-            password: "different-secret",
-          },
+        synthParams: {
+          name: "different-platform",
+          manifests: [
+            {
+              apiVersion: "apps/v1",
+              kind: "Deployment",
+              metadata: { name: "platform-api" },
+            },
+          ],
         },
       },
       want: {
@@ -201,7 +195,7 @@ Deno.test("StubHelmPort.pullChart", async (t) => {
   for (const tt of tests) {
     await t.step(tt.name, async () => {
       const port = new StubHelmPort(tt.in.params)
-      const res = await port.pullChart(tt.in.pullChartParams)
+      const res = await port.synth(tt.in.synthParams)
 
       if (tt.want.err != null) {
         stdAssert.assertEquals(res.err!.is(tt.want.err), true)

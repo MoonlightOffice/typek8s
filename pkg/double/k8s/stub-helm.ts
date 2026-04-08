@@ -1,49 +1,56 @@
-import type { HelmPort, HelmPortCredential } from "../../core/port/k8s/mod.ts"
+import type { HelmPort, SynthParams } from "../../core/port/k8s/mod.ts"
 import { "ts-util" as tsUtil, entity } from "./deps.ts"
 
-export interface StubHelmPortPullChartRule {
-  path: string
-  credential?: HelmPortCredential
-  result: tsUtil.Result<File>
+export interface StubHelmPortSynthRule {
+  /** Exact-match synth params this stub should recognize. */
+  params: SynthParams
+  /** Result returned when the synth params match this rule. */
+  result: tsUtil.Result<File | Promise<File>>
 }
 
 export interface StubHelmPortParams {
-  /** Exact-match rules for `pullChart`; add one entry per `(path, credential)` combination you want the stub to recognize in a test. */
-  pullChartRules?: StubHelmPortPullChartRule[]
+  /** Exact-match rules for `synth`; add one entry per `SynthParams` combination you want the stub to recognize in a test. */
+  synthRules?: StubHelmPortSynthRule[]
 }
 
-function isSameCredential(
-  left?: HelmPortCredential,
-  right?: HelmPortCredential,
-): boolean {
+function isSameOptionalValue(left: unknown, right: unknown): boolean {
   if (left == null || right == null) {
     return left === right
   }
 
-  return left.userName === right.userName && left.password === right.password
+  return JSON.stringify(left) === JSON.stringify(right)
+}
+
+function isSameSynthParams(left: SynthParams, right: SynthParams): boolean {
+  return left.name === right.name &&
+    JSON.stringify(left.manifests) === JSON.stringify(right.manifests) &&
+    isSameOptionalValue(left.crds, right.crds) &&
+    isSameOptionalValue(left.depCharts, right.depCharts)
 }
 
 /**
  * An input-mapped `HelmPort` stub for tests and example wiring.
  *
- * This stub treats chart paths and credentials as opaque inputs and returns
+ * This stub treats synth inputs as opaque values and returns
  * the first exact-match rule. When no rule matches, `entity.ErrInvalid` is returned.
  */
 export class StubHelmPort implements HelmPort {
-  #pullChartRules: StubHelmPortPullChartRule[]
+  #synthRules: StubHelmPortSynthRule[]
 
   constructor(params: StubHelmPortParams = {}) {
-    this.#pullChartRules = params.pullChartRules ?? []
+    this.#synthRules = params.synthRules ?? []
   }
 
-  pullChart(params: { path: string; credential?: HelmPortCredential }): Promise<tsUtil.Result<File>> {
-    const rule = this.#pullChartRules.find((candidate) =>
-      candidate.path === params.path && isSameCredential(candidate.credential, params.credential)
-    )
+  async synth(params: SynthParams): Promise<tsUtil.Result<File>> {
+    const rule = this.#synthRules.find((candidate) => isSameSynthParams(candidate.params, params))
     if (rule == null) {
-      return Promise.resolve(tsUtil.result(false, entity.ErrInvalid))
+      return tsUtil.result(false, entity.ErrInvalid)
     }
 
-    return Promise.resolve(rule.result)
+    if (rule.result.err != null) {
+      return tsUtil.result(false, rule.result.err)
+    }
+
+    return tsUtil.result(true, await rule.result.val)
   }
 }
