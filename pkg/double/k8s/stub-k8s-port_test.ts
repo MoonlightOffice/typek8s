@@ -1,6 +1,6 @@
 import { StubK8sPort } from "./stub-k8s-port.ts"
 import type { StubK8sPortParams } from "./stub-k8s-port.ts"
-import type { getAllOpenApiResult } from "./k8s-port.ts"
+import type { getAllOpenApiResult } from "../../core/port/k8s/mod.ts"
 import { "@std/assert" as stdAssert, "ts-util" as tsUtil, entity } from "./deps.ts"
 
 function createFile(name: string, text: string, type = "text/typescript"): File {

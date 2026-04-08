@@ -1,4 +1,4 @@
-import type { HelmPort, HelmPortCredential } from "./helm.ts"
+import type { HelmPort, HelmPortCredential } from "../../core/port/k8s/mod.ts"
 import { "ts-util" as tsUtil, entity } from "./deps.ts"
 
 export interface StubHelmPortPullChartRule {

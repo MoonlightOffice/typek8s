@@ -1,4 +1,4 @@
-import type { getAllOpenApiResult, K8sPort } from "./k8s-port.ts"
+import type { getAllOpenApiResult, K8sPort } from "../../core/port/k8s/mod.ts"
 import { "ts-util" as tsUtil, entity } from "./deps.ts"
 
 export interface StubK8sPortGetAllOpenApiRule {

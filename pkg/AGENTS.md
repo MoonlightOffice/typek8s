@@ -13,7 +13,7 @@ and the required verification steps.
 
 ## Architecture Rules
 
-Allowed dependency direction:
+Allowed dependency direction for production code:
 
 - `di -> adapter -> core`
 
@@ -23,10 +23,17 @@ Inside `core`:
 
 The reverse direction is not allowed.
 
+Test support and test files may additionally use:
+
+- `double -> core/port`
+- `service/*_test.ts -> double`
+
 ## Layer Responsibilities
 
 - `adapter` mainly implements the interfaces defined in `port`.
 - `di` is responsible for dependency injection and wiring.
+- `double` implements `core/port` interfaces for tests and example wiring. Production code in `core`, `adapter`, and
+  `di` must not depend on `double`.
 - `cli` handles command-line transport concerns such as argument parsing, help text, stdout/stderr output, and exit
   codes, then delegates business behavior to `service`.
 - `service` uses `entity` and `port` to implement business logic.
@@ -34,9 +41,10 @@ The reverse direction is not allowed.
 
 ## Ports, Services, and Test Doubles
 
-- When adding a new `port`, add the appropriate test double for it so tests and example wiring can depend on a stable
-  in-memory implementation or a predictable stub.
+- When adding a new `port`, add the appropriate test double for it under `double` so tests and example wiring can depend
+  on a stable in-memory implementation or a predictable stub.
 - When adding a new `service`, add the supporting test doubles needed to test it cleanly through its port dependencies.
+- Keep the port interface itself under `core/port`; put fake and stub implementations under `double`.
 - Choose the test double style based on the seam and the shape of the interface.
 - If both a fake and a stub are equally implementable for the same test seam, prefer the fake.
 - Prefer blackbox-friendly, stateful fakes when the dependency exposes a meaningful world to model, such as files,

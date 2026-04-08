@@ -1,4 +1,4 @@
-import { "@std/assert" as stdAssert, "ts-util" as tsUtil, entity, port } from "./deps.ts"
+import { "@std/assert" as stdAssert, "ts-util" as tsUtil, double, entity } from "./deps.ts"
 import { GenTypeFileService } from "./gen-type-file.ts"
 
 function createFile(name: string, text: string, type = "text/typescript"): File {
@@ -9,8 +9,8 @@ Deno.test("GenTypeFileService.generate", async (t) => {
   type In = {
     kubeconfigStr: string
     outDir: string
-    fileIOPort: port.fileIo.FakeFileIOPort
-    k8sPort: port.k8s.StubK8sPort
+    fileIOPort: double.fileIo.FakeFileIOPort
+    k8sPort: double.k8s.StubK8sPort
   }
 
   type Want = {
@@ -29,8 +29,8 @@ Deno.test("GenTypeFileService.generate", async (t) => {
       in: {
         kubeconfigStr: "cluster-alpha",
         outDir: "generated/types",
-        fileIOPort: new port.fileIo.FakeFileIOPort(),
-        k8sPort: new port.k8s.StubK8sPort({
+        fileIOPort: new double.fileIo.FakeFileIOPort(),
+        k8sPort: new double.k8s.StubK8sPort({
           getAllOpenApiRules: [
             {
               kubeconfigStr: "cluster-alpha",
@@ -93,8 +93,8 @@ Deno.test("GenTypeFileService.generate", async (t) => {
       in: {
         kubeconfigStr: "cluster-bravo",
         outDir: "generated/types",
-        fileIOPort: new port.fileIo.FakeFileIOPort(),
-        k8sPort: new port.k8s.StubK8sPort({
+        fileIOPort: new double.fileIo.FakeFileIOPort(),
+        k8sPort: new double.k8s.StubK8sPort({
           getAllOpenApiRules: [
             {
               kubeconfigStr: "cluster-bravo",
@@ -113,8 +113,8 @@ Deno.test("GenTypeFileService.generate", async (t) => {
       in: {
         kubeconfigStr: "cluster-charlie",
         outDir: "generated/types",
-        fileIOPort: new port.fileIo.FakeFileIOPort(),
-        k8sPort: new port.k8s.StubK8sPort({
+        fileIOPort: new double.fileIo.FakeFileIOPort(),
+        k8sPort: new double.k8s.StubK8sPort({
           getAllOpenApiRules: [
             {
               kubeconfigStr: "cluster-charlie",
@@ -133,8 +133,8 @@ Deno.test("GenTypeFileService.generate", async (t) => {
       in: {
         kubeconfigStr: "cluster-delta",
         outDir: "generated/types",
-        fileIOPort: new port.fileIo.FakeFileIOPort(),
-        k8sPort: new port.k8s.StubK8sPort({
+        fileIOPort: new double.fileIo.FakeFileIOPort(),
+        k8sPort: new double.k8s.StubK8sPort({
           getAllOpenApiRules: [
             {
               kubeconfigStr: "cluster-delta",

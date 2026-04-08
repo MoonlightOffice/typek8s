@@ -1,4 +1,4 @@
-import type { SynthParams, SynthPort } from "./synth-port.ts"
+import type { SynthParams, SynthPort } from "../../core/port/synth/mod.ts"
 import { "ts-util" as tsUtil, entity } from "./deps.ts"
 
 export interface StubSynthPortSynthRule {

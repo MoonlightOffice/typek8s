@@ -1,4 +1,4 @@
-import { "@std/assert" as stdAssert, "ts-util" as tsUtil, entity, port, service } from "./deps.ts"
+import { "@std/assert" as stdAssert, "ts-util" as tsUtil, double, entity, service } from "./deps.ts"
 import { Typek8sCli } from "./typek8s.ts"
 
 function createFile(name: string, text: string, type = "text/typescript"): File {
@@ -8,8 +8,8 @@ function createFile(name: string, text: string, type = "text/typescript"): File 
 Deno.test("Typek8sCli.run", async (t) => {
   type In = {
     args: string[]
-    fileIOPort: port.fileIo.FakeFileIOPort
-    k8sPort: port.k8s.StubK8sPort
+    fileIOPort: double.fileIo.FakeFileIOPort
+    k8sPort: double.k8s.StubK8sPort
   }
 
   type Want = {
@@ -29,8 +29,8 @@ Deno.test("Typek8sCli.run", async (t) => {
       name: "--help is passed; the help text is written to stdout and the command succeeds",
       in: {
         args: ["--help"],
-        fileIOPort: new port.fileIo.FakeFileIOPort(),
-        k8sPort: new port.k8s.StubK8sPort(),
+        fileIOPort: new double.fileIo.FakeFileIOPort(),
+        k8sPort: new double.k8s.StubK8sPort(),
       },
       want: {
         exitCode: 0,
@@ -44,8 +44,8 @@ Deno.test("Typek8sCli.run", async (t) => {
       name: "the generate command is missing --kubeconfig; the parse error and help text are written to stderr",
       in: {
         args: ["generate"],
-        fileIOPort: new port.fileIo.FakeFileIOPort(),
-        k8sPort: new port.k8s.StubK8sPort(),
+        fileIOPort: new double.fileIo.FakeFileIOPort(),
+        k8sPort: new double.k8s.StubK8sPort(),
       },
       want: {
         exitCode: 1,
@@ -59,8 +59,8 @@ Deno.test("Typek8sCli.run", async (t) => {
       name: "the kubeconfig file does not exist; a read error is written to stderr and generation does not run",
       in: {
         args: ["generate", "--kubeconfig", "config/dev.yaml"],
-        fileIOPort: new port.fileIo.FakeFileIOPort(),
-        k8sPort: new port.k8s.StubK8sPort(),
+        fileIOPort: new double.fileIo.FakeFileIOPort(),
+        k8sPort: new double.k8s.StubK8sPort(),
       },
       want: {
         exitCode: 1,
@@ -75,10 +75,10 @@ Deno.test("Typek8sCli.run", async (t) => {
         "the cluster lookup returns ErrUnauthorized; the generation error is written to stderr and no files are written",
       in: {
         args: ["generate", "--kubeconfig", "config/dev.yaml", "--out", "generated/types"],
-        fileIOPort: new port.fileIo.FakeFileIOPort({
+        fileIOPort: new double.fileIo.FakeFileIOPort({
           "config/dev.yaml": "cluster-bravo",
         }),
-        k8sPort: new port.k8s.StubK8sPort({
+        k8sPort: new double.k8s.StubK8sPort({
           getAllOpenApiRules: [
             {
               kubeconfigStr: "cluster-bravo",
@@ -100,10 +100,10 @@ Deno.test("Typek8sCli.run", async (t) => {
         "the kubeconfig can be read and the cluster returns OpenAPI documents; types are generated into the default output directory and the command succeeds",
       in: {
         args: ["generate", "--kubeconfig", "config/dev.yaml"],
-        fileIOPort: new port.fileIo.FakeFileIOPort({
+        fileIOPort: new double.fileIo.FakeFileIOPort({
           "config/dev.yaml": "cluster-alpha",
         }),
-        k8sPort: new port.k8s.StubK8sPort({
+        k8sPort: new double.k8s.StubK8sPort({
           getAllOpenApiRules: [
             {
               kubeconfigStr: "cluster-alpha",

@@ -1,4 +1,4 @@
-import type { FileIOPort } from "./file-io-port.ts"
+import type { FileIOPort } from "../../core/port/file-io/mod.ts"
 import { "ts-util" as tsUtil, entity } from "./deps.ts"
 
 function isDescendant(path: string, parent: string): boolean {

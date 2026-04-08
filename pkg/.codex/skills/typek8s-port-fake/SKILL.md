@@ -1,6 +1,6 @@
 ---
 name: typek8s-port-fake
-description: Implement or update test doubles for this typek8s codebase, especially fakes and stubs under core/port, following local conventions for readable APIs and table tests.
+description: Implement or update test doubles for this typek8s codebase, especially fakes and stubs under double, following local conventions for readable APIs and table tests.
 ---
 
 # Typek8s Port Double
@@ -11,12 +11,12 @@ Use this skill when adding or updating a fake or stub for a port in this repo, o
 
 Read only the files you need:
 
-- `core/port/file-io/fake-file-io-port.ts`
-- `core/port/file-io/fake-file-io-port_test.ts`
-- `core/port/k8s/stub-k8s-port.ts`
-- `core/port/k8s/stub-k8s-port_test.ts`
-- `core/port/k8s/stub-helm.ts`
-- `core/port/k8s/stub-helm_test.ts`
+- `double/file-io/fake-file-io-port.ts`
+- `double/file-io/fake-file-io-port_test.ts`
+- `double/k8s/stub-k8s-port.ts`
+- `double/k8s/stub-k8s-port_test.ts`
+- `double/k8s/stub-helm.ts`
+- `double/k8s/stub-helm_test.ts`
 
 ## Implementation Rules
 
@@ -42,11 +42,11 @@ Read only the files you need:
 - Follow the nearest existing double for fallback behavior:
   - return `entity.ErrInvalid` when an unconfigured call should be considered invalid input
   - return an empty value only when that behavior is already established for the same style of port fake
-- Export new doubles from the nearest `mod.ts`.
+- Export new doubles from the nearest `double/*/mod.ts`.
 
 ## Test Rules
 
-- Write double tests in table-test style, matching `core/port/file-io/fake-file-io-port_test.ts`.
+- Write double tests in table-test style, matching `double/file-io/fake-file-io-port_test.ts`.
 - Use local `In` and `Want` types.
 - Structure tests as `const tests = [...]` plus `for (const tt of tests) await t.step(tt.name, ...)`.
 - Write case names in `<condition or input>; <outcome or output>` format.

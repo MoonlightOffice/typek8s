@@ -1,6 +1,6 @@
 import { StubSynthPort } from "./stub-synth-port.ts"
 import type { StubSynthPortParams } from "./stub-synth-port.ts"
-import type { SynthParams } from "./synth-port.ts"
+import type { SynthParams } from "../../core/port/synth/mod.ts"
 import { "@std/assert" as stdAssert, "ts-util" as tsUtil, entity } from "./deps.ts"
 
 function createChartFile(name: string, text: string, type = "application/gzip"): File {

@@ -1,6 +1,6 @@
 import { SynthService } from "./synth.ts"
 import type { SynthParams } from "./synth.ts"
-import { "@std/assert" as stdAssert, "ts-util" as tsUtil, entity, port } from "./deps.ts"
+import { "@std/assert" as stdAssert, "ts-util" as tsUtil, double, entity } from "./deps.ts"
 
 function createChartFile(name: string, text: string, type = "application/gzip"): File {
   return new File([text], name, { type })
@@ -9,9 +9,9 @@ function createChartFile(name: string, text: string, type = "application/gzip"):
 Deno.test("SynthService.synth", async (t) => {
   type In = {
     params: SynthParams
-    fileIOPort: port.fileIo.FakeFileIOPort
-    helmPort: port.k8s.StubHelmPort
-    synthPort: port.synth.StubSynthPort
+    fileIOPort: double.fileIo.FakeFileIOPort
+    helmPort: double.k8s.StubHelmPort
+    synthPort: double.synth.StubSynthPort
   }
 
   type Want = {
@@ -52,9 +52,9 @@ Deno.test("SynthService.synth", async (t) => {
             },
           ],
         },
-        fileIOPort: new port.fileIo.FakeFileIOPort(),
-        helmPort: new port.k8s.StubHelmPort(),
-        synthPort: new port.synth.StubSynthPort({
+        fileIOPort: new double.fileIo.FakeFileIOPort(),
+        helmPort: new double.k8s.StubHelmPort(),
+        synthPort: new double.synth.StubSynthPort({
           synthRules: [
             {
               params: {
@@ -105,9 +105,9 @@ Deno.test("SynthService.synth", async (t) => {
           ],
           outDir: "dist/charts",
         },
-        fileIOPort: new port.fileIo.FakeFileIOPort(),
-        helmPort: new port.k8s.StubHelmPort(),
-        synthPort: new port.synth.StubSynthPort({
+        fileIOPort: new double.fileIo.FakeFileIOPort(),
+        helmPort: new double.k8s.StubHelmPort(),
+        synthPort: new double.synth.StubSynthPort({
           synthRules: [
             {
               params: {
@@ -145,13 +145,13 @@ Deno.test("SynthService.synth", async (t) => {
           ],
           outDir: "dist/charts",
         },
-        fileIOPort: new port.fileIo.FakeFileIOPort({
+        fileIOPort: new double.fileIo.FakeFileIOPort({
           "dist/charts/jobs.tgz": "stale-chart",
           "dist/charts/old.txt": "stale-file",
           "dist/keep.txt": "keep",
         }),
-        helmPort: new port.k8s.StubHelmPort(),
-        synthPort: new port.synth.StubSynthPort({
+        helmPort: new double.k8s.StubHelmPort(),
+        synthPort: new double.synth.StubSynthPort({
           synthRules: [
             {
               params: {
@@ -200,8 +200,8 @@ Deno.test("SynthService.synth", async (t) => {
             password: "wrong-password",
           },
         },
-        fileIOPort: new port.fileIo.FakeFileIOPort(),
-        helmPort: new port.k8s.StubHelmPort({
+        fileIOPort: new double.fileIo.FakeFileIOPort(),
+        helmPort: new double.k8s.StubHelmPort({
           pullChartRules: [
             {
               path: "oci://registry.example.com/charts/postgresql",
@@ -213,7 +213,7 @@ Deno.test("SynthService.synth", async (t) => {
             },
           ],
         }),
-        synthPort: new port.synth.StubSynthPort(),
+        synthPort: new double.synth.StubSynthPort(),
       },
       want: {
         err: entity.ErrUnauthorized,
@@ -235,12 +235,12 @@ Deno.test("SynthService.synth", async (t) => {
           ],
           outDir: "generated",
         },
-        fileIOPort: new port.fileIo.FakeFileIOPort({
+        fileIOPort: new double.fileIo.FakeFileIOPort({
           "generated/jobs.tgz": "stale-chart",
           "generated/old.txt": "stale-file",
         }),
-        helmPort: new port.k8s.StubHelmPort(),
-        synthPort: new port.synth.StubSynthPort({
+        helmPort: new double.k8s.StubHelmPort(),
+        synthPort: new double.synth.StubSynthPort({
           synthRules: [
             {
               params: {
