@@ -12,5 +12,6 @@ export * as "@std/tar" from "jsr:@std/tar"
 
 export * from "./core/mod.ts"
 export * from "./adapter/mod.ts"
+export * as di from "./di/mod.ts"
 export * as double from "./double/mod.ts"
 export * as util from "./util/mod.ts"
