@@ -2,7 +2,7 @@
   "tasks": {
     "tidy": "deno fmt && deno check && deno lint",
     "synth": "deno run -A main.ts",
-    "cli": "deno run -A typek8s/api"
+    "cli": "deno run -A typek8s/cli"
   },
   "imports": {
     "~/": "./",
