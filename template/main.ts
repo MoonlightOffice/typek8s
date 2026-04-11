@@ -1,12 +1,8 @@
-import { TypeK8s } from "typek8s"
+import { SynthService } from "typek8s"
 import { deployments } from "~/lib/deploy.ts"
-
-TypeK8s.synth({
+SynthService.synth({
+  name: "sample",
   manifests: [
     ...deployments,
   ],
-}, {
-  type: "chart",
-  chartName: "sample-app",
-  outputDir: "./dist/",
 })

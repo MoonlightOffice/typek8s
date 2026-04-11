@@ -1,8 +1,8 @@
 // Define your apps whatever you like. You can delete all this file.
 
-import { api } from "typek8s"
+import { appsV1, v1 } from "typek8s/api"
 
-function defaultMetadata(name: string): api.v1["Pod"]["metadata"] {
+function defaultMetadata(name: string): v1["Pod"]["metadata"] {
   return {
     name: name,
     labels: {
@@ -11,7 +11,7 @@ function defaultMetadata(name: string): api.v1["Pod"]["metadata"] {
   }
 }
 
-function defaultResources(): api.v1["Pod"]["spec"]["containers"][number]["resources"] {
+function defaultResources(): v1["Pod"]["spec"]["containers"][number]["resources"] {
   return {
     requests: {
       "memory": "100Mi",
@@ -24,7 +24,7 @@ function defaultResources(): api.v1["Pod"]["spec"]["containers"][number]["resour
   }
 }
 
-function defaultDeploy(name: string, image: string): api.appsV1["Deployment"] {
+function defaultDeploy(name: string, image: string): appsV1["Deployment"] {
   return {
     apiVersion: "apps/v1",
     kind: "Deployment",
@@ -64,6 +64,6 @@ function defaultDeploy(name: string, image: string): api.appsV1["Deployment"] {
   }
 }
 
-export const deployments: api.appsV1["Deployment"][] = [
+export const deployments: appsV1["Deployment"][] = [
   defaultDeploy("file-server", "caddy:latest"),
 ]
