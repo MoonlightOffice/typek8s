@@ -56,11 +56,11 @@ Deno.test("AdapterHelmPort.synth", { ignore: Deno.env.get("TESTMODE") !== "LONG"
     }
   }
 
-  const publicChartFixturePath = "adapter/k8s/helm-port/testutil/charts/public-chart-0.1.0.tgz"
-  const privateChartFixturePath = "adapter/k8s/helm-port/testutil/charts/private-chart-0.1.0.tgz"
+  const publicChartFixturePath = "./testutil/charts/public-chart-0.1.0.tgz"
+  const privateChartFixturePath = "./testutil/charts/private-chart-0.1.0.tgz"
   const crdFixturePaths = [
-    "adapter/k8s/helm-port/testutil/crds/example-crd-1.yaml",
-    "adapter/k8s/helm-port/testutil/crds/example-crd-2.yaml",
+    "./testutil/crds/example-crd-1.yaml",
+    "./testutil/crds/example-crd-2.yaml",
   ]
 
   const publicChartFixtureBytes = await Deno.readFile(publicChartFixturePath)
