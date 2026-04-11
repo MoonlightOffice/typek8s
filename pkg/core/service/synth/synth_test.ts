@@ -190,6 +190,7 @@ Deno.test("SynthService.synth", async (t) => {
           depCharts: [
             {
               name: "postgresql",
+              version: "0.1.0",
               chartPath: "oci://registry.example.com/charts/postgresql",
               values: {},
             },
@@ -219,6 +220,7 @@ Deno.test("SynthService.synth", async (t) => {
           depCharts: [
             {
               name: "postgresql",
+              version: "0.1.0",
               chartPath: absoluteChartPath,
               values: {},
             },
@@ -240,6 +242,7 @@ Deno.test("SynthService.synth", async (t) => {
                 depCharts: [
                   {
                     name: "postgresql",
+                    version: "0.1.0",
                     chartPath: absoluteChartPath,
                     values: {},
                   },
