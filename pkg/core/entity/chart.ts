@@ -5,5 +5,5 @@ export interface Chart {
   /** Local path to a dependency chart archive, either relative or absolute. */
   chartPath: string
   /** Override the Helm chart values for this dependency here. */
-  values: Record<string, unknown>
+  values: unknown
 }
