@@ -6,9 +6,9 @@
   },
   "imports": {
     "~/": "./",
-    "typek8s": "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.7.0/mod.ts",
-    "typek8s/cli": "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.7.0/cli.ts",
-    "typek8s/api": "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/tags/v0.7.0/api/mod.ts"
+    "typek8s": "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/heads/stable/mod.ts",
+    "typek8s/cli": "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/heads/stable/cli.ts",
+    "typek8s/api": "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/heads/stable/api/mod.ts"
   },
   "fmt": {
     "semiColons": false,
