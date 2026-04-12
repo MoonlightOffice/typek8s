@@ -107,11 +107,11 @@ Deno.test("AdapterHelmPort.synth", { ignore: Deno.env.get("TESTMODE") !== "LONG"
       filename: "platform.tgz",
       entryPaths: [
         "platform/Chart.yaml",
-        "platform/manifests.yaml",
+        "platform/templates/manifests.yaml",
         "platform/values.yaml",
       ],
       manifest: {
-        path: "platform/manifests.yaml",
+        path: "platform/templates/manifests.yaml",
         manifestSections: manifests.length,
       },
       values: {
@@ -139,11 +139,11 @@ Deno.test("AdapterHelmPort.synth", { ignore: Deno.env.get("TESTMODE") !== "LONG"
         "platform/Chart.yaml",
         "platform/crds/1.yaml",
         "platform/crds/2.yaml",
-        "platform/manifests.yaml",
+        "platform/templates/manifests.yaml",
         "platform/values.yaml",
       ],
       manifest: {
-        path: "platform/manifests.yaml",
+        path: "platform/templates/manifests.yaml",
         manifestSections: manifests.length,
       },
       crds: [
@@ -194,11 +194,11 @@ Deno.test("AdapterHelmPort.synth", { ignore: Deno.env.get("TESTMODE") !== "LONG"
         "platform/Chart.yaml",
         "platform/charts/private-chart-0.1.0.tgz",
         "platform/charts/public-chart-0.1.0.tgz",
-        "platform/manifests.yaml",
+        "platform/templates/manifests.yaml",
         "platform/values.yaml",
       ],
       manifest: {
-        path: "platform/manifests.yaml",
+        path: "platform/templates/manifests.yaml",
         manifestSections: manifests.length,
       },
       charts: [
@@ -257,11 +257,11 @@ Deno.test("AdapterHelmPort.synth", { ignore: Deno.env.get("TESTMODE") !== "LONG"
         "platform/charts/public-chart-0.1.0.tgz",
         "platform/crds/1.yaml",
         "platform/crds/2.yaml",
-        "platform/manifests.yaml",
+        "platform/templates/manifests.yaml",
         "platform/values.yaml",
       ],
       manifest: {
-        path: "platform/manifests.yaml",
+        path: "platform/templates/manifests.yaml",
         manifestSections: manifests.length,
       },
       crds: [

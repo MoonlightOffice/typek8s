@@ -27,7 +27,7 @@ export class AdapterHelmPort implements port.k8s.HelmPort {
           ))),
         ],
         [
-          `${params.name}/manifests.yaml`,
+          `${params.name}/templates/manifests.yaml`,
           util.stringToBytes(params.manifests.map((manifest) => stdYaml.stringify(manifest)).join("\n---\n")),
         ],
       ])
