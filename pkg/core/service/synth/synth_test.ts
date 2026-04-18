@@ -87,7 +87,7 @@ Deno.test("SynthService.synth", async (t) => {
       },
       want: {
         err: null,
-        outputPath: "out/platform.tgz",
+        outputPath: "dist/platform.tgz",
         outputText: "platform-chart",
       },
     },
@@ -104,7 +104,7 @@ Deno.test("SynthService.synth", async (t) => {
               metadata: { name: "cleanup" },
             },
           ],
-          outDir: "dist/charts",
+          outDir: "out/charts",
         },
         fileIOPort: new double.fileIo.FakeFileIOPort(),
         helmPort: new double.k8s.StubHelmPort({
@@ -127,7 +127,7 @@ Deno.test("SynthService.synth", async (t) => {
       },
       want: {
         err: null,
-        outputPath: "dist/charts/jobs.tgz",
+        outputPath: "out/charts/jobs.tgz",
         outputText: "jobs-chart",
       },
     },
@@ -201,7 +201,7 @@ Deno.test("SynthService.synth", async (t) => {
       },
       want: {
         err: entity.ErrInvalid,
-        outputPath: "out/platform.tgz",
+        outputPath: "dist/platform.tgz",
         outputText: null,
       },
     },
@@ -255,7 +255,7 @@ Deno.test("SynthService.synth", async (t) => {
       },
       want: {
         err: null,
-        outputPath: "out/platform.tgz",
+        outputPath: "dist/platform.tgz",
         outputText: "platform-chart-absolute-dep",
       },
     },

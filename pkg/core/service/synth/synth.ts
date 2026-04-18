@@ -7,7 +7,7 @@ import { "ts-util" as tsUtil, entity, port } from "./deps.ts"
  * output placement.
  */
 export interface SynthParams extends port.k8s.SynthParams {
-  /** Output directory for the synthesized chart archive. When omitted, `./out/` is used. */
+  /** Output directory for the synthesized chart archive. When omitted, `./dist/` is used. */
   outDir?: string
 }
 
@@ -33,7 +33,7 @@ export class SynthService {
    * @returns `tsUtil.result(true)` when synthesis succeeds, or an error when it fails.
    */
   async synth(params: SynthParams): Promise<tsUtil.Result<void>> {
-    const outDir = params.outDir ?? "out"
+    const outDir = params.outDir ?? "dist"
     this.fileIOPort.remove(outDir)
 
     const invalidDepChart = params.depCharts?.find((depChart) => !this.isLocalChartPath(depChart.chartPath))
