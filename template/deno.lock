@@ -8,7 +8,7 @@
     "jsr:@std/streams@^1.0.17": "1.0.17",
     "jsr:@std/tar@*": "0.1.10",
     "jsr:@std/yaml@1": "1.0.12",
-    "npm:openapi-typescript@*": "7.10.1_typescript@5.9.3"
+    "npm:openapi-typescript@*": "7.13.0_typescript@5.9.3"
   },
   "jsr": {
     "@std/assert@1.0.19": {
@@ -54,20 +54,20 @@
     "@babel/helper-validator-identifier@7.28.5": {
       "integrity": "sha512-qSs4ifwzKJSV39ucNjsvc6WVHs6b7S03sOh2OcHF9UHfVPqWWALUsNUVzhSBiItjRZoLHx7nIarVjqKVusUZ1Q=="
     },
-    "@redocly/ajv@8.17.1": {
-      "integrity": "sha512-EDtsGZS964mf9zAUXAl9Ew16eYbeyAFWhsPr0fX6oaJxgd8rApYlPBf0joyhnUHz88WxrigyFtTaqqzXNzPgqw==",
+    "@redocly/ajv@8.11.2": {
+      "integrity": "sha512-io1JpnwtIcvojV7QKDUSIuMN/ikdOUd1ReEnUnMKGfDVridQZ31J0MmIuqwuRjWDZfmvr+Q0MqCcfHM2gTivOg==",
       "dependencies": [
         "fast-deep-equal",
-        "fast-uri",
         "json-schema-traverse",
-        "require-from-string"
+        "require-from-string",
+        "uri-js-replace"
       ]
     },
-    "@redocly/config@0.22.2": {
-      "integrity": "sha512-roRDai8/zr2S9YfmzUfNhKjOF0NdcOIqF7bhf4MVC5UxpjIysDjyudvlAiVbpPHp3eDRWbdzUgtkK1a7YiDNyQ=="
+    "@redocly/config@0.22.0": {
+      "integrity": "sha512-gAy93Ddo01Z3bHuVdPWfCwzgfaYgMdaZPcfL7JZ7hWJoK9V0lXDbigTWkhiPFAaLWzbOJ+kbUQG1+XwIm0KRGQ=="
     },
-    "@redocly/openapi-core@1.34.6": {
-      "integrity": "sha512-2+O+riuIUgVSuLl3Lyh5AplWZyVMNuG2F98/o6NrutKJfW4/GTZdPpZlIphS0HGgcOHgmWcCSHj+dWFlZaGSHw==",
+    "@redocly/openapi-core@1.34.11": {
+      "integrity": "sha512-V09ayfnb5GyysmvARbt+voFZAjGcf7hSYxOYxSkCc4fbH/DTfq5YWoec8cflvmHHqyIFbqvmGKmYFzqhr9zxDg==",
       "dependencies": [
         "@redocly/ajv",
         "@redocly/config",
@@ -92,8 +92,8 @@
     "balanced-match@1.0.2": {
       "integrity": "sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw=="
     },
-    "brace-expansion@2.0.2": {
-      "integrity": "sha512-Jt0vHyM+jmUBqojB7E1NIYadt0vI0Qxjxd2TErW94wDz+E2LAm5vKMXXwg6ZZBTHPuUlDgQHKXvjGBdfcF1ZDQ==",
+    "brace-expansion@2.1.0": {
+      "integrity": "sha512-TN1kCZAgdgweJhWWpgKYrQaMNHcDULHkWwQIspdtjV4Y5aurRdZpjAqn6yX3FPqTA9ngHCc4hJxMAMgGfve85w==",
       "dependencies": [
         "balanced-match"
       ]
@@ -112,9 +112,6 @@
     },
     "fast-deep-equal@3.1.3": {
       "integrity": "sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q=="
-    },
-    "fast-uri@3.1.0": {
-      "integrity": "sha512-iPeeDKJSWf4IEOasVVrknXpaBV0IApz/gp7S2bb7Z4Lljbl2MGJRqInZiUrQwV16cpzw/D3S5j5Julj/gT52AA=="
     },
     "https-proxy-agent@7.0.6": {
       "integrity": "sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw==",
@@ -142,8 +139,8 @@
     "json-schema-traverse@1.0.0": {
       "integrity": "sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug=="
     },
-    "minimatch@5.1.6": {
-      "integrity": "sha512-lKwV/1brpG6mBUFHtb7NUmtABCb2WZZmm2wNiOA5hAb8VdCS4B3dtMWyvcoViccwAW/COERjXLt0zP1zXUN26g==",
+    "minimatch@5.1.9": {
+      "integrity": "sha512-7o1wEA2RyMP7Iu7GNba9vc0RWWGACJOCZBJX2GJWip0ikV+wcOsgVuY9uE8CPiyQhkGFSlhuSkZPavN7u1c2Fw==",
       "dependencies": [
         "brace-expansion"
       ]
@@ -151,8 +148,8 @@
     "ms@2.1.3": {
       "integrity": "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA=="
     },
-    "openapi-typescript@7.10.1_typescript@5.9.3": {
-      "integrity": "sha512-rBcU8bjKGGZQT4K2ekSTY2Q5veOQbVG/lTKZ49DeCyT9z62hM2Vj/LLHjDHC9W7LJG8YMHcdXpRZDqC1ojB/lw==",
+    "openapi-typescript@7.13.0_typescript@5.9.3": {
+      "integrity": "sha512-EFP392gcqXS7ntPvbhBzbF8TyBA+baIYEm791Hy5YkjDYKTnk/Tn5OQeKm5BIZvJihpp8Zzr4hzx0Irde1LNGQ==",
       "dependencies": [
         "@redocly/openapi-core",
         "ansi-colors",
@@ -190,6 +187,9 @@
     "typescript@5.9.3": {
       "integrity": "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==",
       "bin": true
+    },
+    "uri-js-replace@1.0.1": {
+      "integrity": "sha512-W+C9NWNLFOoBI2QWDp4UT9pv65r2w5Cx+3sTYFvtMdDBxkKt1syCqsUdSFAChbEe1uK5TfS04wt/nGwmaeIQ0g=="
     },
     "yaml-ast-parser@0.0.43": {
       "integrity": "sha512-2PTINUwsRqSd+s8XxKaJWQlUuEMHJQyEuh2edBbW8KNJz0SJPwUSD2zRWqezFEdN7IzAgeuYHFUCF7o8zRdZ0A=="
@@ -235,7 +235,7 @@
     "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/heads/stable/pkg/adapter/file-io/adapter-file-io-port.ts": "d601ace35a8df333085b3990c58b0dd0f1d4758ca25057e808ec0ab18e710d76",
     "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/heads/stable/pkg/adapter/file-io/deps.ts": "1dca379aa1f5d817317b85ef48d2552add3cc35b9784d2f546c45abbbcc28589",
     "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/heads/stable/pkg/adapter/file-io/mod.ts": "9a134241c4ce8877511d1aa720dff19ef0e96ceb91fc982c046f5fe54ce72455",
-    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/heads/stable/pkg/adapter/k8s/helm-port/adapter-helm-port.ts": "94ddcc278a2f5638eebeca0fdac6fdf0a209d95749c9e764c6e8ffd11b1ba509",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/heads/stable/pkg/adapter/k8s/helm-port/adapter-helm-port.ts": "69836368ffcd15da4e475aa7e122a0735d7e2b32f5459c2df17e3375371d72a5",
     "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/heads/stable/pkg/adapter/k8s/helm-port/deps.ts": "25ac3c7516295149aaa5a500fc52044f4beeb2a9fd95ae1ea5a9a6786839928a",
     "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/heads/stable/pkg/adapter/k8s/k8s-port/adapter-k8s-port.ts": "ef41e5cbd583b9843f5217d7ddafb06c541ee35f7d65dde67d595a12274268c5",
     "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/heads/stable/pkg/adapter/k8s/k8s-port/deps.ts": "25ac3c7516295149aaa5a500fc52044f4beeb2a9fd95ae1ea5a9a6786839928a",
