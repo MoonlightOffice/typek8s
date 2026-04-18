@@ -264,7 +264,7 @@
     "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/heads/stable/pkg/core/service/mod.ts": "7a8b5b3504b3b56af45775a1254186412ead297e015713beca7ed56859b99725",
     "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/heads/stable/pkg/core/service/synth/deps.ts": "25ac3c7516295149aaa5a500fc52044f4beeb2a9fd95ae1ea5a9a6786839928a",
     "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/heads/stable/pkg/core/service/synth/mod.ts": "18203a4a9a3c9254d2e62869cb76a6f44f572fc124f3b2fbea013d90e6bc2041",
-    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/heads/stable/pkg/core/service/synth/synth.ts": "a1df4864b5001dc852dbc39d1fbca928e98d114aa60a6b3782285c8263da02c0",
+    "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/heads/stable/pkg/core/service/synth/synth.ts": "8aeebb34a3b87fd812a1b026e672068950647bc017b2d834f24d360778942af3",
     "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/heads/stable/pkg/deps.ts": "77cc44697725c3a5d02074e5d0a6e1000e8a2e4f378897d4b326753ee5d51606",
     "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/heads/stable/pkg/di/cli.ts": "150a069fcbe11de3cd32bfc11178679c457a5b446ec8a955e84b28be7f98b633",
     "https://raw.githubusercontent.com/MoonlightOffice/typek8s/refs/heads/stable/pkg/di/deps.ts": "d917295f470905382f23728f5105ff488686f80aa3f2a2dc9b14c74bfe6efaf9",
