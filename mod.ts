@@ -4,4 +4,4 @@ export type SynthParams = service.synth.SynthParams
 export const SynthService = di.createSynthService()
 
 export type Chart = entity.Chart
-export type anifest = entity.Manifest
+export type Manifest = entity.Manifest
